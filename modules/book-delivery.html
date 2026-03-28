@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMaster Pro - تسليم كتب للطلاب</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar">
+            <!-- Injected by UICore -->
+        </aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar">
+                    <div class="action-group">
+                        <h1 class="page-title">🚚 تسجيل فاتورة مبيع وتسليم كتب</h1>
+                    </div>
+                    <div class="action-group">
+                        <button class="app-btn-primary btn-back-custom" onclick="history.back()">
+                            <i class="fa-solid fa-arrow-right"></i> رجوع
+                        </button>
+                    </div>
+                </header>
+
+                <div class="data-card" style="max-width: 100%; margin: 0 auto; overflow-x: hidden;">
+                    <form id="delivery-form">
+                        <div
+                            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:25px; margin-bottom:40px;">
+                            <div class="form-group">
+                                <label>الطالب المستلم</label>
+                                <select id="student-id" class="form-control" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>تاريخ التسليم</label>
+                                <input type="date" id="delivery-date" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div id="sales-items">
+                            <h3 class="premium-heading"
+                                style="font-size:18px; margin-bottom:20px; border-right: 5px solid var(--accent-teal); padding-right: 15px; display:inline-block;">
+                                📦 الأصناف المسلمة للطلاب</h3>
+
+                            <div class="sales-row"
+                                style="display:grid; grid-template-columns: 3fr 1fr 1.5fr 1.5fr auto; gap:15px; margin-bottom:15px; align-items:end;">
+                                <div class="form-group">
+                                    <label style="font-size:13px; margin-bottom:5px;">الكتاب</label>
+                                    <select class="form-control s-book" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:13px; margin-bottom:5px;">الكمية</label>
+                                    <input type="number" class="form-control s-qty" value="1" min="1" required>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:13px; margin-bottom:5px;">سعر البيع</label>
+                                    <input type="number" class="form-control s-price" required step="0.01">
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size:13px; margin-bottom:5px;">الإجمالي</label>
+                                    <input type="text" class="form-control s-total" readonly value="0.00">
+                                </div>
+                                <div class="form-group">
+                                    <label style="visibility: hidden; font-size:13px; margin-bottom:5px;">حذف</label>
+                                    <button type="button" class="action-btn text-danger"
+                                        onclick="this.parentElement.parentElement.remove(); countGrand();"><i
+                                            class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" class="app-btn-primary" onclick="window.addSalesRow()"
+                            style="margin-top:10px; background: var(--bg-main) !important; color: var(--accent-teal) !important; border: 1px dashed var(--accent-teal) !important;">
+                            <i class="fa-solid fa-circle-plus"></i> إضافة كتاب آخر للمسودة
+                        </button>
+
+                        <div
+                            style="margin-top:40px; border-top:1px solid var(--border-soft); padding-top:30px; display:flex; flex-wrap: wrap; gap: 30px; justify-content:space-between; align-items: flex-start;">
+                            <div class="form-group" style="flex: 1; min-width: 300px;">
+                                <label style="margin-bottom: 10px; display: block;">ملاحظات التسليم</label>
+                                <textarea class="form-control" placeholder="يمكنك كتابة أي ملاحظات إضافية هنا..."
+                                    style="width:100%; height: 100px; resize: none;"></textarea>
+                            </div>
+
+                            <div class="total-section-wrapper"
+                                style="display: flex; flex-direction: column; gap: 20px; align-items: flex-end;">
+                                <div class="total-section">
+                                    <div class="total-label">المبلغ الإجمالي المستحق:</div>
+                                    <div id="sales-grand-total" class="total-amount">0.00 ج.م</div>
+                                </div>
+
+                                <button type="submit" class="app-btn-primary" style="padding:15px 40px; width: 100%;">
+                                    <i class="fa-solid fa-check-double"></i> تأكيد التسليم وإصدار القيد المالي
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Global Scripts -->
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/accounting-core.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+    <script src="../js/inventory-engine.js"></script>
+
+    <style>
+        /* Dark Mode Overrides */
+
+        /* 1. Back Button */
+        .btn-back-custom {
+            padding: 10px 24px !important;
+            white-space: nowrap;
+            min-width: 140px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.dark-mode .btn-back-custom {
+            color: #fff !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode .btn-back-custom:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: #fff !important;
+        }
+
+        /* 2. Delete/Action Buttons */
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid #fee2e2;
+            background: #fef2f2;
+            color: #ef4444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        body.dark-mode .action-btn {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        body.dark-mode .action-btn:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        /* 3. Inputs & Selects */
+        body.dark-mode .form-control {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #fff !important;
+        }
+
+        body.dark-mode .form-control:focus {
+            border-color: var(--accent-teal);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode select.form-control {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ffffff' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+        }
+
+        /* 4. Total Section Frame */
+        .total-section {
+            border: 2px dashed var(--border-soft);
+            padding: 20px 40px;
+            /* Increased padding */
+            border-radius: 16px;
+            /* Larger radius */
+            background: #f8fafc;
+            text-align: left;
+            min-width: 320px;
+            /* Wider frame */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        body.dark-mode .total-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 15px rgba(45, 212, 191, 0.1);
+        }
+
+        .total-label {
+            color: var(--sidebar-bg);
+            font-size: 14px;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+
+        body.dark-mode .total-label {
+            color: #e2e8f0;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .total-amount {
+            font-size: 32px;
+            color: var(--sidebar-bg);
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 800;
+        }
+
+        body.dark-mode .total-amount {
+            color: #2dd4bf;
+            text-shadow: 0 0 10px rgba(45, 212, 191, 0.3);
+        }
+    </style>
+
+    <script>
+        function initDeliveryPage() {
+            if (typeof Storage === 'undefined') return;
+
+            const allStudents = Storage.get('students') || [];
+            const allBooks = Storage.get('books') || [];
+            const activeBranchId = window.Permissions?.getActiveBranchId();
+
+            // 🛡️ BRANCH ISOLATION: Filter data by current branch
+            const students = allStudents.filter(s => {
+                if (!activeBranchId || activeBranchId === 'null') return true;
+                const sBranch = s.branch_id || s.branch;
+                return String(sBranch) === String(activeBranchId);
+            });
+
+            const books = allBooks.filter(b => {
+                if (!activeBranchId || activeBranchId === 'null') return true;
+                return String(b.branch_id) === String(activeBranchId);
+            });
+
+            // Guard: No books or students
+            if (books.length === 0 && allBooks.length > 0) {
+                Toast.show('تنبيه: لا يوجد كتب مسجلة لهذا الفرع حالياً', 'info');
+            }
+
+            const studentSel = document.getElementById('student-id');
+            if (studentSel) {
+                studentSel.innerHTML = `
+                    <option value="" disabled selected>--- اختر الطالب المستلم ---</option>
+                    ${students.map(s => `<option value="${s.id}">${s.name}</option>`).join('')}
+                `;
+            }
+
+            const dateInput = document.getElementById('delivery-date');
+            if (dateInput) dateInput.valueAsDate = new Date();
+
+            window.addSalesRow = () => {
+                const container = document.getElementById('sales-items');
+                if (!container) return;
+                const row = document.createElement('div');
+                row.className = 'sales-row';
+                row.style = 'display:grid; grid-template-columns: 3fr 1fr 1.5fr 1.5fr auto; gap:15px; margin-bottom:15px; align-items:end; animation: fadeIn 0.3s ease;';
+                row.innerHTML = `
+                    <div class="form-group">
+                        <label style="font-size:13px; margin-bottom:5px;">الكتاب</label>
+                        <select class="form-control s-book" required>
+                            <option value="" disabled selected>اختر كتاباً...</option>
+                            ${books.map(b => `<option value="${b.id}" data-price="${b.selling_price}" data-stock="${b.current_stock}">${b.name} (المتوفر: ${b.current_stock})</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:13px; margin-bottom:5px;">الكمية</label>
+                        <input type="number" class="form-control s-qty" value="1" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:13px; margin-bottom:5px;">سعر البيع</label>
+                        <input type="number" class="form-control s-price" required step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:13px; margin-bottom:5px;">الإجمالي</label>
+                        <input type="text" class="form-control s-total" readonly value="0.00" style="background:#f1f5f9; font-weight:700;">
+                    </div>
+                    <div class="form-group">
+                        <label style="visibility: hidden; font-size:13px; margin-bottom:5px;">حذف</label>
+                        <button type="button" class="action-btn text-danger" onclick="this.parentElement.parentElement.remove(); countGrand();"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(row);
+                bindRow(row);
+            };
+
+            function bindRow(row) {
+                const bSel = row.querySelector('.s-book');
+                const qtyInput = row.querySelector('.s-qty');
+                const priceInput = row.querySelector('.s-price');
+                const totalInput = row.querySelector('.s-total');
+
+                const updateFromBook = () => {
+                    const selectedOption = bSel.options[bSel.selectedIndex];
+                    if (selectedOption && selectedOption.dataset.price) {
+                        priceInput.value = selectedOption.dataset.price;
+                        calc();
+                    }
+                };
+
+                const calc = () => {
+                    const selectedOption = bSel.options[bSel.selectedIndex];
+                    const stock = parseInt(selectedOption?.dataset.stock || 0);
+                    const qty = parseInt(qtyInput.value) || 0;
+
+                    // Simple UI validation for stock
+                    if (qty > stock) {
+                        qtyInput.style.borderColor = '#ef4444';
+                        qtyInput.style.backgroundColor = '#fef2f2';
+                    } else {
+                        qtyInput.style.borderColor = '';
+                        qtyInput.style.backgroundColor = '';
+                    }
+
+                    const v = qty * (parseFloat(priceInput.value) || 0);
+                    totalInput.value = v.toFixed(2);
+                    countGrand();
+                };
+
+                bSel.onchange = updateFromBook;
+                qtyInput.oninput = calc;
+                priceInput.oninput = calc;
+            }
+
+            window.countGrand = () => {
+                let g = 0;
+                document.querySelectorAll('.s-total').forEach(t => g += parseFloat(t.value) || 0);
+                const grandEl = document.getElementById('sales-grand-total');
+                if (grandEl) grandEl.innerText = (typeof Formatter !== 'undefined' ? Formatter.formatCurrency(g) : g.toFixed(2)) + ' ج.م';
+            };
+
+            // Init first row if elements exist
+            const initialRow = document.querySelector('.sales-row');
+            if (initialRow) {
+                const bSel = initialRow.querySelector('.s-book');
+                bSel.innerHTML = `
+                    <option value="" disabled selected>اختر كتاباً...</option>
+                    ${books.map(b => `<option value="${b.id}" data-price="${b.selling_price}" data-stock="${b.current_stock}">${b.name} (المتوفر: ${b.current_stock})</option>`).join('')}
+                `;
+                bindRow(initialRow);
+            }
+
+            const form = document.getElementById('delivery-form');
+            if (form) {
+                form.onsubmit = (e) => {
+                    e.preventDefault();
+
+                    const studentId = document.getElementById('student-id').value;
+                    const deliveryDate = document.getElementById('delivery-date').value;
+                    const rows = document.querySelectorAll('.sales-row');
+
+                    if (!studentId) {
+                        Toast.show('يرجى اختيار الطالب المستلم', 'error');
+                        return;
+                    }
+
+                    if (rows.length === 0) {
+                        Toast.show('يرجى إضافة كتاب واحد على الأقل', 'error');
+                        return;
+                    }
+
+                    const items = Array.from(rows).map(r => {
+                        const bookId = r.querySelector('.s-book').value;
+                        const qty = parseInt(r.querySelector('.s-qty').value);
+                        const price = parseFloat(r.querySelector('.s-price').value);
+
+                        // Backend engine will do the actual validation, but we can check here too
+                        return { book_id: bookId, qty, price };
+                    });
+
+                    const invoice = {
+                        id: Date.now(),
+                        student_id: studentId,
+                        date: deliveryDate,
+                        items: items,
+                        invoice_no: 'INV-' + Math.floor(Math.random() * 90000 + 10000)
+                    };
+
+                    try {
+                        if (typeof InventoryEngine !== 'undefined') {
+                            InventoryEngine.recordBulkSale(invoice);
+                            Toast.show('تمت عملية تسليم الكتب بنجاح وتم تسجيل القيد المالي', 'success');
+
+                            // Optional: Print invoice or redirect
+                            setTimeout(() => {
+                                Modal.confirm({
+                                    title: 'تمت العملية',
+                                    message: 'تم تسجيل التسليم بنجاح. هل تريد الانتقال إلى صفحة التقارير المالية؟',
+                                    onConfirm: () => location.href = 'financial-dashboard.html',
+                                    onCancel: () => location.reload()
+                                });
+                            }, 500);
+                        }
+                    } catch (err) {
+                        Toast.show('خطأ: ' + err.message, 'error');
+                    }
+                };
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initDeliveryPage);
+    </script>
+</body>
+
+</html>
+

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMaster Pro - مجموعات الدراسة</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <style>
+        /* 💎 Premium Group UI - Matching Student/Trainer Style */
+        .modal-container {
+            max-width: 1100px !important;
+            border-radius: 20px !important;
+            padding: 0 !important;
+            background: var(--bg-main);
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+            overflow: hidden;
+        }
+
+        .modal-premium-header {
+            background: var(--sidebar-bg);
+            color: #fff;
+            padding: 25px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-body-scroll {
+            padding: 35px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .form-section-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-ui);
+            border: 1px solid var(--border-soft);
+            margin-bottom: 25px;
+        }
+
+        body.dark-mode .form-section-card {
+            background: var(--bg-card);
+        }
+
+        .group-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .group-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-soft);
+            border-radius: 20px;
+            padding: 25px;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            border-right: 5px solid var(--accent-teal);
+        }
+
+        .group-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-right-color: var(--accent-brick);
+        }
+
+        .group-name {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--sidebar-bg);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        body.dark-mode .group-name {
+            color: var(--accent-teal);
+        }
+
+        .group-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .meta-tag {
+            background: rgba(0, 0, 0, 0.05);
+            color: #1e293b; /* High Contrast Deep Blue/Gray */
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            /* 18px Readability */
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .trainer-bar {
+            background: var(--accent-teal-soft);
+            padding: 12px 15px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .student-count-chip {
+            position: absolute;
+            top: 25px;
+            left: 20px;
+            background: var(--accent-brick);
+            color: #fff;
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            /* 18px Readability */
+            font-weight: 900;
+            box-shadow: 0 4px 10px rgba(155, 34, 38, 0.3);
+        }
+
+        .premium-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            padding: 30px 45px;
+            background: rgba(0, 0, 0, 0.02);
+            border-top: 1px solid var(--border-soft);
+        }
+
+        .modal-body-scroll .field-label {
+            font-size: 1.15rem !important;
+            margin-bottom: 12px;
+            color: var(--sidebar-bg);
+        }
+
+        .modal-body-scroll .oval-input {
+            height: 54px !important;
+            font-size: 1.15rem !important;
+            font-weight: 700;
+        }
+
+        /* Status Tabs Styling */
+        .status-tabs {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.03);
+            padding: 6px;
+            border-radius: 50px;
+            width: fit-content;
+            border: 1px solid var(--border-soft);
+        }
+
+        .tab-btn {
+            border: none;
+            background: transparent;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn i {
+            font-size: 1.1rem;
+        }
+
+        .tab-btn.active {
+            background: #fff;
+            color: var(--accent-teal);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .tab-btn:not(.active):hover {
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--sidebar-bg);
+        }
+
+        /* Dark Mode Visibility Fixes */
+        body.dark-mode .meta-tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff !important;
+        }
+
+        body.dark-mode .trainer-bar {
+            background: rgba(0, 234, 255, 0.05);
+        }
+
+        body.dark-mode .trainer-bar span {
+            color: #fff !important;
+        }
+
+        body.dark-mode .modal-body-scroll .field-label {
+            color: var(--accent-teal);
+        }
+
+        body.dark-mode .tab-btn.active {
+            background: var(--accent-teal);
+            color: #000;
+        }
+
+        body.dark-mode .tab-btn:not(.active) {
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar">
+            <!-- Sidebar injected via UICore -->
+        </aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <a href="../dashboard.html" class="btn-neuro"
+                            style="background: rgba(255, 255, 255, 0.1); border: 1.5px solid var(--border-soft); color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px 20px; border-radius: 50px;">
+                            <i class="fa-solid fa-house"></i>
+                            <span style="font-weight: 800;">الرئيسية</span>
+                        </a>
+                        <h1 class="page-title">📚 مجموعات الدراسة</h1>
+                    </div>
+
+                    <div class="status-tabs">
+                        <button class="tab-btn" data-status="All" onclick="groupsManager.setStatusFilter('All')">
+                            <i class="fa-solid fa-layer-group"></i> كافة المجموعات
+                        </button>
+                        <button class="tab-btn active" data-status="Active"
+                            onclick="groupsManager.setStatusFilter('Active')">
+                            <i class="fa-solid fa-circle-check"></i> مجموعات نشطة
+                        </button>
+                        <button class="tab-btn" data-status="Inactive"
+                            onclick="groupsManager.setStatusFilter('Inactive')">
+                            <i class="fa-solid fa-circle-xmark"></i> غير نشطة
+                        </button>
+                    </div>
+
+                    <div class="action-group" style="display: flex; gap: 15px; align-items: center;">
+                        <div style="position: relative;">
+                            <i class="fa-solid fa-magnifying-glass"
+                                style="position: absolute; right: 20px; top: 18px; color: var(--accent-teal); font-size: 1.3rem;"></i>
+                            <input type="text" id="search-groups" class="oval-input"
+                                placeholder="بحث ذكي في المجموعات..."
+                                style="padding-right: 45px; width: 300px; height: 48px; box-shadow: var(--shadow-ui);">
+                        </div>
+                        <button class="app-btn-primary" onclick="Modal.open('group-modal')"
+                            style="box-shadow: 0 8px 15px rgba(26, 158, 156, 0.2); height: 48px;">
+                            <i class="fa-solid fa-layer-group"></i> إنشاء مجموعة جديدة
+                        </button>
+                    </div>
+                </header>
+
+                <div id="groups-container" class="group-card-grid">
+                    <!-- Populated dynamically -->
+                    <div style="grid-column: 1/-1; text-align:center; padding:100px;" class="text-muted">
+                        <i class="fa-solid fa-spinner fa-spin"
+                            style="font-size: 3rem; margin-bottom: 20px; color: var(--accent-teal);"></i>
+                        <br>جاري تحميل المجموعات الدراسية...
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Group Modal -->
+    <div class="modal-overlay" id="group-modal">
+        <div class="modal-container">
+            <div class="modal-premium-header">
+                <div style="display: flex; align-items: center; gap: 15px; font-size: 1.4rem; font-weight: 900;">
+                    <i class="fa-solid fa-users-rectangle"></i>
+                    <span>إعداد المجموعة الدراسية</span>
+                </div>
+                <button class="close-modal" onclick="Modal.close('group-modal')"
+                    style="color: #fff; font-size: 2rem; background: transparent; border: none; cursor: pointer;">&times;</button>
+            </div>
+
+            <form id="group-form" style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+                <input type="hidden" name="groupId">
+                <div class="modal-body-scroll">
+                    <!-- Section 1: Basic Info -->
+                    <div class="form-section-card">
+                        <h3
+                            style="margin-bottom: 20px; color: var(--sidebar-bg); font-weight: 800; display: flex; align-items: center; gap: 10px;">
+                            <i class="fa-solid fa-info-circle"></i> البيانات الأساسية
+                        </h3>
+
+                        <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px;">
+                            <div class="field-group">
+                                <label class="field-label"
+                                    style="display:block; margin-bottom:8px; font-weight:800;">اسم المجموعة <span
+                                        style="color:red">*</span></label>
+                                <input type="text" name="name" class="oval-input" required
+                                    placeholder="مثلاً: كيمياء - المستوى الأول - مجموعة السبت">
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label"
+                                    style="display:block; margin-bottom:8px; font-weight:800;">المحاضر المسؤول</label>
+                                <select name="trainerId" id="trainer-select" class="oval-input"
+                                    style="font-weight: 700;"></select>
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label"
+                                    style="display:block; margin-bottom:8px; font-weight:800;">حالة المجموعة</label>
+                                <select name="status" class="oval-input" style="font-weight: 700;">
+                                    <option value="Active">نشطة (تظهر في الحضور)</option>
+                                    <option value="Inactive">غير نشطة (مؤرشفة)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Schedule -->
+                    <div class="form-section-card" style="border-right: 5px solid var(--accent-brick);">
+                        <h3
+                            style="margin-bottom: 20px; color: var(--accent-brick); font-weight: 800; display: flex; align-items: center; gap: 10px;">
+                            <i class="fa-solid fa-calendar-alt"></i> جدول المواعيد والبداية
+                        </h3>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+                            <div class="field-group">
+                                <label class="field-label"
+                                    style="display:block; margin-bottom:8px; font-weight:800;">يوم المحاضرة</label>
+                                <select name="day" class="oval-input" style="font-weight: 700;">
+                                    <option value="Saturday">السبت</option>
+                                    <option value="Sunday">الأحد</option>
+                                    <option value="Monday">الاثنين</option>
+                                    <option value="Tuesday">الثلاثاء</option>
+                                    <option value="Wednesday">الأربعاء</option>
+                                    <option value="Thursday">الخميس</option>
+                                    <option value="Friday">الجمعة</option>
+                                </select>
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label"
+                                    style="display:block; margin-bottom:8px; font-weight:800;">توقيت الحصة (كل ربع
+                                    ساعة)</label>
+                                <div style="display: flex; align-items: center; gap: 5px;">
+                                    <select id="group-hour" class="oval-input"
+                                        style="padding: 12px 8px; font-weight: 700;">
+                                        <option value="01">01</option>
+                                        <option value="02">02</option>
+                                        <option value="03">03</option>
+                                        <option value="04">04</option>
+                                        <option value="05">05</option>
+                                        <option value="06">06</option>
+                                        <option value="07">07</option>
+                                        <option value="08">08</option>
+                                        <option value="09">09</option>
+                                        <option value="10" selected>10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>
+                                    <span style="font-weight: 900;">:</span>
+                                    <select id="group-minute" class="oval-input"
+                                        style="padding: 12px 8px; font-weight: 700;">
+                                        <option value="00">00</option>
+                                        <option value="15">15</option>
+                                        <option value="30">30</option>
+                                        <option value="45">45</option>
+                                    </select>
+                                    <select id="group-ampm" class="oval-input"
+                                        style="padding: 12px 8px; font-weight: 700;">
+                                        <option value="AM">AM</option>
+                                        <option value="PM">PM</option>
+                                    </select>
+                                </div>
+                                <input type="hidden" name="time" id="group-time-hidden" value="10:00 AM">
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label"
+                                    style="display:block; margin-bottom:8px; font-weight:800;">تاريخ الانطلاق</label>
+                                <input type="date" id="group-start-date" name="startDate" class="oval-input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <footer class="premium-footer">
+                    <button type="button" class="btn-neuro"
+                        style="background: transparent; border: 1.5px solid #64748b; color: #64748b; padding: 10px 30px;"
+                        onclick="Modal.close('group-modal')">إلغاء</button>
+                    <button type="submit" class="app-btn-primary"
+                        style="padding: 12px 60px; box-shadow: 0 4px 15px rgba(26, 158, 156, 0.3);">
+                        <i class="fa-solid fa-save"></i> حفظ وتفعيل المجموعة
+                    </button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <!-- 👥 VIEW GROUP STUDENTS MODAL -->
+    <div class="modal-overlay" id="view-students-modal">
+        <div class="modal-container" style="max-width: 800px; padding: 0; overflow: hidden; border-radius: 20px;">
+            <div class="modal-header"
+                style="background: linear-gradient(135deg, var(--sidebar-bg) 0%, #1a3a63 100%); padding: 25px; border: none; flex-direction: column; align-items: flex-start; gap: 10px;">
+                <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                    <h2 class="modal-title" style="color: #fff; font-size: 1.5rem; font-weight: 900;"
+                        id="modal-group-name-title">عرض طلاب المجموعة</h2>
+                    <button class="close-modal"
+                        style="color: #fff; opacity: 0.8; font-size: 1.8rem; background:transparent; border:none; cursor:pointer;"
+                        onclick="Modal.close('view-students-modal')">&times;</button>
+                </div>
+                <div id="modal-group-subtitle" style="color: rgba(255,255,255,0.7); font-weight: 700; font-size: 1rem;">
+                </div>
+            </div>
+
+            <div style="padding: 25px; max-height: 60vh; overflow-y: auto;" id="group-students-list-container">
+                <table class="app-table">
+                    <thead>
+                        <tr>
+                            <th>الطالب</th>
+                            <th>رقم الهاتف</th>
+                            <th>كود الطالب</th>
+                            <th>تاريخ الالتحاق</th>
+                        </tr>
+                    </thead>
+                    <tbody id="group-students-tbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div
+                style="padding: 20px 25px; border-top: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.02);">
+                <span style="font-weight: 800; color: var(--text-muted);" id="modal-student-count-summary">إجمالي: 0
+                    طلاب</span>
+                <button class="app-btn-primary close-modal" onclick="Modal.close('view-students-modal')"
+                    style="background: #64748b !important;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/audio-core.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+    <script src="../js/groups.js"></script>
+</body>
+
+</html>
+
+

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التحقق من صحة الشهادة - EduMaster Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a3a63;
+            --accent: #f59e0b;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .verify-card {
+            background: #fff;
+            max-width: 500px;
+            width: 100%;
+            border-radius: 30px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--success);
+        }
+
+        .icon-shield {
+            font-size: 5rem;
+            color: var(--success);
+            margin-bottom: 20px;
+        }
+
+        .status-title {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .cert-info-box {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: right;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            color: #64748b;
+            font-weight: 700;
+        }
+
+        .val {
+            color: var(--primary);
+            font-weight: 900;
+        }
+
+        .footer-logo {
+            margin-top: 40px;
+            opacity: 0.5;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="verify-card" id="main-card">
+        <i class="fa-solid fa-circle-check icon-shield"></i>
+        <h1 class="status-title">شهادة معتمدة</h1>
+        <p style="color: #64748b; font-weight: 700;">تم التحقق من صحة هذه الشهادة بنجاح من قاعدة بياناتنا الرسمية.</p>
+
+        <div class="cert-info-box">
+            <div class="info-row">
+                <span class="label">اسم الطالب:</span>
+                <span class="val" id="v-name">---</span>
+            </div>
+            <div class="info-row">
+                <span class="label">اسم الاختبار:</span>
+                <span class="val" id="v-exam">---</span>
+            </div>
+            <div class="info-row">
+                <span class="label">الدرجة:</span>
+                <span class="val" id="v-grade">---</span>
+            </div>
+            <div class="info-row">
+                <span class="label">رقم الشهادة:</span>
+                <span class="val" id="v-id" style="font-family: monospace; font-size: 0.8rem;">---</span>
+            </div>
+            <div class="info-row">
+                <span class="label">تاريخ الإصدار:</span>
+                <span class="val" id="v-date">---</span>
+            </div>
+        </div>
+
+        <div class="footer-logo">EduMaster Pro</div>
+    </div>
+
+    <script src="../js/core.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const certId = params.get('certId');
+
+            if (!certId) {
+                showError();
+                return;
+            }
+
+            const certs = Storage.get('issued_certificates') || [];
+            const cert = certs.find(c => c.id === certId);
+
+            if (cert) {
+                const students = Storage.get('students') || [];
+                const student = students.find(s => s.id == cert.studentId);
+
+                document.getElementById('v-name').innerText = student ? student.name : 'طالب مسجل';
+                document.getElementById('v-exam').innerText = cert.examName;
+                document.getElementById('v-grade').innerText = `${cert.grade} من ${cert.totalMark}`;
+                document.getElementById('v-id').innerText = cert.id;
+                document.getElementById('v-date').innerText = new Date(cert.date).toLocaleDateString('ar-EG');
+            } else {
+                showError();
+            }
+        });
+
+        function showError() {
+            const card = document.getElementById('main-card');
+            card.style.borderColor = '#ef4444';
+            card.innerHTML = `
+                <i class="fa-solid fa-circle-xmark" style="font-size:5rem; color:#ef4444; margin-bottom:20px;"></i>
+                <h1 class="status-title" style="color:#ef4444;">شهادة غير صالحة!</h1>
+                <p style="color: #64748b; font-weight: 700;">عذراً، لم نتمكن من العثور على شهادة بهذا الرقم في سجلاتنا الرسمية.</p>
+                <div class="footer-logo">EduMaster Pro</div>
+            `;
+        }
+    </script>
+</body>
+
+</html>
+
+

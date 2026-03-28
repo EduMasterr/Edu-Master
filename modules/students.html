@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMaster Pro - الطلاب</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+</head>
+
+<style>
+    /* Dark Mode Enhanced Styling for Student Database */
+    body.dark-mode .data-card {
+        background: rgba(30, 41, 59, 0.6);
+        border: 1px solid rgba(0, 234, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(8px);
+    }
+
+    body.dark-mode .app-table th {
+        background: rgba(15, 23, 42, 0.8);
+        border-bottom-color: var(--accent-teal);
+        color: #fff;
+    }
+
+    body.dark-mode .app-table td {
+        border-bottom-color: rgba(255, 255, 255, 0.05);
+        color: #e2e8f0;
+    }
+
+    body.dark-mode .app-table tr:hover {
+        background: rgba(0, 234, 255, 0.05);
+    }
+
+    /* Student Profile Group Styling */
+    .student-entry {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .student-avatar {
+        width: 38px;
+        height: 38px;
+        background: var(--accent-teal-soft);
+        color: var(--accent-teal);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 14px;
+        border: 1px solid rgba(0, 234, 255, 0.1);
+    }
+
+    body.dark-mode .student-avatar {
+        background: rgba(0, 234, 255, 0.1);
+        color: #2dd4bf;
+    }
+
+</style>
+
+<body>
+    <div class="wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <!-- Injected by UICore -->
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar"
+                    style="gap: 30px; flex-wrap: wrap; padding: 20px 30px; justify-content: center;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <a href="../dashboard.html" class="btn-neuro"
+                            style="background: rgba(255, 255, 255, 0.1); border: 1.5px solid var(--border-soft); color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px 20px; border-radius: 50px;">
+                            <i class="fa-solid fa-house"></i>
+                            <span style="font-weight: 800;">الرئيسية</span>
+                        </a>
+                        <h1 class="page-title" style="font-size: 1.8rem; font-weight: 900; margin: 0;">👥 قاعدة بيانات الطلاب</h1>
+                    </div>
+
+                    <!-- 🚀 PREMIUM SEARCH & FILTER ROW -->
+                    <div class="action-group"
+                        style="display: flex; gap: 15px; align-items: center; justify-content: center;">
+
+
+
+                        <!-- Large Local Search -->
+                        <div style="position: relative; flex: 2; max-width: 520px; margin-left: 80px;">
+                            <i class="fa-solid fa-magnifying-glass"
+                                style="position: absolute; right: 20px; top: 16px; color: var(--accent-teal); font-size: 1.1rem; z-index: 5;"></i>
+                            <input type="text" id="search-students" class="oval-input search-highlight"
+                                placeholder="ابحث بسرعة (بالاسم، الكود، أو الهاتف)..."
+                                style="padding-right: 50px; width: 100%; height: 52px; font-size: 1rem; border: 2px solid var(--border-soft); background: var(--bg-card); box-shadow: var(--shadow-ui); border-radius: 50px;">
+                        </div>
+
+                        <!-- Premium Branch Filter -->
+                        <div style="position: relative; flex: 1; max-width: 280px; margin-left: 50px;">
+                            <i class="fa-solid fa-building-columns"
+                                style="position: absolute; right: 15px; top: 18px; color: var(--text-muted); pointer-events: none;"></i>
+                            <select id="branch-filter" class="oval-input"
+                                style="padding-right: 40px; width: 100%; height: 52px; border: 2px solid var(--border-soft); cursor: pointer; font-weight: 700; border-radius: 50px;">
+                                <option value="">جميع الفروع</option>
+                                <!-- Populated by JS -->
+                            </select>
+                        </div>
+
+                        <!-- Add Button -->
+                        <a href="add-student.html" class="app-btn-primary" id="btn-add-student"
+                            style="height: 52px; padding: 0 25px; font-weight: 900; border-radius: 12px; font-size: 1rem; box-shadow: 0 4px 15px rgba(26, 158, 156, 0.3);">
+                            <i class="fa-solid fa-user-plus"></i> إضافة طالب
+                        </a>
+                    </div>
+                </header>
+
+                <!-- Bulk Action Toolbar (Appears when checkboxes are selected) -->
+                <div id="bulk-toolbar"
+                    style="display: none; background: var(--sidebar-bg); color: #fff; padding: 15px 25px; border-radius: 15px; margin-bottom: 20px; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <span style="font-weight: 800; font-size: 1.1rem;"><span id="selected-count">0</span> طلاب
+                            محددين</span>
+                        <div style="width: 2px; height: 30px; background: rgba(255,255,255,0.1);"></div>
+                        <button class="app-btn-primary" onclick="window.studentsManager.openBulkEnroll()"
+                            style="background: var(--accent-teal); box-shadow: none;">
+                            <i class="fa-solid fa-layer-group"></i> تسكين في مجموعة
+                        </button>
+                    </div>
+                    <button class="app-btn-primary" onclick="window.studentsManager.clearSelection()"
+                        style="background: transparent; border: 1px solid rgba(255,255,255,0.3);">
+                        إلغاء التحديد
+                    </button>
+                </div>
+
+                <div class="data-card">
+                    <div class="table-responsive">
+                        <table class="app-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40px;"><input type="checkbox" id="select-all-students"></th>
+                                    <th>الكود</th>
+                                    <th>الطالب</th>
+                                    <th>الفرع</th>
+                                    <th>المجموعة</th>
+                                    <th>الحالة</th>
+                                    <th>بواسطة</th>
+                                    <th>إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-table-body">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 🏆 ENROLL IN GROUP MODAL -->
+    <div class="modal-overlay" id="enroll-group-modal">
+        <div class="modal-container" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 class="modal-title">📦 تسكين الطلاب في مجموعة</h2>
+                <button class="close-modal" onclick="Modal.close('enroll-group-modal')">&times;</button>
+            </div>
+            <div style="padding: 25px;">
+                <p style="margin-bottom: 20px; color: var(--text-muted); font-weight: 600;">سيتم إضافة الـ <span
+                        id="enroll-count-text">0</span> طلاب المحددين إلى المجموعة المختارة:</p>
+
+                <div class="form-group">
+                    <label
+                        style="display: block; margin-bottom: 15px; font-weight: 800; color: var(--accent-teal); font-size: 1.1rem;">اختر
+                        المجموعة:</label>
+
+                    <div style="position: relative; margin-bottom: 15px;">
+                        <i class="fa-solid fa-search"
+                            style="position: absolute; right: 15px; top: 12px; opacity: 0.5;"></i>
+                        <input type="text" id="group-search-input" class="form-control-oval"
+                            placeholder="ابحث عن اسم المجموعة أو المدرس..."
+                            style="padding-right: 40px; font-size: 1rem; height: 50px;">
+                    </div>
+
+                    <select id="enroll-group-select" class="form-control-oval" size="10"
+                        style="height: auto; font-weight: 700; cursor: pointer; font-size: 1rem; padding: 10px;">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+
+                <div style="margin-top: 30px; display: flex; gap: 10px;">
+                    <button class="app-btn-primary" onclick="window.studentsManager.confirmBulkEnroll()"
+                        style="flex: 2;">تأكيد التسكين</button>
+                    <button class="app-btn-primary close-modal"
+                        style="flex: 1; background: #64748b !important;">رجوع</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🏆 LUXURY STUDENT PROFILE MODAL -->
+    <div class="modal-overlay" id="student-profile-modal">
+        <div class="modal-container"
+            style="max-width: 900px; height: 90vh; display: flex; flex-direction: column; overflow: hidden; padding: 0;">
+            <!-- Modal Header / Profile Cover -->
+            <div
+                style="background: linear-gradient(135deg, var(--sidebar-bg) 0%, #1a3a63 100%); padding: 30px; position: relative; color: #fff;">
+                <button class="close-modal"
+                    style="position: absolute; left: 20px; top: 15px; color: #fff; opacity: 0.7;">&times;</button>
+                <div style="display: flex; align-items: center; gap: 25px;">
+                    <div id="modal-profile-img"
+                        style="width: 100px; height: 100px; background: rgba(255,255,255,0.1); border: 3px solid var(--accent-teal); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: 900; overflow: hidden;">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div>
+                        <h2 id="modal-profile-name" style="margin-bottom: 5px; font-weight: 900; font-size: 1.8rem;">اسم
+                            الطالب بالكامل</h2>
+                        <div style="display: flex; gap: 15px; font-size: 0.9rem; opacity: 0.8;">
+                            <span><i class="fa-solid fa-id-badge"></i> كود: <b id="modal-profile-id">12345</b></span>
+                            <span><i class="fa-solid fa-building"></i> <span id="modal-profile-branch">فرع
+                                    الهرم</span></span>
+                        </div>
+                    </div>
+                    <div style="margin-right: auto; text-align: left;">
+                        <div id="modal-profile-qr"
+                            style="background: #fff; padding: 5px; border-radius: 8px; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                            <!-- QR Placeholder -->
+                            <i class="fa-solid fa-qrcode" style="color: #000; font-size: 3rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div style="background: rgba(0,0,0,0.05); display: flex; border-bottom: 1px solid var(--border-soft);">
+                <button class="profile-tab active" data-tab="personal"><i class="fa-solid fa-info-circle"></i> البيانات
+                    الشخصية</button>
+                <button class="profile-tab" data-tab="financial"><i class="fa-solid fa-wallet"></i> السجل
+                    المالي</button>
+                <button class="profile-tab" data-tab="activity"><i class="fa-solid fa-history"></i> سجل النشاط</button>
+            </div>
+
+            <!-- Modal Content (Scrollable) -->
+            <div id="modal-tab-content" style="flex: 1; overflow-y: auto; padding: 30px;">
+                <!-- Content injected by JS -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div
+                style="padding: 15px 30px; border-top: 1px solid var(--border-soft); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02);">
+                <div style="font-size: 0.85rem; color: var(--text-muted);">
+                    <i class="fa-solid fa-user-lock"></i> تمت الإضافة بواسطة: <b id="modal-added-by"
+                        style="color: var(--accent-teal);">اسم الموظف</b>
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <button class="app-btn-primary" id="btn-edit-student-profile"><i class="fa-solid fa-pen"></i> تعديل
+                        البيانات</button>
+                    <button class="app-btn-primary close-modal"
+                        style="background: #f1f5f9 !important; color: #64748b !important;">إغلاق</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✍️ PREMIUM EDIT STUDENT MODAL -->
+    <div class="modal-overlay" id="edit-student-modal">
+        <div class="modal-container" style="max-width: 550px; padding: 0; overflow: hidden; border-radius: 20px;">
+            <div class="modal-header"
+                style="background: linear-gradient(135deg, var(--sidebar-bg) 0%, #1a3a63 100%); padding: 25px; border: none;">
+                <h2 class="modal-title" style="color: #fff; font-size: 1.2rem; font-weight: 900;">✍️ تعديل ملف الطالب
+                    الشامل</h2>
+                <button class="close-modal" style="color: #fff; opacity: 0.8; font-size: 1.8rem;">&times;</button>
+            </div>
+
+            <form id="edit-student-form" style="padding: 25px 30px; max-height: 70vh; overflow-y: auto;">
+                <input type="hidden" name="studentId">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <!-- الأساسيات -->
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-muted);">الاسم
+                            بالكامل (رباعي)</label>
+                        <input type="text" name="name" class="oval-input" required
+                            style="width: 100%; height: 50px; font-size: 1.1rem; font-weight: 700; border: 2px solid var(--border-soft); padding: 0 15px;">
+                    </div>
+
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-muted);">رقم
+                            الهاتف الأساسي</label>
+                        <input type="tel" name="phone" class="oval-input" required
+                            style="width: 100%; height: 50px; font-size: 1.1rem; font-weight: 700; border: 2px solid var(--border-soft); padding: 0 15px; direction: ltr;">
+                    </div>
+
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-muted);">رقم
+                            هاتف إضافي</label>
+                        <input type="tel" name="phoneExtra" class="oval-input"
+                            style="width: 100%; height: 50px; border: 2px solid var(--border-soft); padding: 0 15px; direction: ltr;">
+                    </div>
+
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-muted);">الرقم
+                            القومي</label>
+                        <input type="text" name="nationalId" class="oval-input" maxlength="14"
+                            style="width: 100%; height: 50px; border: 2px solid var(--border-soft); padding: 0 15px;">
+                    </div>
+
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-muted);">تاريخ
+                            الميلاد</label>
+                        <input type="date" name="birthDate" class="oval-input"
+                            style="width: 100%; height: 50px; border: 2px solid var(--border-soft); padding: 0 15px;">
+                    </div>
+
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-muted);">النوع</label>
+                        <select name="gender" class="oval-input"
+                            style="width: 100%; height: 50px; border: 2px solid var(--border-soft); padding: 0 15px;">
+                            <option value="male">ذكر</option>
+                            <option value="female">أنثى</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-muted);">المحافظة</label>
+                        <select name="addressPersonal" class="oval-input"
+                            style="width: 100%; height: 50px; border: 2px solid var(--border-soft); padding: 0 15px;">
+                            <option value="Cairo">القاهرة</option>
+                            <option value="Alexandria">الإسكندرية</option>
+                            <option value="Giza">الجيزة</option>
+                            <option value="Qalyubia">القليوبية</option>
+                            <option value="Beheira">البحيرة</option>
+                            <option value="Dakahlia">الدقهلية</option>
+                            <option value="Gharbia">الغربية</option>
+                            <option value="Monufia">المنوفية</option>
+                            <option value="Damietta">دمياط</option>
+                            <option value="Kafr El Sheikh">كفر الشيخ</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-muted);">الوظيفة
+                            / التخصص</label>
+                        <input type="text" name="job" class="oval-input"
+                            style="width: 100%; height: 50px; border: 2px solid var(--border-soft); padding: 0 15px;">
+                    </div>
+
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-muted);">العنوان
+                            التفصيلي</label>
+                        <input type="text" name="addressExtra" class="oval-input"
+                            style="width: 100%; height: 50px; border: 2px solid var(--border-soft); padding: 0 15px;">
+                    </div>
+
+                    <div class="form-group" style="grid-column: span 2; position: relative;">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-muted);">تعديل
+                            المجموعات (بحث)</label>
+                        <div style="position: relative;">
+                            <i class="fa-solid fa-search"
+                                style="position: absolute; right: 15px; top: 12px; color: var(--accent-teal);"></i>
+                            <input type="text" id="edit-group-search" class="oval-input"
+                                placeholder="اكتب اسم المجموعة للبحث..."
+                                style="width: 100%; height: 50px; font-size: 1.1rem; font-weight: 700; border: 2px solid var(--border-soft); padding: 0 45px 0 15px;">
+                        </div>
+                        <div id="edit-group-results"
+                            style="position: absolute; top: 100%; left: 0; right: 0; background: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 100; max-height: 200px; overflow-y: auto; display: none; margin-top: 5px; border: 1px solid var(--border-soft);">
+                        </div>
+                        <div id="current-groups-list"
+                            style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-muted);">حالة
+                            الدراسية</label>
+                        <select name="status" class="oval-input"
+                            style="width: 100%; height: 50px; border: 2px solid var(--border-soft); padding: 0 15px;">
+                            <option value="Active">✅ طالب نشط</option>
+                            <option value="Inactive">🛑 متوقف / مؤجل</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label
+                            style="display: block; margin-bottom: 8px; font-weight: 800; font-size: 0.9rem; color: var(--text-muted);">مصدر
+                            الطالب</label>
+                        <select name="source" class="oval-input"
+                            style="width: 100%; height: 50px; border: 2px solid var(--border-soft); padding: 0 15px;">
+                            <option value="Facebook">فيس بوك</option>
+                            <option value="WhatsApp">واتساب</option>
+                            <option value="Friend">صديق</option>
+                            <option value="Street">إعلان</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-top: 25px; display: flex; gap: 15px;">
+                    <button type="submit" class="app-btn-primary" style="flex: 2; height: 55px; font-weight: 900;">
+                        <i class="fa-solid fa-save"></i> حفظ جميع التعديلات
+                    </button>
+                    <button type="button" class="app-btn-primary close-modal"
+                        style="flex: 1; height: 55px; background: #64748b !important;">رجوع</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <style>
+        .profile-tab {
+            padding: 15px 25px;
+            border: none;
+            background: none;
+            font-weight: 800;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: 0.3s;
+            border-bottom: 3px solid transparent;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .profile-tab:hover {
+            color: var(--accent-teal);
+            background: rgba(26, 158, 156, 0.05);
+        }
+
+        .profile-tab.active {
+            color: var(--accent-teal);
+            border-bottom-color: var(--accent-teal);
+            background: #fff;
+        }
+
+        body.dark-mode .profile-tab.active {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .info-item {
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 12px;
+        }
+
+        .info-label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .info-value {
+            display: block;
+            font-weight: 800;
+            color: var(--text-main);
+            font-size: 1rem;
+        }
+    </style>
+
+
+
+    <!-- Global Scripts -->
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/audio-core.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+    <script src="../js/certification-engine.js"></script>
+    <script src="../js/messaging-core.js"></script>
+    <script src="../js/students.js"></script>
+</body>
+
+</html>
+
+

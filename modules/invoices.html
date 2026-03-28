@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMaster Pro - إدارة الفواتير</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <!-- Injected by UICore -->
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar">
+                    <div class="action-group">
+                        <h1 class="page-title">📄 إدارة الفواتير</h1>
+                    </div>
+                </header>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: #3b82f6;">
+                            <i class="fa-solid fa-file-invoice"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-invoices">0</h3>
+                            <p>إجمالي الفواتير</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                            <i class="fa-solid fa-calendar-day"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="today-invoices">0</h3>
+                            <p>فواتير اليوم</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">
+                            <i class="fa-solid fa-sack-dollar"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-amount">0 ج.م</h3>
+                            <p>إجمالي المبالغ</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                            <i class="fa-solid fa-chart-simple"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="avg-amount">0 ج.م</h3>
+                            <p>متوسط الفاتورة</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Invoices Table -->
+                <div class="data-card">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2>📋 جميع الفواتير</h2>
+                        <div style="display: flex; gap: 12px;">
+                            <input type="text" id="search-invoice" class="form-control" style="width: 250px;"
+                                placeholder="بحث برقم الفاتورة أو اسم الطالب..." onkeyup="searchInvoices()">
+                            <select id="filter-branch" class="form-control" style="width: 200px;"
+                                onchange="loadInvoices()">
+                                <option value="">جميع الفروع</option>
+                            </select>
+                            <input type="date" id="filter-date" class="form-control" style="width: 180px;"
+                                onchange="loadInvoices()">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="neuro-table">
+                            <thead>
+                                <tr>
+                                    <th>رقم الفاتورة</th>
+                                    <th>التاريخ</th>
+                                    <th>اسم الطالب</th>
+                                    <th>الفرع</th>
+                                    <th>المبلغ</th>
+                                    <th>الموظف</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoices-table-body">
+                                <tr>
+                                    <td colspan="7" style="text-align:center; padding:40px;" class="text-muted">
+                                        لا توجد فواتير
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Global Scripts -->
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/pdf-invoice-generator.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+
+    <script>
+        let allInvoices = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function () {
+            loadBranches();
+            loadInvoices();
+            updateStats();
+        });
+
+        // Load branches
+        function loadBranches() {
+            const branches = Storage.get('branches') || [];
+            const filterBranch = document.getElementById('filter-branch');
+
+            branches.forEach(branch => {
+                const option = document.createElement('option');
+                option.value = branch.id;
+                option.textContent = branch.name;
+                filterBranch.appendChild(option);
+            });
+        }
+
+        // Load invoices
+        function loadInvoices() {
+            const filterBranchId = document.getElementById('filter-branch').value;
+            const filterDate = document.getElementById('filter-date').value;
+
+            const filters = {};
+            if (filterBranchId) filters.branchId = parseInt(filterBranchId);
+            if (filterDate) {
+                filters.startDate = filterDate;
+                filters.endDate = filterDate;
+            }
+
+            allInvoices = InvoiceGenerator.getAllInvoices(filters);
+            renderInvoices(allInvoices);
+        }
+
+        // Render invoices
+        function renderInvoices(invoices) {
+            const tbody = document.getElementById('invoices-table-body');
+
+            if (invoices.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding:40px;" class="text-muted">
+                            لا توجد فواتير
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = invoices.map(invoice => `
+                <tr>
+                    <td style="font-weight: 600; color: var(--accent-blue);">${invoice.invoice_number}</td>
+                    <td>${new Date(invoice.date).toLocaleDateString('ar-EG')}</td>
+                    <td>${invoice.student_name}</td>
+                    <td>${invoice.branch_name}</td>
+                    <td style="font-weight: 600; color: #10b981;">${Formatter.formatCurrency(invoice.total)} ج.م</td>
+                    <td>${invoice.employee_name}</td>
+                    <td>
+                        <button class="action-btn" onclick="viewInvoice('${invoice.id}')" title="عرض" data-permission="view_invoices">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        <button class="action-btn" onclick="printInvoice('${invoice.id}')" title="طباعة" data-permission="print_invoice">
+                            <i class="fa-solid fa-print"></i>
+                        </button>
+                        <button class="action-btn" onclick="downloadInvoice('${invoice.id}')" title="تحميل" data-permission="print_invoice">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Apply permissions
+            Permissions.applyUIPermissions();
+        }
+
+        // Search invoices
+        function searchInvoices() {
+            const searchTerm = document.getElementById('search-invoice').value.toLowerCase();
+
+            if (!searchTerm) {
+                renderInvoices(allInvoices);
+                return;
+            }
+
+            const filtered = allInvoices.filter(invoice =>
+                invoice.invoice_number.toLowerCase().includes(searchTerm) ||
+                invoice.student_name.toLowerCase().includes(searchTerm)
+            );
+
+            renderInvoices(filtered);
+        }
+
+        // Update stats
+        function updateStats() {
+            const today = new Date().toISOString().split('T')[0];
+            const allInvoices = InvoiceGenerator.getAllInvoices();
+            const todayInvoices = allInvoices.filter(inv => inv.date.startsWith(today));
+
+            const totalAmount = allInvoices.reduce((sum, inv) => sum + inv.total, 0);
+            const avgAmount = allInvoices.length > 0 ? totalAmount / allInvoices.length : 0;
+
+            document.getElementById('total-invoices').textContent = allInvoices.length;
+            document.getElementById('today-invoices').textContent = todayInvoices.length;
+            document.getElementById('total-amount').textContent = Formatter.formatCurrency(totalAmount) + ' ج.م';
+            document.getElementById('avg-amount').textContent = Formatter.formatCurrency(avgAmount) + ' ج.م';
+        }
+
+        // View invoice
+        function viewInvoice(invoiceId) {
+            const invoice = InvoiceGenerator.getInvoice(invoiceId);
+            if (invoice) {
+                const html = InvoiceGenerator.generatePDFHTML(invoice);
+                const newWindow = window.open('', '_blank');
+                newWindow.document.write(html);
+                newWindow.document.close();
+            }
+        }
+
+        // Print invoice
+        function printInvoice(invoiceId) {
+            const invoice = InvoiceGenerator.getInvoice(invoiceId);
+            if (invoice) {
+                InvoiceGenerator.printInvoice(invoice);
+            }
+        }
+
+        // Download invoice
+        function downloadInvoice(invoiceId) {
+            const invoice = InvoiceGenerator.getInvoice(invoiceId);
+            if (invoice) {
+                InvoiceGenerator.downloadInvoice(invoice);
+                showToast('success', 'تم تحميل الفاتورة بنجاح');
+            }
+        }
+
+        // Toast notification
+        function showToast(type, message) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <i class="fa-solid fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+
+            let container = document.getElementById('toast-container');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'toast-container';
+                document.body.appendChild(container);
+            }
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+
+</html>
+
+

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMaster Pro - الحضور والغياب</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <style>
+        /* ── Attendance Premium UI ── */
+        .att-header-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-soft);
+            border-right: 5px solid var(--accent-teal);
+            border-radius: var(--radius-md);
+            padding: 22px 28px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow-ui);
+        }
+
+        .group-select-wrap {
+            position: relative;
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .group-select-wrap i {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-teal);
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
+        .group-select-wrap select {
+            padding-right: 48px;
+            height: 54px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            width: 100%;
+        }
+
+        .date-wrap {
+            position: relative;
+        }
+
+        .date-wrap input[type="date"] {
+            height: 54px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            min-width: 180px;
+        }
+
+        /* Stats chips */
+        .att-stats {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .att-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 1rem;
+            border: 2px solid transparent;
+            transition: transform 0.2s;
+        }
+
+        .att-chip:hover {
+            transform: scale(1.05);
+        }
+
+        .chip-present {
+            background: rgba(26, 158, 156, 0.1);
+            color: var(--accent-teal);
+            border-color: var(--accent-teal);
+        }
+
+        .chip-absent {
+            background: rgba(239, 68, 68, 0.08);
+            color: #ef4444;
+            border-color: #ef4444;
+        }
+
+        .chip-late {
+            background: rgba(245, 158, 11, 0.08);
+            color: #f59e0b;
+            border-color: #f59e0b;
+        }
+
+        /* Attendance Table */
+        .att-table-wrap {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-soft);
+            overflow: hidden;
+            box-shadow: var(--shadow-ui);
+        }
+
+        .att-table-head {
+            padding: 22px 28px;
+            border-bottom: 1px solid var(--border-soft);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-card);
+        }
+
+        .att-table-head h2 {
+            font-size: 1.15rem;
+            font-weight: 900;
+            color: var(--sidebar-bg);
+        }
+
+        #attendance-list {
+            padding: 10px 0;
+            min-height: 350px;
+        }
+
+        .att-row {
+            display: flex;
+            align-items: center;
+            padding: 14px 28px;
+            border-bottom: 1px solid var(--border-soft);
+            gap: 16px;
+            transition: background 0.15s;
+        }
+
+        .att-row:hover {
+            background: var(--bg-main);
+        }
+
+        .att-row:last-child {
+            border-bottom: none;
+        }
+
+        .att-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--sidebar-bg);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .att-name {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-main);
+            flex: 1;
+        }
+
+        .att-subtext {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .att-btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .att-btn {
+            padding: 9px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 800;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .att-btn.present {
+            background: var(--accent-teal);
+            color: #fff;
+            border-color: var(--accent-teal);
+        }
+
+        .att-btn.absent {
+            background: #ef4444;
+            color: #fff;
+            border-color: #ef4444;
+        }
+
+        .att-btn.late {
+            background: #f59e0b;
+            color: #fff;
+            border-color: #f59e0b;
+        }
+
+        .att-btn.inactive {
+            background: var(--bg-main);
+            color: var(--text-muted);
+            border-color: var(--border-soft);
+        }
+
+        .att-btn.inactive:hover {
+            border-color: var(--text-muted);
+        }
+
+        .att-time-badge {
+            font-size: 0.9rem;
+            font-weight: 900;
+            color: var(--text-muted);
+            min-width: 68px;
+            text-align: center;
+        }
+
+        .att-notes {
+            border: 1px solid var(--border-soft);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            background: var(--bg-main);
+            color: var(--text-main);
+            width: 140px;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        /* Empty State */
+        .empty-att {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 40px;
+            gap: 18px;
+            text-align: center;
+        }
+
+        .empty-att-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--accent-teal-soft);
+            border: 2px solid var(--accent-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--accent-teal);
+        }
+
+        .mark-all-bar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .mark-all-bar button {
+            font-size: 0.92rem;
+            padding: 7px 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar"><!-- Injected by UICore --></aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <!-- Top Bar -->
+                <header class="top-bar" style="margin-bottom: 25px;">
+                    <h1 class="premium-heading">
+                        <i class="fa-solid fa-clipboard-user" style="color: var(--accent-teal);"></i>
+                        سجل الحضور والغياب
+                    </h1>
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <a href="../admin-console/index.html" class="app-btn-primary" style="background: var(--sidebar-bg); border-color: var(--sidebar-bg); text-decoration: none; display: flex; align-items: center; gap: 8px; border-radius: 50px;">
+                            <i class="fa-solid fa-barcode"></i> حضور بالباركود
+                        </a>
+                        <button class="app-btn-primary" id="save-attendance-btn">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> حفظ السجل
+                        </button>
+                        <button class="app-btn-secondary" id="notify-absent-all"
+                            style="background: #25D366; color: white; border:none; width: 44px; height: 44px; border-radius: 50%; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);"
+                            title="إرسال غياب الكل (واتساب)">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </button>
+                        <button class="app-btn-primary" id="export-csv-btn" 
+                            style="background: var(--accent-teal-soft); color: var(--accent-teal); border: 2.5px solid var(--accent-teal) !important; border-radius: 50px;">
+                            <i class="fa-solid fa-file-csv"></i> تصدير (Excel)
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Group + Date Selector -->
+                <div class="att-header-card">
+                    <!-- Group Selector -->
+                    <div class="group-select-wrap">
+                        <i class="fa-solid fa-users-viewfinder"></i>
+                        <select id="group-select" class="app-input">
+                            <option value="">اختر المجموعة...</option>
+                        </select>
+                    </div>
+
+                    <!-- Date -->
+                    <div class="date-wrap">
+                        <input type="date" id="attendance-date" class="app-input">
+                    </div>
+
+                    <!-- Load Button -->
+                    <button class="app-btn-primary" id="load-group-btn"
+                        style="height:54px; padding: 0 30px; font-size: 1.05rem;">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i> استعراض القائمة
+                    </button>
+                </div>
+
+                <!-- Stats + Table -->
+                <div class="att-table-wrap">
+                    <div class="att-table-head">
+                        <h2>
+                            <i class="fa-solid fa-clipboard-user"
+                                style="color: var(--accent-teal); margin-left: 10px;"></i>
+                            قائمة التحضير الذكية
+                        </h2>
+                        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+                            <div class="att-stats">
+                                <div class="att-chip chip-present"><i class="fa-solid fa-circle-check"></i> حاضر: <span
+                                        id="count-present">0</span></div>
+                                <div class="att-chip chip-absent"><i class="fa-solid fa-circle-xmark"></i> غائب: <span
+                                        id="count-absent">0</span></div>
+                                <div class="att-chip chip-late"><i class="fa-solid fa-clock"></i> متأخر: <span
+                                        id="count-late">0</span></div>
+                            </div>
+                            <div class="mark-all-bar">
+                                <button class="app-btn-secondary" onclick="markAll('present')"
+                                    style="font-size:0.9rem; padding:7px 14px;"><i class="fa-solid fa-check-double"></i>
+                                    حضور الكل</button>
+                                <button class="app-btn-secondary"
+                                    style="color:#ef4444; font-size:0.9rem; padding:7px 14px;"
+                                    onclick="markAll('absent')"><i class="fa-solid fa-ban"></i> غياب الكل</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="attendance-list">
+                        <!-- Empty State -->
+                        <div class="empty-att" id="empty-state">
+                            <div class="empty-att-icon">
+                                <i class="fa-solid fa-users-rectangle"></i>
+                            </div>
+                            <h4 style="font-weight:900; font-size:1.2rem; color:var(--sidebar-bg);">في انتظار اختيار
+                                المجموعة</h4>
+                            <p style="color:var(--text-muted); font-size:0.95rem; max-width:420px; line-height:1.7;">
+                                يرجى تحديد المجموعة التدريبية من القائمة أعلاه لعرض قائمة الطلاب والبدء في تسجيل الحضور
+                                والغياب.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+    <script src="../js/messaging-core.js"></script>
+    <script src="../js/qr-attendance.js"></script>
+    <script>
+        // ── Init UICore for Sidebar ──────────────────────────
+        UICore.init();
+
+        // ─── State ───────────────────────────────────────────
+        let currentGroupId = null;
+        let attendanceMap = {}; // { studentId: { status, time, notes } }
+
+        // ─── Init ─────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('attendance-date').valueAsDate = new Date();
+            loadGroupSelector();
+
+            document.getElementById('load-group-btn').addEventListener('click', loadGroupAttendance);
+            document.getElementById('group-select').addEventListener('change', function () {
+                currentGroupId = this.value;
+                if (currentGroupId) loadGroupAttendance();
+            });
+            document.getElementById('save-attendance-btn').addEventListener('click', saveAttendance);
+            document.getElementById('export-csv-btn').addEventListener('click', exportCSV);
+
+            // ⚡ WhatsApp Bulk Notify
+            document.getElementById('notify-absent-all').addEventListener('click', async () => {
+                const absents = Object.entries(attendanceMap).filter(([id, data]) => data.status === 'absent');
+                if (absents.length === 0) {
+                    Toast.show('لا يوجد طلاب غائبون لإرسال تنبيهات لهم', 'info');
+                    return;
+                }
+
+                if (!confirm(`هل تريد إرسال رسائل واتساب لـ ${absents.length} طالب غائب؟`)) return;
+
+                for (const [sid, data] of absents) {
+                    sendStudentReport(sid);
+                    // Add a small delay to prevent browser browser blocking multiple popups
+                    await new Promise(r => setTimeout(r, 500));
+                }
+                Toast.show('تم بدء عملية الإرسال بنجاح', 'success');
+            });
+        });
+
+        // ─── Load groups from localStorage ───────────────────
+        function loadGroupSelector() {
+            const groups = Storage.get('study_groups') || [];
+            const trainers = Storage.get('trainers') || [];
+            const sel = document.getElementById('group-select');
+            sel.innerHTML = '<option value="">اختر المجموعة...</option>';
+
+            groups.forEach(g => {
+                const trainer = trainers.find(t => Number(t.id) === Number(g.trainerId));
+                const opt = document.createElement('option');
+                opt.value = g.id;
+                opt.textContent = g.name + (trainer ? ` — ${trainer.name}` : '');
+                sel.appendChild(opt);
+            });
+        }
+
+        // ─── Load students in group ───────────────────────────
+        function loadGroupAttendance() {
+            const groupId = document.getElementById('group-select').value;
+            const date = document.getElementById('attendance-date').value;
+            if (!groupId) { Toast.show('الرجاء اختيار مجموعة أولاً', 'warning'); return; }
+
+            currentGroupId = groupId;
+
+            const groups = Storage.get('study_groups') || [];
+            const students = Storage.get('students') || [];
+            const group = groups.find(g => g.id == groupId);
+
+            if (!group) { Toast.show('المجموعة غير موجودة', 'error'); return; }
+
+            const enrolledIds = (group.students || []).map(id => id.toString());
+            const enrolledStudents = students.filter(s => enrolledIds.includes(s.id.toString()));
+
+            // Load saved attendance for this session
+            const savedData = Storage.get('attendance') || {};
+            const key = `${date}_${groupId}`;
+            attendanceMap = savedData[key] ? { ...savedData[key] } : {};
+
+            // Default to 'present' for all if no saved data
+            if (Object.keys(attendanceMap).length === 0) {
+                enrolledStudents.forEach(s => {
+                    attendanceMap[s.id] = { status: 'present', time: '--:--', notes: '' };
+                });
+            }
+
+            renderAttendanceList(enrolledStudents);
+        }
+
+        // ─── Render list ──────────────────────────────────────
+        function renderAttendanceList(students) {
+            const list = document.getElementById('attendance-list');
+            document.getElementById('empty-state')?.remove();
+
+            if (students.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-att">
+                        <div class="empty-att-icon"><i class="fa-solid fa-user-slash"></i></div>
+                        <h4 style="font-weight:900; color:var(--sidebar-bg);">لا يوجد طلاب مقيدون</h4>
+                        <p style="color:var(--text-muted);">يرجى تسجيل الطلاب في هذه المجموعة من صفحة قاعدة البيانات.</p>
+                    </div>`;
+                return;
+            }
+
+            list.innerHTML = '';
+            students.forEach(s => {
+                const record = attendanceMap[s.id] || { status: 'present', time: '--:--', notes: '' };
+                const row = document.createElement('div');
+                row.className = 'att-row';
+                row.dataset.studentId = s.id;
+                
+                const initials = (s.name || '؟').substring(0, 1);
+                const subtext = s.phone || s.code || '';
+                
+                row.innerHTML = `
+                    <div class="att-avatar">${initials}</div>
+                    <div style="flex:1; min-width:0;">
+                        <div class="att-name">${s.name} 
+                            <button class="action-btn" style="color: #25D366; font-size: 0.8rem; margin-right: 8px; border:none; background:transparent; cursor:pointer;" 
+                                onclick="sendStudentReport('${s.id}')" title="إرسال تقرير واتساب">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </button>
+                        </div>
+                        <div class="att-subtext">${subtext}</div>
+                    </div>
+                    <div class="att-btn-group">
+                        <button class="att-btn ${record.status === 'present' ? 'present' : 'inactive'}"
+                            data-status="present" onclick="setStatus(this, '${s.id}', 'present')">
+                            <i class="fa-solid fa-check"></i> حاضر
+                        </button>
+                        <button class="att-btn ${record.status === 'late' ? 'late' : 'inactive'}"
+                            data-status="late" onclick="setStatus(this, '${s.id}', 'late')">
+                            <i class="fa-solid fa-clock"></i> متأخر
+                        </button>
+                        <button class="att-btn ${record.status === 'absent' ? 'absent' : 'inactive'}"
+                            data-status="absent" onclick="setStatus(this, '${s.id}', 'absent')">
+                            <i class="fa-solid fa-xmark"></i> غائب
+                        </button>
+                    </div>
+                    <div class="att-time-badge" id="time-${s.id}">${record.time}</div>
+                    <input class="att-notes" placeholder="ملاحظة..." value="${record.notes || ''}"
+                        oninput="attendanceMap['${s.id}'].notes = this.value" />
+                `;
+                list.appendChild(row);
+            });
+
+            updateCounts();
+        }
+
+        // ─── Set status for one student ───────────────────────
+        function setStatus(btn, studentId, status) {
+            const row = btn.closest('.att-row');
+            row.querySelectorAll('.att-btn').forEach(b => b.className = 'att-btn inactive');
+
+            const classes = { present: 'present', absent: 'absent', late: 'late' };
+            btn.className = `att-btn ${classes[status]}`;
+
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById(`time-${studentId}`).textContent = timeStr;
+
+            if (!attendanceMap[studentId]) attendanceMap[studentId] = {};
+            attendanceMap[studentId].status = status;
+            attendanceMap[studentId].time = timeStr;
+
+            updateCounts();
+        }
+
+        // ─── Mark all ──────────────────────────────────────────
+        function markAll(status) {
+            document.querySelectorAll('.att-row').forEach(row => {
+                const sid = row.dataset.studentId;
+                const btn = row.querySelector(`.att-btn[data-status="${status}"]`);
+                if (btn) setStatus(btn, sid, status);
+            });
+        }
+
+        // ─── Update counts ────────────────────────────────────
+        function updateCounts() {
+            let p = 0, a = 0, l = 0;
+            Object.values(attendanceMap).forEach(r => {
+                if (r.status === 'present') p++;
+                else if (r.status === 'absent') a++;
+                else if (r.status === 'late') l++;
+            });
+            document.getElementById('count-present').textContent = p;
+            document.getElementById('count-absent').textContent = a;
+            document.getElementById('count-late').textContent = l;
+        }
+
+        // ─── Save ─────────────────────────────────────────────
+        function saveAttendance() {
+            if (!currentGroupId) { Toast.show('الرجاء اختيار مجموعة أولاً', 'warning'); return; }
+            const date = document.getElementById('attendance-date').value;
+            const key = `${date}_${currentGroupId}`;
+            const data = Storage.get('attendance') || {};
+            data[key] = attendanceMap;
+            Storage.save('attendance', data);
+            Toast.show('✅ تم حفظ سجل الحضور بنجاح', 'success');
+        }
+
+        // ─── Export CSV ───────────────────────────────────────
+        function exportCSV() {
+            if (!currentGroupId) { Toast.show('اختر مجموعة أولاً', 'warning'); return; }
+            const date = document.getElementById('attendance-date').value;
+            const students = Storage.get('students') || [];
+            let csv = 'اسم الطالب,الحالة,الوقت,ملاحظات\n';
+            Object.entries(attendanceMap).forEach(([sid, rec]) => {
+                const s = students.find(x => x.id == sid);
+                const statusMap = { present: 'حاضر', absent: 'غائب', late: 'متأخر' };
+                csv += `${s?.name || sid},${statusMap[rec.status] || rec.status},${rec.time},${rec.notes || ''}\n`;
+            });
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `حضور_${date}.csv`; a.click();
+        }
+        // ─── Individual WhatsApp Report ───────────────────────
+        function sendStudentReport(studentId) {
+            const students = Storage.get('students') || [];
+            const student = students.find(s => s.id == studentId);
+            const groups = Storage.get('study_groups') || [];
+            const group = groups.find(g => g.id == currentGroupId);
+            const record = attendanceMap[studentId];
+
+            if (!student || !record) return;
+
+            const timeStr = record.time !== '--:--' ? record.time : new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+            MessagingCore.notifyAttendance(student, group ? group.name : 'غير محدد', record.status, timeStr);
+        }
+    </script>
+</body>
+
+</html>
+

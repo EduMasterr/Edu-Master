@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إعدادات النظام والأمان - EduMaster Pro</title>
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            padding: 10px 0;
+        }
+
+        .settings-section {
+            background: #FFFFFF;
+            border: 1px solid var(--border-soft);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-ui);
+            transition: 0.3s;
+        }
+
+        body.dark-mode .settings-section {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(0, 234, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .settings-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--accent-teal);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-soft);
+            padding-bottom: 18px;
+        }
+
+        body.dark-mode .section-header {
+            border-bottom-color: rgba(0, 234, 255, 0.2);
+        }
+
+        .section-header i {
+            font-size: 1.6rem;
+            color: var(--accent-teal);
+        }
+
+        .section-header h2 {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        body.dark-mode .section-header h2 {
+            color: #fff !important;
+            text-shadow: 0 0 10px rgba(0, 234, 255, 0.4);
+        }
+
+        .control-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .control-card {
+            background: #F8FAFC;
+            border: 1px solid var(--border-soft);
+            border-radius: 16px;
+            padding: 25px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        body.dark-mode .control-card {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(0, 234, 255, 0.2);
+        }
+
+        .control-card:hover {
+            border-color: var(--accent-teal);
+            transform: translateY(-5px);
+            background: #FFFFFF;
+            box-shadow: 0 12px 30px rgba(26, 158, 156, 0.1);
+        }
+
+        body.dark-mode .control-card:hover {
+            background: rgba(0, 234, 255, 0.1);
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 15px rgba(0, 234, 255, 0.2);
+        }
+
+        .control-card h3 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0;
+        }
+
+        body.dark-mode .control-card h3 {
+            color: #fff !important;
+        }
+
+        .control-card p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.7;
+            min-height: 60px;
+        }
+
+        body.dark-mode .control-card p {
+            color: #cbd5e1 !important;
+        }
+
+        .sync-status {
+            font-size: 0.82rem;
+            color: var(--accent-teal);
+            font-weight: 800;
+            margin-top: 10px;
+        }
+
+        .alert-premium {
+            background: #FFF5F5;
+            border-right: 6px solid #EF4444;
+            color: #B91C1C;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.08);
+        }
+
+        body.dark-mode .alert-premium {
+            background: rgba(239, 68, 68, 0.1);
+            color: #fca5a5;
+            border-right-color: #ef4444;
+        }
+
+        .guardian-badge {
+            background: #F8FAFC;
+            border: 2px dashed var(--accent-teal);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 25px;
+            transition: 0.3s;
+        }
+
+        body.dark-mode .guardian-badge {
+            background: rgba(15, 23, 42, 0.4);
+            border-color: rgba(0, 234, 255, 0.4);
+        }
+
+        .guardian-badge i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar"></aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar">
+                    <div class="action-group">
+                        <h1 class="page-title">⚙️ إعدادات النظام والأمان</h1>
+                    </div>
+                </header>
+
+                <div class="alert-premium" id="sync-alert" style="display: none;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span id="sync-alert-text">تنبيه أمان: النظام لم يقم بالمزامنة منذ فترة، يرجى إجراء مزامنة الآن
+                        لحماية بياناتك.</span>
+                </div>
+
+                <!-- 🔴 CRITICAL: 24-Hour Backup Reminder Alert -->
+                <div class="alert-premium" id="backup-reminder-alert"
+                    style="display: none; background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); border: 2px solid #fca5a5; box-shadow: 0 8px 30px rgba(220, 38, 38, 0.4);">
+                    <i class="fa-solid fa-circle-exclamation"
+                        style="color: #fef2f2; font-size: 1.5rem; animation: pulse 2s infinite;"></i>
+                    <div style="flex: 1;">
+                        <span
+                            style="color: #fef2f2; font-weight: 900; font-size: 1.1rem; display: block; margin-bottom: 5px;">⚠️
+                            تنبيه حرج: حان وقت النسخ الاحتياطي!</span>
+                        <span id="backup-alert-text" style="color: #fecaca; font-weight: 700;">مر أكثر من 24 ساعة على
+                            آخر نسخة احتياطية. قم بحفظ بياناتك الآن لتجنب أي فقدان محتمل!</span>
+                    </div>
+                    <button class="app-btn-primary" onclick="BackupEngine.exportBranchData()"
+                        style="background: #fef2f2 !important; color: #dc2626 !important; border: 2px solid #fef2f2 !important; font-weight: 900; padding: 10px 25px; margin-left: 15px;">
+                        <i class="fa-solid fa-download"></i> نسخ احتياطي الآن
+                    </button>
+                    <button onclick="dismissBackupAlert()"
+                        style="background: rgba(254, 242, 242, 0.2); color: #fef2f2; border: 1px solid rgba(254, 242, 242, 0.3); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 800;">
+                        <i class="fa-solid fa-times"></i> تجاهل
+                    </button>
+                </div>
+
+                <style>
+                    @keyframes pulse {
+
+                        0%,
+                        100% {
+                            opacity: 1;
+                            transform: scale(1);
+                        }
+
+                        50% {
+                            opacity: 0.7;
+                            transform: scale(1.1);
+                        }
+                    }
+                </style>
+
+                <div class="settings-grid">
+                    <!-- Global HQ Section -->
+                    <section class="settings-section" id="hq-section" style="display: none;">
+                        <div class="section-header">
+                            <i class="fa-solid fa-tower-broadcast" style="color: var(--accent-teal);"></i>
+                            <h2 style="color: var(--text-main);">الإدارة المركزية (Global HQ Backup)</h2>
+                        </div>
+                        <p style="margin-bottom: 20px; font-weight: 700; color: var(--text-main);">هذا الدرع المتقدم
+                            يقوم بسحب نسخة احتياطية مشفرة وشاملة لجميع الفروع المتصلة والمحاسبة والطلاب.</p>
+                        <button class="app-btn-primary"
+                            style="padding: 12px 40px;"
+                            onclick="BackupEngine.exportBranchData()">
+                            <i class="fa-solid fa-box-archive"></i> تحميل السحابة الشاملة لكافة الفروع
+                        </button>
+                    </section>
+
+                    <!-- Auto-Guardian Section -->
+                    <section class="settings-section admin-only">
+                        <div class="section-header">
+                            <i class="fa-solid fa-shield-virus"></i>
+                            <h2 id="guardian-title">إدارة حماية البيانات (Auto-Guardian)</h2>
+                        </div>
+                        <p style="margin-bottom: 25px; color: var(--text-muted); font-weight: 700;">
+                            ربط النظام بمجلد حماية فيزيائي على جهازك يضمن عدم فقدان البيانات حتى في حال تعطل المتصفح.
+                            <span style="color: var(--accent-teal); display: block; margin-top: 5px;">📍 يتم الحفظ
+                                تلقائياً في: D:\\Backups-Edu-Master</span>
+                        </p>
+
+                        <div class="guardian-badge">
+                            <i class="fa-solid fa-cloud-slash" id="guardian-icon"
+                                style="color: var(--border-soft);"></i>
+                            <div id="guardian-status"
+                                style="color: var(--text-main); font-weight: 900; font-size: 1.1rem; margin-bottom: 25px;">
+                                الحالة:
+                                درع الحماية غير نشط لهذا الفرع</div>
+                            <button class="app-btn-primary" onclick="BackupEngine.linkBranchFolder()"
+                                style="min-width: 280px; justify-content: center;">
+                                <i class="fa-solid fa-link"></i> ربط وتفعيل مجلد الحماية
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- Backup & Sync Section -->
+                    <section class="settings-section" id="backup-section">
+                        <div class="section-header">
+                            <i class="fa-solid fa-cloud-shield"></i>
+                            <h2>النسخ الاحتياطي والأداء السحابي</h2>
+                        </div>
+                        <div class="control-row">
+                            <div class="control-card" style="border-right: 5px solid #25d366; grid-column: span 2;">
+                                <h3><span>سحابة GitHub المؤمنة (إصدار المحترفين)</span> <i
+                                        class="fa-brands fa-github"></i></h3>
+                                <p>ربط بياناتك بحساب GitHub الخاص بك لضمان بقائها للأبد حتى لو تفرمت الجهاز. (مجاني
+                                    تماماً)</p>
+                                <div
+                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 10px;">
+                                    <div class="form-group">
+                                        <label style="font-size: 0.75rem;">GitHub Token (PAT)</label>
+                                        <input type="password" id="cloud-token" class="app-input"
+                                            placeholder="ghp_xxxx..." style="height: 40px; font-size: 0.8rem;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size: 0.75rem;">Gist ID (اتركه فارغاً لأول مرة)</label>
+                                        <input type="text" id="cloud-gist-id" class="app-input"
+                                            placeholder="مثلا: 8f2b..." style="height: 40px; font-size: 0.8rem;">
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="app-btn-primary" onclick="saveCloudConfig()"
+                                        style="flex: 1; background: #334155 !important;"><i class="fa-solid fa-save"></i>
+                                        حفظ الإعدادات</button>
+                                    <button class="app-btn-primary" onclick="CloudSync.pushToCloud()"
+                                        style="flex: 1; background: #25d366 !important;"><i
+                                            class="fa-solid fa-cloud-arrow-up"></i> رفع النسخة للسحاب</button>
+                                    <button class="app-btn-primary" onclick="CloudSync.pullFromCloud()"
+                                        style="flex: 1; background: #6366f1 !important;"><i
+                                            class="fa-solid fa-cloud-arrow-down"></i> استعادة من السحاب</button>
+                                </div>
+                                <div class="sync-status" id="cloud-last-sync">حالة السحابة: جاهز للإعداد</div>
+                            </div>
+
+                            <div class="control-card">
+                                <h3><span>مزامنة سحابية (Auto-Sync)</span> <i class="fa-solid fa-rotate"></i></h3>
+                                <p>مزامنة قواعد بيانات الفرع فورياً وتأمينها في خوادم مشفرة ضد التلف أو الحذف.</p>
+                                <button class="app-btn-primary" onclick="syncNow()"
+                                    style="justify-content: center;"><i
+                                        class="fa-solid fa-cloud-arrow-up"></i> ابدأ المزامنة الآن</button>
+                                <div class="sync-status" id="last-sync-time">آخر مزامنة: لم تتم بعد</div>
+                            </div>
+
+                            <div class="control-card">
+                                <h3><span>نسخة احتياطية محلية</span> <i class="fa-solid fa-file-export"></i></h3>
+                                <p>حفظ ملف كامل بجميع بيانات النظام للطلاب والمحاسبة لاستعادته يدوياً في أي وقت.</p>
+                                <button class="app-btn-primary"
+                                    style="justify-content: center;"
+                                    onclick="BackupEngine.exportBranchData()">
+                                    <i class="fa-solid fa-file-arrow-down"></i> تصدير نسخة JSON
+                                </button>
+                            </div>
+
+                            <div class="control-card">
+                                <h3><span>استعادة البيانات</span> <i class="fa-solid fa-file-import"></i></h3>
+                                <p>رفع ملف نسخة احتياطية سابقة لاستعادة البيانات. سيتم استبدال البيانات الحالية.</p>
+                                <input type="file" id="file-import-direct" accept=".json" style="display: none;"
+                                    onchange="openRestoreOverlay(this.files[0])">
+                                <button class="app-btn-primary"
+                                    style="justify-content: center;"
+                                    onclick="document.getElementById('file-import-direct').click()">
+                                    <i class="fa-solid fa-cloud-arrow-down"></i> استيراد من ملف محلي
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Branch Users Section -->
+                    <section class="settings-section" id="users-section">
+                        <div class="section-header">
+                            <i class="fa-solid fa-users-gear"></i>
+                            <h2>إدارة مستخدمي وموظفي الفرع</h2>
+                            <button class="app-btn-primary" style="margin-right: auto;" onclick="openBranchUserModal()">
+                                <i class="fa-solid fa-user-plus"></i> إضافة مستخدم جديد
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="app-table" id="branch-users-table">
+                                <thead>
+                                    <tr>
+                                        <th>الاسم الكامل</th>
+                                        <th>اسم المستخدم</th>
+                                        <th>الصلاحية</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Staff QR Codes Section -->
+                    <section class="settings-section admin-only" id="staff-qr-section">
+                        <div class="section-header">
+                            <i class="fa-solid fa-qrcode"></i>
+                            <h2>توليد وإدارة أكواد الموظفين (QR IDs)</h2>
+                        </div>
+                        <p style="margin-bottom: 20px; font-weight: 700; color: var(--text-muted);">قم بتوليد رموز QR
+                            فريدة للموظفين لاستخدامها في جهاز البصمة. هذه الأكواد مرتبطة ببيانات الموظف والفرع.</p>
+                        <div class="table-responsive">
+                            <table class="neuro-table" id="staff-qr-table">
+                                <thead>
+                                    <tr>
+                                        <th>الموظف</th>
+                                        <th>الفرع</th>
+                                        <th>الرمز الحالي (Token)</th>
+                                        <th>الحالة</th>
+                                        <th>إجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </section>
+
+
+                    <!-- Maintenance Section -->
+                    <section class="settings-section admin-only" style="border-right-color: #EF4444;">
+                        <div class="section-header">
+                            <i class="fa-solid fa-circle-exclamation" style="color: #EF4444;"></i>
+                            <h2 style="color: var(--text-main);">الم Maintenance الشامل والتهيئة</h2>
+                        </div>
+                        <div class="control-row">
+                            <div class="control-card" style="border-right: 5px solid #EF4444;">
+                                <h3><i class="fa-solid fa-radiation" style="color: #EF4444;"></i> تصفير كل النظام</h3>
+                                <p>حذف شامل لجميع العمليات والبيانات للطلاب والفروع والعودة لحالة المصنع.</p>
+                                <button class="app-btn-primary"
+                                    style="background: #EF4444 !important; justify-content: center;"
+                                    onclick="SystemReset.factoryReset()">مسح شامل (لا يمكن التراجع)</button>
+                            </div>
+                            <div class="control-card" style="border-right: 5px solid #F59E0B;">
+                                <h3><i class="fa-solid fa-eraser" style="color: #F59E0B;"></i> تهيئة بيانات التشغيل</h3>
+                                <p>حذف الطلاب والمالية فقط مع الاحتفاظ بالهيكل الأساسي والموظفين.</p>
+                                <button class="app-btn-primary"
+                                    style="background: #F59E0B !important; justify-content: center;"
+                                    onclick="SystemReset.softReset()">تهيئة التشغيل</button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="branch-user-modal">
+        <div class="modal-container" style="max-width: 480px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="user-modal-title">إضافة موظف تحكم</h2>
+                <button class="close-modal" onclick="Modal.close('branch-user-modal')">&times;</button>
+            </div>
+            <form id="branch-user-form" style="padding: 25px;">
+                <input type="hidden" id="edit-user-id">
+                <div class="form-group">
+                    <label>الاسم الكامل للموظف</label>
+                    <input type="text" id="bu-name" class="app-input" required placeholder="مثلاً: محمد علي">
+                </div>
+                <div class="form-group" style="margin-top:18px;">
+                    <label>اسم المستخدم (للموظف)</label>
+                    <input type="text" id="bu-login" class="app-input" required placeholder="m_ali_2024">
+                </div>
+                <div class="form-group" style="margin-top:18px;">
+                    <label>كلمة المرور المؤقتة</label>
+                    <input type="text" id="bu-pass" class="app-input" required>
+                </div>
+                <div class="form-group" style="margin-top:18px;">
+                    <label>رتبة الصلاحية</label>
+                    <select id="bu-role" class="app-input" required>
+                        <option value="2">مدير فرع / مشرف</option>
+                        <option value="3">موظف استقبال / سكرتارية</option>
+                    </select>
+                </div>
+                <div style="margin-top: 35px; display:flex; gap:12px;">
+                    <button type="submit" class="app-btn-primary" style="flex:1; justify-content: center;">حفظ
+                        البيانات</button>
+                    <button type="button" class="app-btn-primary"
+                        style="flex:1; justify-content: center; background:var(--text-muted) !important;"
+                        onclick="Modal.close('branch-user-modal')">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════
+         RESTORE OVERLAY (standalone - no BackupEngine dependency)
+         ════════════════════════════════════════════ -->
+    <div id="restore-overlay" style="
+        display: none;
+        position: fixed; inset: 0; z-index: 99999;
+        background: rgba(10, 15, 30, 0.92);
+        backdrop-filter: blur(12px);
+        align-items: center;
+        justify-content: center;
+        font-family: 'Tajawal', sans-serif;
+    ">
+        <div style="
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 1px solid rgba(26,158,156,0.3);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 520px;
+            width: 90%;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            color: #fff;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+        ">
+            <!-- Close button -->
+            <button onclick="closeRestoreOverlay()" style="
+                position:absolute; top:15px; left:15px;
+                background:rgba(255,255,255,0.1); border:none;
+                color:#fff; width:36px; height:36px; border-radius:50%;
+                cursor:pointer; font-size:1.1rem; display:flex;
+                align-items:center; justify-content:center;
+            ">✕</button>
+
+            <div style="text-align:center; margin-bottom:25px;">
+                <div style="font-size:2.5rem; margin-bottom:8px;">🔄</div>
+                <h2 style="font-size:1.4rem; font-weight:900; color:#1a9e9c; margin:0;">استعادة البيانات</h2>
+                <p style="color:#64748b; font-size:0.9rem; margin-top:5px;">سيتم استبدال البيانات الحالية بالملف المختار</p>
+            </div>
+
+            <!-- Progress bar -->
+            <div id="ro-progress-bar" style="height:5px; background:rgba(255,255,255,0.08); border-radius:999px; margin-bottom:20px; overflow:hidden; display:none;">
+                <div id="ro-progress-fill" style="height:100%; background:linear-gradient(90deg,#1a9e9c,#00e9e7); border-radius:999px; width:0%; transition:width 0.4s;"></div>
+            </div>
+
+            <!-- Status area (Scrollable) -->
+            <div style="overflow-y: auto; overflow-x: hidden; padding-right: 5px; flex-grow: 1; margin-bottom: 5px;">
+                <div id="ro-status"></div>
+            </div>
+
+            <!-- Action buttons -->
+            <div id="ro-actions" style="display:flex; gap:12px; margin-top:20px; justify-content:center;"></div>
+        </div>
+    </div>
+
+    <!-- Global Scripts -->
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+    <script src="../js/system-reset.js"></script>
+    <script src="../js/backup-engine.js"></script>
+    <script src="../js/cloud-sync.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = window.Permissions?.getCurrentUser();
+            if (!user || ![1, 2].includes(user.role_id)) {
+                location.href = 'dashboard.html';
+                return;
+            }
+            if (user.role_id !== 1) {
+                document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+            }
+            const activeBranchId = window.Permissions?.getActiveBranchId();
+            if (!activeBranchId) {
+                const hqSection = document.getElementById('hq-section');
+                if (hqSection) hqSection.style.display = 'block';
+            }
+            UICore.init();
+            loadBranchUsers();
+            loadStaffQRs();
+            updateSyncTimeDisplay();
+            updateGuardianUI();
+            updateCloudUI();
+        });
+
+        function updateCloudUI() {
+            if (!window.CloudSync) return;
+            const config = window.CloudSync._config;
+            document.getElementById('cloud-token').value = config.token || '';
+            document.getElementById('cloud-gist-id').value = config.gistId || '';
+            if (config.lastSync) {
+                document.getElementById('cloud-last-sync').innerText = `آخر مزامنة سحابية: ${new Date(config.lastSync).toLocaleString('ar-EG')}`;
+            }
+        }
+
+        window.saveCloudConfig = () => {
+            const token = document.getElementById('cloud-token').value;
+            const gistId = document.getElementById('cloud-gist-id').value;
+            window.CloudSync.saveConfig(token, gistId);
+            updateCloudUI();
+        };
+
+
+        function loadStaffQRs() {
+            const user = Permissions.getCurrentUser();
+            if (user.role_id !== 1) return;
+
+            const users = Storage.get('users') || [];
+            const qrs = Storage.get('employee_qrs') || [];
+            const branches = Storage.get('branches') || [];
+            const tableBody = document.querySelector('#staff-qr-table tbody');
+            if (!tableBody) return;
+
+            const staffMembers = users.filter(u => [2, 3].includes(u.role_id));
+
+            if (staffMembers.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--text-muted);">لا يوجد موظفين مسجلين حالياً</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = staffMembers.map(staff => {
+                const qr = qrs.find(q => q.userId === staff.id);
+                const branch = branches.find(b => b.id === staff.branch);
+                return `
+                    <tr>
+                        <td style="font-weight:800; color:var(--text-main);"><i class="fa-solid fa-user-tie" style="margin-left:8px; color:var(--accent-teal)"></i> ${staff.name}</td>
+                        <td style="font-weight:700;">${branch ? branch.name : 'إدارة عامة'}</td>
+                        <td style="font-family:monospace; font-size:0.85rem; background:rgba(0,234,255,0.05); padding:5px 10px; border-radius:6px;">${qr ? qr.token : '---'}</td>
+                        <td>
+                            <span class="status-badge ${qr?.status === 'Active' ? 'status-confirmed' : 'status-pending'}">
+                                ${qr ? (qr.status === 'Active' ? 'نشط' : 'ملغي') : 'غير مؤمن'}
+                            </span>
+                        </td>
+                        <td>
+                            <div style="display:flex; gap:8px;">
+                                <button class="action-btn" style="color:var(--accent-teal)" onclick="generateStaffQR(${staff.id})" title="توليد/تغيير الرمز">
+                                    <i class="fa-solid fa-sync"></i>
+                                </button>
+                                ${qr ? `
+                                    <button class="action-btn" style="color:#f59e0b" onclick="printStaffCard('${staff.name.replace(/'/g, "\\'")}', '${qr.token}')" title="طباعة كارت الموظف">
+                                        <i class="fa-solid fa-print"></i>
+                                    </button>
+                                    <button class="action-btn" style="color:#ef4444" onclick="toggleStaffQR(${staff.id})" title="تغيير الحالة">
+                                        <i class="fa-solid fa-ban"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.generateStaffQR = (userId) => {
+            const qrs = Storage.get('employee_qrs') || [];
+            const existingIdx = qrs.findIndex(q => q.userId === userId);
+            const newToken = 'EMP-' + Math.random().toString(36).substring(2, 10).toUpperCase();
+            const qrData = { userId, token: newToken, status: 'Active', updatedAt: new Date().toISOString() };
+            if (existingIdx !== -1) qrs[existingIdx] = qrData;
+            else qrs.push(qrData);
+            Storage.save('employee_qrs', qrs);
+            Toast.show('تم توليد كود الموظف بنجاح', 'success');
+            loadStaffQRs();
+        };
+
+        window.toggleStaffQR = (userId) => {
+            const qrs = Storage.get('employee_qrs') || [];
+            const qr = qrs.find(q => q.userId === userId);
+            if (qr) {
+                qr.status = qr.status === 'Active' ? 'Inactive' : 'Active';
+                Storage.save('employee_qrs', qrs);
+                loadStaffQRs();
+            }
+        };
+
+        window.printStaffCard = (name, token) => {
+            const printWin = window.open('', '_blank');
+            printWin.document.write(`
+                <html>
+                <head>
+                    <title>ID CARD - ${name}</title>
+                    <style>
+                        body { font-family: 'Tajawal', sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #f1f5f9; }
+                        .card { width: 350px; height: 220px; background: #fff; border-radius: 12px; border: 2px solid #0f172a; padding: 20px; text-align: center; position: relative; }
+                        .logo { font-weight: 900; color: #1a9e9c; font-size: 1.2rem; }
+                        .qr-box { margin: 15px auto; width: 100px; height: 100px; }
+                        .name { font-weight: 800; font-size: 1.1rem; margin: 5px 0; }
+                        .token { font-family: monospace; font-size: 0.8rem; color: #64748b; }
+                    </style>
+                </head>
+                <body>
+                    <div class="card">
+                        <div class="logo">EduMaster Pro</div>
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${token}" class="qr-box">
+                        <div class="name">${name}</div>
+                        <div class="token">${token}</div>
+                    </div>
+                    <script>setTimeout(() => { window.print(); window.close(); }, 500);<\/script>
+                </body>
+                </html>
+            `);
+            printWin.document.close();
+        };
+
+        function loadBranchUsers() {
+            const users = Storage.get('users') || [];
+            const roles = Storage.get('roles') || [{ id: 1, name: 'سوبر أدمن' }, { id: 2, name: 'مدير فرع' }, { id: 3, name: 'موظف' }];
+            const activeBranchId = window.Permissions?.getActiveBranchId();
+            const tableBody = document.querySelector('#branch-users-table tbody');
+            if (!tableBody) return;
+            const branchUsers = users.filter(u => (activeBranchId === null && !u.branch) || (u.branch === parseInt(activeBranchId)));
+            if (branchUsers.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:40px; color:var(--text-muted);">لا يوجد مستخدمين مسجلين حالياً</td></tr>`;
+                return;
+            }
+            tableBody.innerHTML = branchUsers.map(user => {
+                const role = roles.find(r => r.id === user.role_id) || { name: 'موظف' };
+                return `
+                    <tr>
+                        <td><div style="font-weight:900; color:var(--text-main);"><i class="fa-solid fa-user-gear" style="margin-left:8px; color:var(--accent-teal)"></i> ${user.name}</div></td>
+                        <td><code style="background:var(--accent-teal-soft); color:var(--accent-teal); padding:5px 12px; border-radius:8px; font-weight:800;">${user.username}</code></td>
+                        <td><span class="status-badge" style="background:var(--accent-teal-soft); color:var(--accent-teal); border:1px solid var(--accent-teal);">${role.name}</span></td>
+                        <td>
+                            <div style="display:flex; gap:10px;">
+                                <button class="action-btn" style="color:var(--accent-teal)" onclick="editBranchUser(${user.id})"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button class="action-btn" style="color:#EF4444" onclick="deleteBranchUser(${user.id})"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function openBranchUserModal() {
+            document.getElementById('branch-user-form').reset();
+            document.getElementById('edit-user-id').value = '';
+            document.getElementById('user-modal-title').innerText = 'إضافة مستخدم جديد للفرع';
+            Modal.open('branch-user-modal');
+        }
+
+        function editBranchUser(userId) {
+            const users = Storage.get('users') || [];
+            const user = users.find(u => u.id === userId);
+            if (user) {
+                document.getElementById('edit-user-id').value = user.id;
+                document.getElementById('bu-name').value = user.name;
+                document.getElementById('bu-login').value = user.username;
+                document.getElementById('bu-pass').value = user.password;
+                document.getElementById('bu-role').value = user.role_id;
+                document.getElementById('user-modal-title').innerText = 'تعديل بيانات الموظف';
+                Modal.open('branch-user-modal');
+            }
+        }
+
+        function deleteBranchUser(userId) {
+            const users = Storage.get('users') || [];
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+
+            Modal.secureDelete(`الموظف: ${user.name}`, () => {
+                Storage.save('users', users.filter(u => u.id !== userId));
+                loadBranchUsers();
+            });
+        }
+
+        document.getElementById('branch-user-form').onsubmit = (e) => {
+            e.preventDefault();
+            const editId = document.getElementById('edit-user-id').value;
+            const userData = {
+                name: document.getElementById('bu-name').value,
+                username: document.getElementById('bu-login').value,
+                password: document.getElementById('bu-pass').value,
+                role_id: parseInt(document.getElementById('bu-role').value),
+                branch: window.Permissions?.getActiveBranchId() ? parseInt(window.Permissions.getActiveBranchId()) : null
+            };
+            let users = Storage.get('users') || [];
+            if (editId) {
+                const idx = users.findIndex(u => u.id == editId);
+                if (idx !== -1) users[idx] = { ...users[idx], ...userData };
+            } else {
+                if (users.some(u => u.username === userData.username)) return alert('اسم المستخدم موجود بالفعل');
+                userData.id = Date.now();
+                users.push(userData);
+            }
+            Storage.save('users', users);
+            Modal.close('branch-user-modal');
+            loadBranchUsers();
+        };
+
+        async function syncNow() {
+            await BackupEngine.syncGlobal();
+            updateSyncTimeDisplay();
+        }
+
+        function updateGuardianUI() {
+            if (!window.BackupEngine) return;
+            const statusText = document.getElementById('guardian-status');
+            const icon = document.getElementById('guardian-icon');
+            const keys = BackupEngine.getKeys();
+            const isActive = localStorage.getItem(keys.active) === 'true';
+            const folderName = localStorage.getItem(keys.folder);
+
+            if (window.eduAPI) {
+                // Hardcoded UI display because the Desktop app now automatically backs up silently under the hood 
+                statusText.innerText = `الحالة: درع الحماية نشط إجبارياً (مجلد: D:\\Backups-Edu-Master)`;
+                statusText.style.color = 'var(--accent-teal)';
+                icon.style.color = 'var(--accent-teal)';
+                icon.className = 'fa-solid fa-shield-check';
+                return;
+            }
+
+            if (isActive && folderName) {
+                statusText.innerText = `الحالة: درع الحماية نشط (مجلد: ${folderName})`;
+                statusText.style.color = 'var(--accent-teal)';
+                icon.style.color = 'var(--accent-teal)';
+                icon.className = 'fa-solid fa-shield-check';
+            } else {
+                statusText.innerText = `الحالة: درع الحماية غير نشط لهذا الفرع`;
+                statusText.style.color = 'var(--text-main)';
+                icon.className = 'fa-solid fa-cloud-slash';
+            }
+        }
+
+        function updateSyncTimeDisplay() {
+            if (!window.BackupEngine) return;
+            const keys = BackupEngine.getKeys();
+            const timeStr = localStorage.getItem(keys.sync);
+            if (timeStr) {
+                document.getElementById('last-sync-time').innerText = `آخر مزامنة ناجحة: ${timeStr}`;
+                document.getElementById('sync-alert').style.display = 'none';
+            } else {
+                document.getElementById('sync-alert').style.display = 'flex';
+            }
+        }
+
+        // ========== 24-HOUR BACKUP REMINDER SYSTEM ==========
+
+        function checkBackupReminder() {
+            const lastBackupKey = 'edumaster_last_backup_check';
+            const lastBackupTime = localStorage.getItem(lastBackupKey);
+            const now = Date.now();
+            const twentyFourHours = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+            if (!lastBackupTime || (now - parseInt(lastBackupTime)) > twentyFourHours) {
+                // Show the red alert
+                const alert = document.getElementById('backup-reminder-alert');
+                if (alert) alert.style.display = 'flex';
+            } else {
+                // Hide the alert
+                const alert = document.getElementById('backup-reminder-alert');
+                if (alert) alert.style.display = 'none';
+            }
+        }
+
+        window.dismissBackupAlert = function () {
+            const alert = document.getElementById('backup-reminder-alert');
+            if (alert) alert.style.display = 'none';
+
+            // Update the last backup check time to now (so it won't show again for 24 hours)
+            localStorage.setItem('edumaster_last_backup_check', Date.now().toString());
+            Toast.show('سيتم تذكيرك مرة أخرى بعد 24 ساعة', 'info');
+        };
+
+        // Override the exportBranchData to update backup time
+        if (window.BackupEngine && BackupEngine.exportBranchData) {
+            const originalExport = BackupEngine.exportBranchData.bind(BackupEngine);
+            BackupEngine.exportBranchData = async function () {
+                await originalExport();
+                // Update last backup time
+                localStorage.setItem('edumaster_last_backup_check', Date.now().toString());
+                checkBackupReminder(); // Hide the alert immediately
+            };
+        }
+
+        // Check on page load
+        checkBackupReminder();
+
+        // Check every hour
+        setInterval(checkBackupReminder, 60 * 60 * 1000);
+    </script>
+</body>
+    <!-- ════ RESTORE OVERLAY LOGIC ════ -->
+    <script>
+        let _restorePendingData = null;
+
+        function openRestoreOverlay(file) {
+            if (!file) return;
+            // Reset file input
+            setTimeout(() => { document.getElementById('file-import-direct').value = ''; }, 300);
+
+            // Show overlay
+            const overlay = document.getElementById('restore-overlay');
+            overlay.style.display = 'flex';
+            setROStatus('⏳ جاري قراءة الملف...', '#93c5fd', 'rgba(59,130,246,0.1)');
+            setROProgress(30);
+            document.getElementById('ro-progress-bar').style.display = 'block';
+            document.getElementById('ro-actions').innerHTML = '';
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setROProgress(60);
+                let data;
+                try {
+                    data = JSON.parse(e.target.result);
+                } catch(err) {
+                    setROStatus('❌ الملف تالف أو ليس ملف JSON صحيح.', '#fca5a5', 'rgba(239,68,68,0.1)');
+                    document.getElementById('ro-progress-bar').style.display = 'none';
+                    return;
+                }
+
+                _restorePendingData = data;
+                const keys = Object.keys(data).filter(k => k !== 'backup_meta');
+                const meta = data.backup_meta || {};
+                const dateStr = meta.date ? new Date(meta.date).toLocaleString('ar-EG') : 'غير معروف';
+
+                const keyLabels = {
+                    'edumaster_trainers': 'المحاضرون',
+                    'edumaster_users': 'المستخدمون',
+                    'edumaster_students': 'الطلاب',
+                    'edumaster_study_groups': 'مجموعات الدراسة',
+                    'edumaster_transactions': 'المعاملات المالية',
+                    'edumaster_branches': 'الفروع',
+                    'edumaster_books': 'الكتب',
+                    'edumaster_app_books': 'قائمة الكتب',
+                };
+
+                let rows = '';
+                keys.forEach(k => {
+                    const label = keyLabels[k] || k.replace('edumaster_', '');
+                    const val = data[k];
+                    const count = Array.isArray(val) ? val.length + ' سجل' : '✓';
+                    rows += `<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:0.88rem;"><span style="color:#cbd5e1;">${label}</span><span style="background:rgba(26,158,156,0.2);color:#1a9e9c;padding:1px 10px;border-radius:999px;font-weight:900;">${count}</span></div>`;
+                });
+
+                document.getElementById('ro-status').innerHTML = `
+                    <div style="font-size:0.8rem;color:#64748b;margin-bottom:12px;">📅 تاريخ النسخة: ${dateStr}</div>
+                    ${rows}
+                `;
+
+                document.getElementById('ro-actions').innerHTML = `
+                    <div style="width: 100%; margin-top:10px; padding:10px 14px; background:rgba(239,68,68,0.1); border-radius:8px; color:#fca5a5; font-size:0.83rem; text-align:center; margin-bottom: 15px;">
+                        ⚠️ سيتم استبدال جميع البيانات الحالية بالبيانات الموضحة أعلاه!
+                    </div>
+                    <div style="display:flex; gap:12px; justify-content:center; width: 100%;">
+                        <button onclick="doDirectRestore()" style="
+                            background:#1a9e9c;color:#fff;border:none;padding:12px 28px;
+                            border-radius:12px;font-family:'Tajawal',sans-serif;font-size:1rem;
+                            font-weight:900;cursor:pointer;display:flex;align-items:center;gap:8px; flex: 1; justify-content: center;
+                        "><i class='fa-solid fa-check'></i> تأكيد الاستعادة</button>
+                        <button onclick="closeRestoreOverlay()" style="
+                            background:rgba(255,255,255,0.08);color:#94a3b8;border:1px solid rgba(255,255,255,0.1);
+                            padding:12px 20px;border-radius:12px;font-family:'Tajawal',sans-serif;
+                            font-size:0.95rem;font-weight:700;cursor:pointer; flex: 1;
+                        ">إلغاء</button>
+                    </div>
+                `;
+
+                setROProgress(100);
+            };
+
+            reader.onerror = () => {
+                setROStatus('❌ فشل في قراءة الملف.', '#fca5a5', 'rgba(239,68,68,0.1)');
+                document.getElementById('ro-progress-bar').style.display = 'none';
+            };
+
+            reader.readAsText(file);
+        }
+
+        function doDirectRestore() {
+            const data = _restorePendingData;
+            if (!data) return;
+
+            document.getElementById('ro-actions').innerHTML = '';
+            setROStatus('<div style="text-align:center;padding:10px;">⏳ جاري كتابة البيانات...</div>', '#93c5fd', 'rgba(59,130,246,0.1)');
+            setROProgress(20);
+
+            let count = 0;
+            const keys = Object.keys(data).filter(k => k !== 'backup_meta');
+
+            keys.forEach((key, i) => {
+                const lsKey = key.startsWith('edumaster_') ? key : `edumaster_${key}`;
+                try {
+                    const val = data[key];
+                    localStorage.setItem(lsKey, typeof val === 'string' ? val : JSON.stringify(val));
+                    count++;
+                } catch(e) {
+                    console.warn('Write failed:', lsKey);
+                }
+                setROProgress(20 + Math.round((i + 1) / keys.length * 70));
+            });
+
+            // Reset IDB migration flag
+            localStorage.removeItem('__idb_v2_done__');
+
+            setROProgress(100);
+
+            document.getElementById('ro-status').innerHTML = `
+                <div style="text-align:center;padding:20px 0;">
+                    <div style="font-size:2.5rem;margin-bottom:10px;">✅</div>
+                    <div style="font-size:1.15rem;font-weight:900;color:#6ee7b7;margin-bottom:6px;">تمت الاستعادة بنجاح!</div>
+                    <div style="color:#94a3b8;font-size:0.9rem;">تم استعادة ${count} وحدة. سيتم إعادة التشغيل...</div>
+                </div>
+            `;
+
+            setTimeout(() => location.reload(), 2000);
+        }
+
+        function closeRestoreOverlay() {
+            document.getElementById('restore-overlay').style.display = 'none';
+            _restorePendingData = null;
+        }
+
+        function setROStatus(html, color, bg) {
+            const el = document.getElementById('ro-status');
+            el.style.background = bg || 'transparent';
+            el.style.borderRadius = '10px';
+            el.style.padding = bg ? '12px' : '0';
+            el.style.color = color || '#fff';
+            el.innerHTML = html;
+        }
+
+        function setROProgress(pct) {
+            document.getElementById('ro-progress-fill').style.width = pct + '%';
+        }
+    </script>
+
+</html>
+
+

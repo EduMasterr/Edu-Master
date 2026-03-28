@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة / تعديل محاضر - EduMaster Pro</title>
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #2B5A9E 0%, #1e3a8a 100%);
+            --accent-gradient: linear-gradient(135deg, #1A9E9C 0%, #0d9488 100%);
+        }
+
+        .edit-mode-header {
+            background: var(--accent-gradient);
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 20px rgba(26, 158, 156, 0.2);
+        }
+
+        .form-card {
+            background: var(--bg-card);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: var(--shadow-ui);
+            border: 1px solid var(--border-soft);
+        }
+
+        .section-title {
+            font-weight: 900;
+            font-size: 1.4rem;
+            color: var(--text-main);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 2px solid var(--border-soft);
+            padding-bottom: 15px;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .field-label {
+            font-weight: 800;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        .field-label span {
+            color: #ef4444;
+        }
+
+        .premium-input {
+            width: 100%;
+            height: 55px;
+            padding: 0 25px;
+            border-radius: 18px;
+            border: 2px solid var(--border-soft);
+            background: var(--bg-main);
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .premium-input:focus {
+            border-color: var(--accent-teal);
+            background: var(--bg-card);
+            box-shadow: 0 0 0 5px rgba(26, 158, 156, 0.1);
+            outline: none;
+        }
+
+        .photo-uploader {
+            width: 200px;
+            height: 200px;
+            border-radius: 30px;
+            border: 3px dashed var(--border-soft);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-main);
+        }
+
+        .photo-uploader:hover {
+            border-color: var(--accent-teal);
+            background: rgba(26, 158, 156, 0.05);
+        }
+
+        #photo-preview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .status-toggle {
+            display: flex;
+            gap: 10px;
+            background: var(--bg-main);
+            padding: 5px;
+            border-radius: 50px;
+            width: fit-content;
+        }
+
+        .status-option {
+            padding: 10px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            transition: 0.3s;
+        }
+
+        .status-option.active {
+            background: var(--accent-teal);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-save {
+            height: 65px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: 900;
+            background: var(--primary-gradient);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            transition: 0.3s;
+            box-shadow: 0 10px 30px rgba(43, 90, 158, 0.3);
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(43, 90, 158, 0.4);
+        }
+
+        .payment-config-box {
+            background: rgba(26, 158, 156, 0.03);
+            padding: 30px;
+            border-radius: 25px;
+            border: 2px solid rgba(26, 158, 156, 0.1);
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar">
+            <!-- Injected by UICore -->
+        </aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <a href="trainers.html" class="btn-neuro"
+                            style="background: #fff; border: 1.5px solid var(--border-soft); color: var(--sidebar-bg); text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px 25px; border-radius: 50px; font-weight: 800;">
+                            <i class="fa-solid fa-arrow-right"></i> عودة للقائمة
+                        </a>
+                        <h1 class="page-title" id="page-title-text">➕ تسجيل محاضر جديد</h1>
+                    </div>
+                </header>
+
+                <div id="edit-header" class="edit-mode-header">
+                    <i class="fa-solid fa-user-pen" style="font-size: 1.8rem;"></i>
+                    <div style="display: flex; flex-direction: column;">
+                        <span style="font-weight: 900; font-size: 1.2rem;">وضع التعديل النشط</span>
+                        <span style="font-size: 0.85rem; opacity: 0.9; font-weight: 700;">أنت تقوم الآن بتعديل بيانات
+                            المحاضر بشكل كامل</span>
+                    </div>
+                </div>
+
+                <form id="trainer-form-main">
+                    <div class="form-card">
+                        <div class="section-title">
+                            <i class="fa-solid fa-id-card" style="color: var(--accent-teal);"></i> المعلومات الأساسية
+                            والمهنية
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 220px 1fr; gap: 40px; margin-bottom: 40px;">
+                            <div class="field-group" style="align-items: center; gap: 15px;">
+                                <label class="field-label">الصورة الشخصية</label>
+                                <div class="photo-uploader" style="margin-bottom: 5px;">
+                                    <div id="photo-preview-box" onclick="document.getElementById('photo-input').click()" style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative;">
+                                        <i class="fa-solid fa-camera-retro" id="camera-icon" style="font-size: 3rem; color: var(--text-muted); opacity: 0.5;"></i>
+                                        <span id="upload-text" style="font-weight: 800; font-size: 0.85rem; color: var(--text-muted); margin-top: 12px;">إرفاق صورة ملفات</span>
+                                        <img id="photo-preview" alt="Preview" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+                                    </div>
+                                    <input type="file" id="photo-input" hidden accept="image/*" onchange="previewPhoto(this)">
+                                </div>
+                                <button type="button" onclick="openCameraModal()" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 200px; height: 48px; background: var(--saas-primary, #2563EB); color: #fff; border: none; border-radius: 12px; font-weight: 900; font-size: 0.9rem; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.2); font-family: inherit;">
+                                    <i class="fa-solid fa-camera" style="font-size: 1.1rem;"></i> التقاط من الكاميرا
+                                </button>
+                            </div>
+
+                            <div class="grid-layout">
+                                <div class="field-group">
+                                    <label class="field-label">اسم المحاضر بالكامل <span>*</span></label>
+                                    <input type="text" id="trainer-name" class="premium-input" required
+                                        placeholder="أدخل الاسم الثلاثي">
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">رقم الهاتف الجوال <span>*</span></label>
+                                    <input type="tel" id="trainer-phone" class="premium-input" required
+                                        placeholder="01XXXXXXXXX">
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">البريد الإلكتروني</label>
+                                    <input type="email" id="trainer-email" class="premium-input"
+                                        placeholder="example@email.com">
+                                </div>
+                                <div class="field-group">
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <label class="field-label">التخصص / المادة</label>
+                                        <button type="button" onclick="openSpecialtyModal()"
+                                            style="background:rgba(26,158,156,0.1); color:var(--accent-teal); border:none; padding:5px 12px; border-radius:8px; cursor:pointer; font-weight:800; font-size:0.75rem; display:flex; align-items:center; gap:6px;">
+                                            <i class="fa-solid fa-sliders"></i> إدارة
+                                        </button>
+                                    </div>
+                                    <select id="trainer-specialty" class="premium-input" style="font-weight: 700;">
+                                        <option value="">اختر التخصص...</option>
+                                    </select>
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">كود المحاضر (ID)</label>
+                                    <input type="text" id="trainer-code" class="premium-input" placeholder="T-101"
+                                        style="color: var(--accent-teal); border-color: var(--accent-teal-soft);">
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">نوع التعاقد</label>
+                                    <select id="trainer-contract" class="premium-input">
+                                        <option value="full-time">دوام كامل (Full-time)</option>
+                                        <option value="part-time">دوام جزئي (Part-time)</option>
+                                        <option value="freelance">مستقل (Freelance)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 🆕 Section 1.5: Branch Scope Management -->
+                        <div class="section-title" style="margin-top: 40px; border-right: 5px solid var(--accent-teal);">
+                            <i class="fa-solid fa-code-branch" style="color: var(--accent-teal);"></i> نطاق عمل المحاضر (الفروع)
+                        </div>
+
+                        <div class="payment-config-box" style="margin-bottom: 40px; background: rgba(26, 158, 156, 0.05);">
+                            <p style="margin-bottom: 20px; font-weight: 800; color: var(--text-muted); font-size: 0.85rem;">
+                                حدد الفروع التي يسمح لهذا المحاضر بالظهور والعمل فيها.
+                            </p>
+                            
+                            <div style="display: flex; gap: 30px; align-items: flex-start;">
+                                <div class="field-group" style="flex: 0 0 250px;">
+                                    <label class="field-label">نوع النطاق</label>
+                                    <select id="trainer-branch-mode" class="premium-input" onchange="toggleBranchSelection(this.value)" style="border-radius: 15px;">
+                                        <option value="all">الكل (في كافة فروع النظام)</option>
+                                        <option value="specific">فروع محددة فقط</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="specific-branches-container" style="display: none; flex: 1;">
+                                    <label class="field-label">اختر الفروع المتاحة</label>
+                                    <div id="branch-checkboxes" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; background: #fff; padding: 20px; border-radius: 15px; border: 1px solid var(--border-soft);">
+                                        <!-- Populated via JS -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="section-title">
+                            <i class="fa-solid fa-sack-dollar" style="color: #f59e0b;"></i> الإعدادات المالية
+                        </div>
+
+                        <div class="payment-config-box">
+                            <div class="grid-layout" style="grid-template-columns: 1.5fr 1fr 1fr;">
+                                <div class="field-group">
+                                    <label class="field-label">نظام الحساب</label>
+                                    <select id="trainer-payment-mode" class="premium-input"
+                                        onchange="togglePaymentFields(this.value)">
+                                        <option value="fixed">راتب ثابت / محاضرة ثابتة</option>
+                                        <option value="ratio">نسبة مئوية من الطلاب</option>
+                                        <option value="fixed_ratio">أساسي + نسبة عمولة</option>
+                                    </select>
+                                </div>
+                                <div class="field-group" id="fixed-val-group">
+                                    <label class="field-label">المبلغ المالي (ج.م)</label>
+                                    <input type="number" id="trainer-payment-value" class="premium-input" value="0">
+                                </div>
+                                <div class="field-group" id="ratio-val-group" style="display: none;">
+                                    <label class="field-label">النسبة (%)</label>
+                                    <input type="number" id="trainer-payment-ratio" class="premium-input" value="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field-group" style="margin-top: 30px;">
+                            <label class="field-label">حالة المحاضر</label>
+                            <div class="status-toggle">
+                                <div class="status-option active" id="status-active" onclick="setStatus('Active')">نشط
+                                </div>
+                                <div class="status-option" id="status-inactive" onclick="setStatus('Inactive')">متوقف
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-save">
+                            <i class="fa-solid fa-check-double"></i>
+                            <span id="btn-text">حفظ بيانات المحاضر الآن</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Specialty Manager Modal -->
+    <div class="modal-overlay" id="modal-specialty">
+        <div class="modal-container" style="max-width: 450px; padding: 0;">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-list-ul" style="color:var(--accent-teal);"></i> إدارة
+                    تخصصات المحاضرين</h3>
+                <button type="button" class="close-modal" onclick="Modal.close('modal-specialty')"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="modal-body-scroll" style="padding: 20px;">
+                <div id="specialty-list-container"
+                    style="max-height: 300px; overflow-y: auto; margin-bottom: 20px; padding: 5px;">
+                    <!-- Populated by JS -->
+                </div>
+
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="new-specialty-input" class="premium-input" placeholder="اضف تخصص جديد..."
+                        style="flex:1; height:45px;">
+                    <button type="button" class="app-btn-primary" onclick="handleAddSpecialty()"
+                        style="padding:10px 20px; height:45px;">إضافة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camera Modal -->
+    <div class="modal-overlay" id="modal-camera">
+        <div class="modal-container" style="max-width: 500px; padding: 0;">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-camera" style="color:var(--accent-teal);"></i> التقاط صورة احترافية</h3>
+                <button type="button" class="close-modal" onclick="closeCameraModal()">&times;</button>
+            </div>
+            <div style="padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                <div style="width: 100%; height: 350px; background: #000; border-radius: 20px; overflow: hidden; position: relative;">
+                    <video id="capture-video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+                </div>
+                <button type="button" onclick="takeSnapshot()" class="app-btn-primary" style="width: 100%; height: 55px; font-size: 1.1rem;">
+                    <i class="fa-solid fa-shutter-speed"></i> التقاط الصورة الآن
+                </button>
+            </div>
+        </div>
+    </div>
+    <canvas id="capture-canvas" style="display: none;"></canvas>
+
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/audio-core.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+
+    <script>
+        // ── Camera Management ──
+        let cameraStream = null;
+
+        window.openCameraModal = async function() {
+            try {
+                Modal.open('modal-camera');
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                document.getElementById('capture-video').srcObject = cameraStream;
+            } catch (err) {
+                console.error('Camera Error:', err);
+                Toast.show('فشل الوصول للكاميرا، يرجى التأكد من الأذونات', 'error');
+                Modal.close('modal-camera');
+            }
+        };
+
+        window.closeCameraModal = function() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            Modal.close('modal-camera');
+        };
+
+        window.takeSnapshot = function() {
+            const video = document.getElementById('capture-video');
+            const canvas = document.getElementById('capture-canvas');
+            const context = canvas.getContext('2d');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0);
+
+            currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+            
+            const preview = document.getElementById('photo-preview');
+            const camIcon = document.getElementById('camera-icon');
+            const uploadText = document.getElementById('upload-text');
+
+            if (preview) {
+                preview.src = currentPhotoBase64;
+                preview.style.display = 'block';
+            }
+            if (camIcon) camIcon.style.display = 'none';
+            if (uploadText) uploadText.style.display = 'none';
+
+            closeCameraModal();
+            Toast.show('تم التقاط الصورة بنجاح', 'success');
+        };
+
+        // ── Global State ──
+        let currentStatus = 'Active';
+        let searchParams = new URLSearchParams(window.location.search);
+        let editId = searchParams.get('editId') || searchParams.get('edit');
+        let currentPhotoBase64 = '';
+
+        // ── Specialty Management Logic ──
+        window.openSpecialtyModal = () => {
+            try {
+                Modal.open('modal-specialty');
+                renderSpecialtyList();
+            } catch (err) {
+                console.error('Error opening specialty modal:', err);
+            }
+        };
+
+        window.handleAddSpecialty = () => {
+            const input = document.getElementById('new-specialty-input');
+            const val = input.value.trim();
+            if (!val) return;
+
+            let list = Storage.get('trainer_specialties') || [];
+            if (list.includes(val)) {
+                Toast.show('هذا التخصص موجود بالفعل', 'error');
+                return;
+            }
+
+            list.push(val);
+            Storage.save('trainer_specialties', list);
+            input.value = '';
+            renderSpecialtyList();
+            renderSpecialtySelect(list);
+            Toast.show('تم إضافة التخصص بنجاح', 'success');
+        };
+
+        window.handleDeleteSpecialty = (name) => {
+            Modal.confirm({
+                title: 'تأكيد حذف التخصص',
+                message: `هل أنت متأكد من حذف تخصص [${name}]؟`,
+                type: 'danger',
+                confirmText: 'حذف',
+                cancelText: 'تراجع',
+                icon: 'fa-trash-can',
+                onConfirm: () => {
+                    let list = Storage.get('trainer_specialties') || [];
+                    list = list.filter(s => s !== name);
+                    Storage.save('trainer_specialties', list);
+                    renderSpecialtyList();
+                    renderSpecialtySelect(list);
+                    if (window.AudioCore) AudioCore.playScare();
+                    Toast.show('تم حذف التخصص بنجاح', 'info');
+                }
+            });
+        };
+
+        function renderSpecialtyList() {
+            const container = document.getElementById('specialty-list-container');
+            if (!container) return;
+
+            const list = Storage.get('trainer_specialties') || [];
+            container.innerHTML = '';
+
+            if (list.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted);">لا توجد تخصصات مسجلة</div>';
+                return;
+            }
+
+            list.forEach(specialty => {
+                const item = document.createElement('div');
+                item.style.cssText = 'display:flex; justify-content:space-between; align-items:center; padding:12px 15px; background:var(--bg-main); border-radius:12px; margin-bottom:10px; font-weight:700; border: 1px solid var(--border-soft);';
+
+                const span = document.createElement('span');
+                span.textContent = specialty;
+
+                const delBtn = document.createElement('button');
+                delBtn.type = 'button';
+                delBtn.style.cssText = 'background:transparent; border:none; color:#ef4444; cursor:pointer; font-size: 1.1rem; padding: 5px;';
+                delBtn.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+                delBtn.onclick = () => window.handleDeleteSpecialty(specialty);
+
+                item.appendChild(span);
+                item.appendChild(delBtn);
+                container.appendChild(item);
+            });
+        }
+
+        function renderSpecialtySelect(list) {
+            const select = document.getElementById('trainer-specialty');
+            if (!select) return;
+
+            const currentVal = select.value;
+            select.innerHTML = '<option value="">اختر التخصص...</option>';
+            list.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s;
+                opt.textContent = s;
+                select.appendChild(opt);
+            });
+            if (currentVal) select.value = currentVal;
+        }
+
+        function initSpecialties() {
+            const list = Storage.get('trainer_specialties') || [];
+            renderSpecialtySelect(list);
+        }
+
+        // ── Initialization ──
+        document.addEventListener('DOMContentLoaded', () => {
+            initSpecialties();
+            initBranchCheckboxes();
+            if (editId) {
+                loadTrainerData(editId);
+            }
+        });
+
+        function initBranchCheckboxes() {
+            const container = document.getElementById('branch-checkboxes');
+            if (!container) return;
+            const branches = Storage.get('branches') || [];
+            container.innerHTML = branches.map(b => `
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 5px; border-radius: 8px; transition: 0.2s;" onmouseover="this.style.background='var(--bg-main)'" onmouseout="this.style.background='transparent'">
+                    <input type="checkbox" class="branch-check" value="${b.id}" style="width: 18px; height: 18px; accent-color: var(--accent-teal);">
+                    <span style="font-weight: 700; font-size: 0.9rem;">${b.name}</span>
+                </label>
+            `).join('') || '<div style="color: var(--text-muted); font-size: 0.8rem;">يرجى إضافة فروع أولاً</div>';
+            // 🎯 Automatic ID generation during typing
+            const syncId = () => {
+                const phone = document.getElementById('trainer-phone').value.trim();
+                const codeInput = document.getElementById('trainer-code');
+                if (phone.length >= 7 && (codeInput.value === '' || codeInput.value.includes('-'))) {
+                    codeInput.value = Utils.generateFixedCode('TRA', phone);
+                    codeInput.style.borderColor = 'var(--accent-teal)';
+                }
+            };
+            document.getElementById('trainer-phone').addEventListener('input', syncId);
+            document.getElementById('trainer-name').addEventListener('input', syncId);
+        }
+
+        function toggleBranchSelection(mode) {
+            const container = document.getElementById('specific-branches-container');
+            if (container) container.style.display = (mode === 'specific' ? 'block' : 'none');
+        }
+
+        // ── UI Control Functions ──
+        function setStatus(status) {
+            currentStatus = status;
+            const activeBtn = document.getElementById('status-active');
+            const inactiveBtn = document.getElementById('status-inactive');
+            if (activeBtn) activeBtn.classList.toggle('active', status === 'Active');
+            if (inactiveBtn) inactiveBtn.classList.toggle('active', status === 'Inactive');
+        }
+
+        function togglePaymentFields(mode) {
+            const fixed = document.getElementById('fixed-val-group');
+            const ratio = document.getElementById('ratio-val-group');
+            if (!fixed || !ratio) return;
+
+            if (mode === 'fixed') {
+                fixed.style.display = 'block';
+                ratio.style.display = 'none';
+            } else if (mode === 'ratio') {
+                fixed.style.display = 'none';
+                ratio.style.display = 'block';
+            } else {
+                fixed.style.display = 'block';
+                ratio.style.display = 'block';
+            }
+        }
+
+        function previewPhoto(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    currentPhotoBase64 = e.target.result;
+                    const preview = document.getElementById('photo-preview');
+                    const camIcon = document.getElementById('camera-icon');
+                    const uploadText = document.getElementById('upload-text');
+
+                    if (preview) {
+                        preview.src = currentPhotoBase64;
+                        preview.style.display = 'block';
+                    }
+                    if (camIcon) camIcon.style.display = 'none';
+                    if (uploadText) uploadText.style.display = 'none';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function loadTrainerData(id) {
+            const trainers = Storage.get('trainers') || [];
+            const t = trainers.find(x => x.id == id);
+            if (!t) return;
+
+            document.getElementById('page-title-text').textContent = '📝 تعديل بيانات المحاضر';
+            const editHeader = document.getElementById('edit-header');
+            if (editHeader) editHeader.style.display = 'flex';
+
+            const btnText = document.getElementById('btn-text');
+            if (btnText) btnText.textContent = 'تحديث البيانات وحفظ التغييرات';
+
+            document.getElementById('trainer-name').value = t.name || '';
+            document.getElementById('trainer-phone').value = t.phone || '';
+            document.getElementById('trainer-email').value = t.email || '';
+
+            let specialties = Storage.get('trainer_specialties') || [];
+            if (t.specialty && !specialties.includes(t.specialty)) {
+                specialties.push(t.specialty);
+                Storage.save('trainer_specialties', specialties);
+                renderSpecialtySelect(specialties);
+            }
+            document.getElementById('trainer-specialty').value = t.specialty || '';
+
+            document.getElementById('trainer-code').value = t.trainerCode || '';
+            document.getElementById('trainer-contract').value = t.contractType || 'full-time';
+            document.getElementById('trainer-payment-mode').value = t.paymentMode || 'fixed';
+            document.getElementById('trainer-payment-value').value = t.paymentValue || 0;
+            document.getElementById('trainer-payment-ratio').value = t.paymentRatio || 0;
+
+            togglePaymentFields(t.paymentMode || 'fixed');
+            setStatus(t.status || 'Active');
+
+            if (t.photo) {
+                currentPhotoBase64 = t.photo;
+                const preview = document.getElementById('photo-preview');
+                const camIcon = document.getElementById('camera-icon');
+                const uploadText = document.getElementById('upload-text');
+
+                if (preview) {
+                    preview.src = t.photo;
+                    preview.style.display = 'block';
+                }
+                if (camIcon) camIcon.style.display = 'none';
+                if (uploadText) uploadText.style.display = 'none';
+            }
+
+            // Load Multi-Branch Data
+            if (t.is_global) {
+                document.getElementById('trainer-branch-mode').value = 'all';
+                toggleBranchSelection('all');
+            } else {
+                document.getElementById('trainer-branch-mode').value = 'specific';
+                toggleBranchSelection('specific');
+                const checks = document.querySelectorAll('.branch-check');
+                const savedIds = t.branch_ids || (t.branch_id ? [t.branch_id] : []);
+                checks.forEach(c => c.checked = savedIds.includes(Number(c.value)));
+            }
+        }
+
+        document.getElementById('trainer-form-main').onsubmit = function (e) {
+            e.preventDefault();
+            try {
+                const trainers = Storage.get('trainers') || [];
+                const activeBranchId = Number(Permissions.getActiveBranchId() || 1);
+
+                const branchMode = document.getElementById('trainer-branch-mode').value;
+                const isGlobal = branchMode === 'all';
+                const branchIds = isGlobal ? [] : Array.from(document.querySelectorAll('.branch-check:checked')).map(c => Number(c.value));
+
+                if (!isGlobal && branchIds.length === 0) {
+                    Toast.show('يرجى اختيار فرع واحد على الأقل أو جعل النطاق "الكل"', 'error');
+                    return;
+                }
+
+                // Required fields validation with visual cue
+                const reqName = document.getElementById('trainer-name');
+                const reqPhone = document.getElementById('trainer-phone');
+                if (!reqName.value.trim() || !reqPhone.value.trim()) {
+                    if (!reqName.value.trim()) {
+                        reqName.style.borderColor = '#ef4444';
+                    }
+                    if (!reqPhone.value.trim()) {
+                        reqPhone.style.borderColor = '#ef4444';
+                    }
+                    
+                    if (!reqName.value.trim()) {
+                        reqName.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        reqName.focus();
+                    } else {
+                        reqPhone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        reqPhone.focus();
+                    }
+
+                    Toast.show('يرجى إكمال البيانات الأساسية', 'error');
+                    setTimeout(() => {
+                        reqName.style.borderColor = '';
+                        reqPhone.style.borderColor = '';
+                    }, 3000);
+                    return;
+                }
+
+                let tCode = document.getElementById('trainer-code').value.trim();
+                if (!tCode || tCode.includes('-')) {
+                    // Always prefer numeric in v5 system
+                    tCode = Utils.generateFixedCode('TRA', reqPhone.value.trim() || Date.now());
+                }
+
+                const trainerData = {
+                    id: editId ? Number(editId) : Date.now(),
+                    name: reqName.value.trim(),
+                    phone: reqPhone.value.trim(),
+                    email: document.getElementById('trainer-email').value,
+                    specialty: document.getElementById('trainer-specialty').value,
+                    code: tCode,
+                    trainerCode: tCode,
+                    contractType: document.getElementById('trainer-contract').value,
+                    status: currentStatus,
+                    paymentMode: document.getElementById('trainer-payment-mode').value,
+                    paymentValue: Number(document.getElementById('trainer-payment-value').value),
+                    paymentRatio: Number(document.getElementById('trainer-payment-ratio').value),
+                    photo: currentPhotoBase64,
+                    is_global: isGlobal,
+                    branch_ids: branchIds,
+                    branch_id: isGlobal ? null : branchIds[0] // Fallback for old code
+                };
+
+                if (editId) {
+                    const idx = trainers.findIndex(x => x.id == editId);
+                    if (idx !== -1) {
+                        trainers[idx] = { ...trainers[idx], ...trainerData };
+                    }
+                } else {
+                    trainers.push(trainerData);
+                }
+
+                Storage.save('trainers', trainers);
+                if (window.AudioCore) AudioCore.playSuccess();
+                Toast.show('تم حفظ بيانات المحاضر بنجاح', 'success');
+
+                setTimeout(() => {
+                    window.location.href = 'trainers.html';
+                }, 1000);
+            } catch (err) {
+                console.error('Error saving trainer:', err);
+                Toast.show('حدث خطأ أثناء حفظ البيانات', 'error');
+            }
+        };
+
+        // Global Enter key to Save
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const tag = e.target.tagName.toLowerCase();
+                if (tag === 'textarea' || tag === 'button') return;
+                e.preventDefault();
+                const form = document.getElementById('trainer-form-main');
+                if (form) form.dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>
+
+

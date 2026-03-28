@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تصفير النظام - EduMaster Pro</title>
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar"></aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar">
+                    <div class="action-group">
+                        <h1 class="page-title">🧹 تصفير النظام</h1>
+                    </div>
+                </header>
+
+                <!-- System Stats -->
+                <div class="data-card" style="max-width: 900px; margin: 20px auto;">
+                    <h2 style="margin-bottom: 20px;">📊 إحصائيات النظام الحالية</h2>
+                    <div id="system-stats"
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <!-- Will be populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Reset Options -->
+                <div class="data-card" style="max-width: 900px; margin: 20px auto;">
+                    <h2 style="margin-bottom: 20px; color: var(--accent-orange);">⚠️ خيارات التصفير</h2>
+
+                    <!-- Soft Reset -->
+                    <div
+                        style="background: rgba(251, 191, 36, 0.1); border: 2px solid #fbbf24; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                        <h3 style="color: #fbbf24; margin-bottom: 10px;">
+                            <i class="fa-solid fa-broom"></i> تصفير جزئي (البيانات فقط)
+                        </h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                            يحذف الطلاب، المجموعات، المعاملات المالية، والمخزون فقط.<br>
+                            <strong>يحتفظ بـ:</strong> المستخدمين، الفروع، الدليل المحاسبي
+                        </p>
+                        <button class="primary-btn" onclick="performSoftReset()" style="background: #fbbf24;">
+                            <i class="fa-solid fa-broom"></i>
+                            تصفير البيانات التشغيلية
+                        </button>
+                    </div>
+
+                    <!-- Factory Reset -->
+                    <div
+                        style="background: rgba(239, 68, 68, 0.1); border: 2px solid #ef4444; border-radius: 12px; padding: 20px;">
+                        <h3 style="color: #ef4444; margin-bottom: 10px;">
+                            <i class="fa-solid fa-triangle-exclamation"></i> تصفير كامل (إعادة ضبط المصنع)
+                        </h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 15px;">
+                            يحذف <strong>جميع البيانات</strong> ويعيد النظام لحالة المصنع.<br>
+                            سيتم الاحتفاظ فقط بحساب المدير الافتراضي (admin/admin123)
+                        </p>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <button class="danger-btn" onclick="performFactoryReset()">
+                                <i class="fa-solid fa-trash-can"></i>
+                                تصفير كامل للنظام
+                            </button>
+                            <button class="secondary-btn" onclick="exportBackup()">
+                                <i class="fa-solid fa-download"></i>
+                                تصدير نسخة احتياطية أولاً
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Warning Box -->
+                <div class="data-card"
+                    style="max-width: 900px; margin: 20px auto; background: rgba(239, 68, 68, 0.05);">
+                    <h3 style="color: #ef4444; margin-bottom: 10px;">
+                        <i class="fa-solid fa-exclamation-triangle"></i> تحذير مهم
+                    </h3>
+                    <ul style="color: var(--text-secondary); line-height: 1.8;">
+                        <li>لا يمكن التراجع عن عملية التصفير</li>
+                        <li>تأكد من حفظ نسخة احتياطية قبل التصفير</li>
+                        <li>سيتم تسجيل خروجك تلقائياً بعد التصفير</li>
+                        <li>استخدم هذه الأداة بحذر شديد</li>
+                    </ul>
+                </div>
+
+                <!-- Console Output -->
+                <div class="data-card" id="console-output"
+                    style="max-width: 900px; margin: 20px auto; background: var(--bg-dark); font-family: 'Courier New', monospace; font-size: 0.9rem; max-height: 400px; overflow-y: auto; display: none;">
+                    <h3 style="margin-bottom: 15px; color: var(--accent-blue);">📋 سجل العمليات</h3>
+                    <div id="console-content"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+    <script src="../js/system-reset.js"></script>
+
+    <script>
+        // Initialize UI
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof UICore !== 'undefined') {
+                UICore.renderSidebar();
+            }
+            loadSystemStats();
+        });
+
+        // Override console.log to show in UI
+        const consoleContent = document.getElementById('console-content');
+        const consoleOutput = document.getElementById('console-output');
+        const originalLog = console.log;
+
+        console.log = function (...args) {
+            originalLog.apply(console, args);
+            if (consoleContent) {
+                consoleOutput.style.display = 'block';
+                const message = args.join(' ');
+                const line = document.createElement('div');
+                line.textContent = message;
+                line.style.marginBottom = '5px';
+
+                if (message.includes('✅') || message.includes('✓')) line.style.color = '#10b981';
+                if (message.includes('❌')) line.style.color = '#ef4444';
+                if (message.includes('⚠️') || message.includes('🧹')) line.style.color = '#fbbf24';
+                if (message.includes('📊') || message.includes('•')) line.style.color = '#94a3b8';
+
+                consoleContent.appendChild(line);
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            }
+        };
+
+        function loadSystemStats() {
+            const stats = SystemReset.getSystemStats();
+            const container = document.getElementById('system-stats');
+
+            container.innerHTML = `
+                <div class="stat-box">
+                    <div style="font-size: 2rem; font-weight: 800; color: var(--accent-orange);">${stats.students}</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9rem;">طلاب</div>
+                </div>
+                <div class="stat-box">
+                    <div style="font-size: 2rem; font-weight: 800; color: var(--accent-green);">${stats.groups}</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9rem;">مجموعات</div>
+                </div>
+                <div class="stat-box">
+                    <div style="font-size: 2rem; font-weight: 800; color: var(--accent-purple);">${stats.branches}</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9rem;">فروع</div>
+                </div>
+                <div class="stat-box">
+                    <div style="font-size: 2rem; font-weight: 800; color: var(--accent-blue);">${stats.books}</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9rem;">كتب</div>
+                </div>
+                <div class="stat-box">
+                    <div style="font-size: 2rem; font-weight: 800; color: #fbbf24;">${stats.transactions}</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9rem;">معاملات مالية</div>
+                </div>
+                <div class="stat-box">
+                    <div style="font-size: 2rem; font-weight: 800; color: #06b6d4;">${stats.journalEntries}</div>
+                    <div style="color: var(--text-secondary); font-size: 0.9rem;">قيود محاسبية</div>
+                </div>
+            `;
+        }
+
+        function performSoftReset() {
+            consoleContent.innerHTML = '';
+            SystemReset.softReset();
+        }
+
+        function performFactoryReset() {
+            consoleContent.innerHTML = '';
+            SystemReset.factoryReset();
+        }
+
+        function exportBackup() {
+            SystemReset.exportBeforeReset();
+        }
+    </script>
+
+    <style>
+        .stat-box {
+            background: var(--bg-surface);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .secondary-btn {
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            border: 2px solid var(--accent-blue);
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .secondary-btn:hover {
+            background: var(--accent-blue);
+            color: white;
+        }
+    </style>
+</body>
+
+</html>
+
+

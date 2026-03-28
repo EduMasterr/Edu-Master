@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مولد البيانات التجريبية - EduMaster Pro</title>
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Injected by UICore -->
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar">
+                    <div class="action-group">
+                        <h1 class="page-title">🎯 مولد البيانات التجريبية</h1>
+                    </div>
+                </header>
+
+                <!-- Demo Data Generator Interface -->
+                <div class="data-card" style="max-width: 900px; margin: 40px auto;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <i class="fa-solid fa-database"
+                            style="font-size: 3rem; color: var(--accent-blue); margin-bottom: 15px;"></i>
+                        <h2>مولد البيانات التجريبية</h2>
+                        <p style="color: var(--text-secondary); margin-top: 10px;">
+                            قم بإنشاء بيانات تجريبية كاملة لاختبار النظام بشكل واقعي
+                        </p>
+                        <p style="color: var(--accent-blue); font-weight: 700; margin-top: 10px; font-size: 0.95rem;">
+                            📍 جميع البيانات سيتم إنشاؤها في <strong>فرع 4</strong> فقط
+                        </p>
+                    </div>
+
+                    <!-- What Will Be Created -->
+                    <div class="info-box"
+                        style="background: rgba(0, 234, 255, 0.05); border: 1px solid var(--accent-blue); border-radius: 12px; padding: 20px; margin-bottom: 30px;">
+                        <h3 style="color: var(--accent-blue); margin-bottom: 15px;">
+                            <i class="fa-solid fa-info-circle"></i> ماذا سيتم إنشاؤه؟
+                        </h3>
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            <div class="stat-item">
+                                <i class="fa-solid fa-users-rectangle" style="color: var(--accent-green);"></i>
+                                <strong>5 مجموعات</strong>
+                                <p style="font-size: 0.85rem; color: var(--text-secondary);">English, IELTS,
+                                    Programming...</p>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fa-solid fa-book" style="color: var(--accent-purple);"></i>
+                                <strong>3 كتب</strong>
+                                <p style="font-size: 0.85rem; color: var(--text-secondary);">مع تسجيل المخزون</p>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fa-solid fa-user-graduate" style="color: var(--accent-orange);"></i>
+                                <strong>5 طلاب</strong>
+                                <p style="font-size: 0.85rem; color: var(--text-secondary);">بحالات مختلفة</p>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fa-solid fa-receipt" style="color: var(--accent-blue);"></i>
+                                <strong>5 مدفوعات</strong>
+                                <p style="font-size: 0.85rem; color: var(--text-secondary);">مع قيود محاسبية</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button class="primary-btn" onclick="runSeeder()"
+                            style="padding: 15px 40px; font-size: 1.1rem;">
+                            <i class="fa-solid fa-play"></i>
+                            إنشاء البيانات التجريبية
+                        </button>
+                        <button class="danger-btn" onclick="cleanupDemo()"
+                            style="padding: 15px 40px; font-size: 1.1rem;">
+                            <i class="fa-solid fa-trash"></i>
+                            حذف البيانات التجريبية
+                        </button>
+                    </div>
+
+                    <!-- Current Stats -->
+                    <div id="demo-stats"
+                        style="margin-top: 30px; padding: 20px; background: var(--bg-surface); border-radius: 12px; display: none;">
+                        <h3 style="margin-bottom: 15px;">📊 إحصائيات البيانات التجريبية الحالية</h3>
+                        <div id="stats-content"
+                            style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center;">
+                            <!-- Will be populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Console Output -->
+                    <div id="console-output"
+                        style="margin-top: 30px; padding: 20px; background: var(--bg-dark); border-radius: 12px; font-family: 'Courier New', monospace; font-size: 0.9rem; max-height: 400px; overflow-y: auto; display: none;">
+                        <!-- Console logs will appear here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Load Core Scripts -->
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/accounting-core.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+    <script src="../js/demo-seed-data.js"></script>
+
+    <script>
+        // Initialize UI
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof UICore !== 'undefined') {
+                UICore.renderSidebar();
+                UICore.renderGlobalSearch();
+            }
+            updateStats();
+        });
+
+        // Override console.log to show in UI
+        const consoleOutput = document.getElementById('console-output');
+        const originalLog = console.log;
+        console.log = function (...args) {
+            originalLog.apply(console, args);
+            if (consoleOutput) {
+                consoleOutput.style.display = 'block';
+                const message = args.join(' ');
+                const line = document.createElement('div');
+                line.textContent = message;
+                line.style.marginBottom = '5px';
+                if (message.includes('✅')) line.style.color = '#10b981';
+                if (message.includes('❌')) line.style.color = '#ef4444';
+                if (message.includes('=')) line.style.color = '#00eaff';
+                consoleOutput.appendChild(line);
+                consoleOutput.scrollTop = consoleOutput.scrollHeight;
+            }
+        };
+
+        function runSeeder() {
+            consoleOutput.innerHTML = '';
+            consoleOutput.style.display = 'block';
+
+            setTimeout(() => {
+                DemoSeeder.seed();
+                updateStats();
+            }, 100);
+        }
+
+        function cleanupDemo() {
+            DemoSeeder.cleanup();
+            updateStats();
+            consoleOutput.innerHTML = '';
+            consoleOutput.style.display = 'none';
+        }
+
+        function updateStats() {
+            const stats = DemoSeeder.getStats();
+            const statsDiv = document.getElementById('demo-stats');
+            const statsContent = document.getElementById('stats-content');
+
+            const total = stats.students + stats.groups + stats.books + stats.transactions;
+
+            if (total > 0) {
+                statsDiv.style.display = 'block';
+                statsContent.innerHTML = `
+                    <div>
+                        <div style="font-size: 2rem; font-weight: 800; color: var(--accent-orange);">${stats.students}</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">طلاب</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2rem; font-weight: 800; color: var(--accent-green);">${stats.groups}</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">مجموعات</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2rem; font-weight: 800; color: var(--accent-purple);">${stats.books}</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">كتب</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2rem; font-weight: 800; color: var(--accent-blue);">${stats.transactions}</div>
+                        <div style="color: var(--text-secondary); font-size: 0.9rem;">معاملات</div>
+                    </div>
+                `;
+            } else {
+                statsDiv.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
+

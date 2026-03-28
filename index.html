@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMaster Pro - تسجيل الدخول</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            width: 100%; height: 100%;
+            font-family: 'Tajawal', 'Inter', sans-serif;
+            background: radial-gradient(ellipse at top, #1e293b 0%, #0a2385 60%, #060e2e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            color: #fff;
+        }
+
+        /* ─── Animated Background Stars ─── */
+        .bg-stars {
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image:
+                radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 70% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.2) 0%, transparent 100%),
+                radial-gradient(2px 2px at 85% 20%, rgba(153,27,27,0.5) 0%, transparent 100%),
+                radial-gradient(2px 2px at 15% 70%, rgba(153,27,27,0.3) 0%, transparent 100%);
+        }
+
+        /* ─── Login Card ─── */
+        .login-card {
+            position: relative; z-index: 10;
+            background: rgba(10, 20, 60, 0.75);
+            border: 2px solid rgba(153, 27, 27, 0.8);
+            border-radius: 32px;
+            padding: 50px 45px;
+            width: 460px;
+            max-width: 96vw;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 0 40px rgba(153, 27, 27, 0.15) inset;
+            backdrop-filter: blur(24px);
+            text-align: center;
+            animation: card-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @keyframes card-in {
+            from { opacity: 0; transform: translateY(30px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* ─── Logo Circle ─── */
+        .logo-glow {
+            width: 100px; height: 100px;
+            margin: 0 auto 30px;
+            background: rgba(153, 27, 27, 0.12);
+            border: 2.5px solid #991b1b;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(153, 27, 27, 0.4), 0 0 60px rgba(153, 27, 27, 0.1);
+            animation: logo-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logo-pulse {
+            0%, 100% { box-shadow: 0 0 25px rgba(153,27,27,0.4); }
+            50%       { box-shadow: 0 0 45px rgba(153,27,27,0.7); }
+        }
+
+        .logo-glow i { font-size: 3rem; color: #fff; }
+
+        /* ─── Title ─── */
+        .system-title {
+            font-size: 2rem; font-weight: 800; letter-spacing: 1px;
+            margin-bottom: 8px; color: #fff;
+        }
+        .system-subtitle {
+            color: #94a3b8; font-size: 0.9rem; margin-bottom: 35px;
+        }
+
+        /* ─── Steps ─── */
+        .login-step { display: none; animation: fade-in 0.35s ease; }
+        .login-step.active { display: block; }
+        @keyframes fade-in {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ─── HQ Button ─── */
+        .hq-btn {
+            width: 100%;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, rgba(153,27,27,0.3) 0%, rgba(220,38,38,0.15) 100%);
+            border: 2px solid #991b1b;
+            border-radius: 16px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 1.05rem;
+            font-weight: 700;
+            display: flex; align-items: center; gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 18px;
+        }
+        .hq-btn:hover {
+            background: linear-gradient(135deg, rgba(153,27,27,0.5) 0%, rgba(220,38,38,0.3) 100%);
+            border-color: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(153,27,27,0.3);
+        }
+        .hq-btn i { font-size: 1.2rem; color: #dc2626; }
+
+        /* ─── Branch Drawer ─── */
+        .branch-drawer-container {
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .drawer-toggle {
+            width: 100%; padding: 14px 20px;
+            background: rgba(255,255,255,0.04);
+            border: none;
+            color: #94a3b8;
+            font-family: inherit; font-size: 1rem; font-weight: 600;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; transition: all 0.3s;
+        }
+        .drawer-toggle:hover { color: #fff; background: rgba(255,255,255,0.08); }
+        .drawer-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .drawer-content.active { max-height: 400px; overflow-y: auto; }
+        .branch-grid { display: grid; gap: 8px; padding: 12px; }
+        .branch-btn {
+            width: 100%; padding: 13px 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 12px; color: #cbd5e1;
+            font-family: inherit; font-size: 0.95rem;
+            display: flex; align-items: center; gap: 10px;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .branch-btn:hover {
+            border-color: #1A9E9C;
+            background: rgba(26,158,156,0.1);
+            color: #fff; transform: scale(1.01);
+        }
+
+        /* ─── Form Controls ─── */
+        .form-group { position: relative; margin-bottom: 16px; }
+        .form-group i.field-icon {
+            position: absolute; right: 16px; top: 50%;
+            transform: translateY(-50%);
+            color: #64748b; font-size: 1rem; z-index: 2;
+        }
+        .form-control {
+            width: 100%;
+            padding: 14px 46px 14px 16px;
+            background: rgba(255,255,255,0.06);
+            border: 1.5px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            color: #fff; font-family: inherit; font-size: 1rem;
+            outline: none; transition: border-color 0.3s, background 0.3s;
+        }
+        .form-control::placeholder { color: #64748b; }
+        .form-control:focus {
+            border-color: #1A9E9C;
+            background: rgba(26,158,156,0.08);
+        }
+        .eye-toggle {
+            position: absolute; left: 16px; top: 50%;
+            transform: translateY(-50%);
+            color: #64748b; cursor: pointer; z-index: 2; font-size: 1rem;
+            transition: color 0.2s;
+        }
+        .eye-toggle:hover { color: #1A9E9C; }
+
+        /* ─── Submit Button ─── */
+        .btn-submit {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, #991b1b 0%, #dc2626 100%);
+            border: none; border-radius: 14px;
+            color: #fff; font-family: inherit;
+            font-size: 1.1rem; font-weight: 700;
+            cursor: pointer; display: flex;
+            align-items: center; justify-content: center; gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 6px 20px rgba(153,27,27,0.35);
+        }
+        .btn-submit:hover:not(:disabled) {
+            background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(153,27,27,0.5);
+        }
+        .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        /* ─── Selected Branch Banner ─── */
+        .branch-banner {
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(153,27,27,0.1);
+            border: 1px solid rgba(153,27,27,0.3);
+            border-radius: 14px; padding: 13px 18px;
+            color: #fca5a5; margin-bottom: 24px;
+        }
+        .back-btn {
+            background: transparent; border: none;
+            color: #94a3b8; cursor: pointer;
+            font-size: 1.1rem; transition: color 0.2s;
+        }
+        .back-btn:hover { color: #fff; }
+
+        /* ─── Remember Me ─── */
+        .remember-group {
+            display: flex; justify-content: center; gap: 24px;
+            margin-bottom: 20px;
+        }
+        .remember-item {
+            display: flex; align-items: center; gap: 7px;
+            color: #94a3b8; font-size: 0.85rem; cursor: pointer;
+        }
+        .remember-item input { accent-color: #1A9E9C; width: 15px; height: 15px; }
+        .remember-item:hover { color: #fff; }
+
+        /* ─── Error ─── */
+        .login-error {
+            color: #f87171; font-size: 0.9rem;
+            background: rgba(239,68,68,0.1);
+            padding: 11px; border-radius: 10px;
+            margin-top: 14px; display: none;
+        }
+
+        /* ─── Forgot ─── */
+        .forgot-pass {
+            display: block; margin-top: 18px;
+            color: #64748b; font-size: 0.85rem;
+            text-decoration: none; cursor: pointer; transition: color 0.2s;
+        }
+        .forgot-pass:hover { color: #1A9E9C; }
+
+        /* ─── Modal ─── */
+        .modal-overlay {
+            position: fixed; inset: 0; z-index: 9000;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            display: none; align-items: center; justify-content: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-card {
+            background: #0f172a;
+            border: 2px solid #00ff88;
+            border-radius: 24px; padding: 40px; width: 400px;
+            max-width: 95vw; text-align: center;
+            animation: card-in 0.3s ease;
+            box-shadow: 0 0 40px rgba(0,255,136,0.15);
+        }
+        .modal-icon {
+            width: 64px; height: 64px;
+            background: rgba(0,255,136,0.1);
+            color: #00ff88; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; margin: 0 auto 18px;
+        }
+        .modal-card h2 { color: #fff; margin-bottom: 10px; }
+        .modal-card p { color: #94a3b8; font-size: 0.9rem; line-height: 1.5; }
+        .modal-actions { display: flex; gap: 12px; margin-top: 24px; }
+        .btn-modal-confirm {
+            flex: 1; padding: 13px; border-radius: 11px;
+            background: #00ff88; color: #000;
+            font-weight: 700; border: none; cursor: pointer;
+            font-family: inherit; transition: background 0.3s;
+        }
+        .btn-modal-confirm:hover { background: #22c55e; }
+        .btn-modal-cancel {
+            flex: 1; padding: 13px; border-radius: 11px;
+            background: rgba(255,255,255,0.06); color: #94a3b8;
+            font-weight: 600; border: none; cursor: pointer;
+            font-family: inherit; transition: background 0.3s;
+        }
+        .btn-modal-cancel:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+        /* Recovery card */
+        .recovery-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(26,158,156,0.2);
+            border-radius: 13px; padding: 14px;
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 10px; text-align: right;
+        }
+        .recovery-label { color: #1A9E9C; font-size: 0.78rem; margin-bottom: 3px; }
+        .recovery-value { color: #fff; font-weight: 600; font-size: 0.95rem; }
+    </style>
+</head>
+
+<body>
+    <div class="bg-stars"></div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+        <div class="logo-glow" id="logo-glow">
+            <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <h1 class="system-title app-brand-name">EduMaster Pro</h1>
+        <p class="system-subtitle">نظام إدارة المراكز التعليمية</p>
+
+        <!-- Step 1: Branch Selection -->
+        <div id="step-1" class="login-step active">
+            <button class="hq-btn" onclick="selectBranch(null, 'إدارة النظام (الرئيسي)')">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>إدارة النظام (الرئيسي)</span>
+            </button>
+
+            <div class="branch-drawer-container">
+                <button class="drawer-toggle" onclick="toggleBranchDrawer()">
+                    <span>فروع <span class="app-brand-name">EduMaster</span> المتاحة</span>
+                    <i class="fa-solid fa-chevron-down" id="drawer-arrow"></i>
+                </button>
+                <div id="branch-drawer" class="drawer-content">
+                    <div id="branch-grid" class="branch-grid"></div>
+                </div>
+            </div>
+
+            <a class="forgot-pass" onclick="openSecurityModal()">هل نسيت كلمة المرور؟</a>
+        </div>
+
+        <!-- Step 2: Login Form -->
+        <div id="step-2" class="login-step">
+            <div class="branch-banner">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <i class="fa-solid fa-location-dot" style="color:#dc2626;"></i>
+                    <span id="selected-branch-name" style="font-weight:700;"></span>
+                </div>
+                <button class="back-btn" onclick="showStep(1)">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <i class="fa-solid fa-user field-icon"></i>
+                    <input type="text" id="username" class="form-control" placeholder="اسم المستخدم" required>
+                </div>
+                <div class="form-group">
+                    <i class="fa-solid fa-lock field-icon"></i>
+                    <input type="password" id="password" class="form-control" placeholder="كلمة المرور" style="padding-left: 46px;" required>
+                    <i class="fa-solid fa-eye eye-toggle" onclick="togglePassword('password', this)"></i>
+                </div>
+
+                <div class="remember-group">
+                    <label class="remember-item">
+                        <input type="checkbox" id="remember-user">
+                        <span>تذكر المعرف</span>
+                    </label>
+                    <label class="remember-item">
+                        <input type="checkbox" id="remember-pass">
+                        <span>تذكر المرور</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submit-btn">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>دخول النظام</span>
+                </button>
+            </form>
+
+            <div class="login-error" id="login-error">❌ بيانات الدخول غير صحيحة لهذا الفرع</div>
+            <a class="forgot-pass" onclick="openSecurityModal()">هل نسيت كلمة المرور؟</a>
+        </div>
+    </div>
+
+    <!-- Security / Password Recovery Modal -->
+    <div id="security-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-icon"><i class="fa-solid fa-shield-virus"></i></div>
+            <h2>التحقق من الهوية</h2>
+            <p>يرجى إدخال كلمة المرور الرئيسية للوصول إلى بيانات الحساب</p>
+
+            <div id="master-input-group" style="margin-top:20px;">
+                <div class="form-group">
+                    <i class="fa-solid fa-key field-icon"></i>
+                    <input type="password" id="master-pass-input" class="form-control" placeholder="كلمة المرور الرئيسية" style="padding-left:46px;">
+                    <i class="fa-solid fa-eye eye-toggle" onclick="togglePassword('master-pass-input', this)"></i>
+                </div>
+            </div>
+
+            <div id="security-results" style="display:none;max-height:260px;overflow-y:auto;margin-top:16px;"></div>
+
+            <div class="modal-actions" id="modal-actions">
+                <button class="btn-modal-confirm" onclick="verifyMasterPassword()">تأكيد</button>
+                <button class="btn-modal-cancel" onclick="closeSecurityModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div id="notification-modal" class="modal-overlay">
+        <div class="modal-card" id="notify-card">
+            <div class="modal-icon" id="notify-icon-box"><i id="notify-icon" class="fa-solid fa-circle-info"></i></div>
+            <h2 id="notify-title">تنبيه</h2>
+            <p id="notify-msg"></p>
+            <div class="modal-actions" style="margin-top:20px;">
+                <button class="btn-modal-confirm" onclick="closeNotification()" style="background:#1A9E9C;">حسناً</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core JS -->
+    <script src="js/core.js"></script>
+    <script>
+        const MASTER_PASSWORD = 'admin135';
+        window.selectedBranchId = null;
+
+        /* ── Apply custom branding from config ── */
+        function applyBranding() {
+            try {
+                const raw = localStorage.getItem('edumaster_app_config');
+                if (!raw) return;
+                const cfg = JSON.parse(raw);
+
+                if (cfg.appName) {
+                    document.querySelectorAll('.app-brand-name').forEach(el => el.textContent = cfg.appName);
+                }
+
+                if (cfg.logoUrl && cfg.logoUrl.length > 50) {
+                    let url = cfg.logoUrl;
+                    if (!url.startsWith('data:') && !url.startsWith('http')) url = 'data:image/png;base64,' + url;
+                    const container = document.getElementById('logo-glow');
+                    if (container) {
+                        container.innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:contain;transform:translate(${cfg.logoX||0}px,${cfg.logoY||0}px) scale(${cfg.logoScale||1});">`;
+                    }
+                }
+            } catch(e) {}
+        }
+
+        window.addEventListener('load', applyBranding);
+
+        /* ── Navigation ── */
+        function showStep(n) {
+            document.querySelectorAll('.login-step').forEach(s => s.classList.remove('active'));
+            document.getElementById('step-' + n).classList.add('active');
+        }
+
+        function toggleBranchDrawer() {
+            const d = document.getElementById('branch-drawer');
+            const a = document.getElementById('drawer-arrow');
+            d.classList.toggle('active');
+            a.style.transform = d.classList.contains('active') ? 'rotate(180deg)' : '';
+        }
+
+        function selectBranch(id, name) {
+            window.selectedBranchId = id;
+            document.getElementById('selected-branch-name').textContent = name;
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+
+            const key = 'remember_branch_' + (id || 'HQ');
+            const saved = JSON.parse(localStorage.getItem(key) || '{}');
+            if (saved.username) { document.getElementById('username').value = saved.username; document.getElementById('remember-user').checked = true; }
+            if (saved.password) { document.getElementById('password').value = saved.password; document.getElementById('remember-pass').checked = true; }
+
+            const span = document.querySelector('#submit-btn span');
+            if (span) span.textContent = id === null ? 'دخول مدير النظام' : 'دخول موظف (' + name + ')';
+            showStep(2);
+        }
+
+        function populateBranches() {
+            const branches = typeof Storage !== 'undefined' ? (Storage.get('branches') || []) : [];
+            const grid = document.getElementById('branch-grid');
+            branches.forEach(b => {
+                const btn = document.createElement('button');
+                btn.className = 'branch-btn';
+                btn.onclick = () => selectBranch(b.id, b.name);
+                btn.innerHTML = '<i class="fa-solid fa-building"></i> <span>' + b.name + '</span>';
+                grid.appendChild(btn);
+            });
+        }
+
+        /* ── Password Toggle ── */
+        function togglePassword(id, icon) {
+            const inp = document.getElementById(id);
+            if (inp.type === 'password') { inp.type = 'text'; icon.classList.replace('fa-eye', 'fa-eye-slash'); }
+            else { inp.type = 'password'; icon.classList.replace('fa-eye-slash', 'fa-eye'); }
+        }
+
+        /* ── Notifications ── */
+        function showNotification(msg, title, type) {
+            document.getElementById('notify-title').textContent = title || 'تنبيه';
+            document.getElementById('notify-msg').textContent = msg;
+            const box = document.getElementById('notify-icon-box');
+            const ic = document.getElementById('notify-icon');
+            if (type === 'error') {
+                box.style.cssText = 'background:rgba(239,68,68,0.1);color:#ef4444;';
+                ic.className = 'fa-solid fa-triangle-exclamation';
+            } else {
+                box.style.cssText = 'background:rgba(26,158,156,0.1);color:#1A9E9C;';
+                ic.className = 'fa-solid fa-circle-info';
+            }
+            document.getElementById('notification-modal').classList.add('active');
+        }
+        function closeNotification() { document.getElementById('notification-modal').classList.remove('active'); }
+
+        /* ── Security Modal ── */
+        function openSecurityModal() {
+            const u = document.getElementById('username').value.trim();
+            if (!u) { showNotification('يرجى إدخال اسم المستخدم أولاً', 'تنبيه', 'error'); return; }
+            document.getElementById('security-modal').classList.add('active');
+            document.getElementById('master-pass-input').focus();
+            document.getElementById('master-input-group').style.display = 'block';
+            document.getElementById('security-results').style.display = 'none';
+            document.getElementById('modal-actions').style.display = 'flex';
+        }
+        function closeSecurityModal() {
+            document.getElementById('security-modal').classList.remove('active');
+            document.getElementById('master-pass-input').value = '';
+        }
+        function verifyMasterPassword() {
+            if (document.getElementById('master-pass-input').value === MASTER_PASSWORD) {
+                showRegisteredUsers();
+            } else {
+                showNotification('كلمة المرور الرئيسية غير صحيحة!', 'فشل التحقق', 'error');
+            }
+        }
+        function showRegisteredUsers() {
+            const users = (typeof Storage !== 'undefined') ? (Storage.get('users') || []) : [];
+            const branchId = window.selectedBranchId;
+            const search = document.getElementById('username').value.trim().toLowerCase();
+            const target = users.find(u =>
+                u.username.toLowerCase() === search &&
+                ((branchId === null && !u.branch) || (u.branch === parseInt(branchId)))
+            );
+
+            document.getElementById('master-input-group').style.display = 'none';
+            document.getElementById('modal-actions').style.display = 'none';
+            const area = document.getElementById('security-results');
+            area.style.display = 'block';
+
+            if (!target) {
+                area.innerHTML = `<div style="padding:20px;text-align:center;">
+                    <i class="fa-solid fa-user-slash" style="font-size:2.5rem;color:#ef4444;margin-bottom:12px;display:block;"></i>
+                    <h3 style="color:#fff;margin-bottom:8px;">المستخدم غير موجود</h3>
+                    <p style="color:#94a3b8;">لم يُعثر على [${search}] في هذا الفرع.</p>
+                </div>
+                <button class="btn-modal-confirm" style="width:100%;margin-top:16px;background:#1A9E9C;" onclick="closeSecurityModal()">حسناً</button>`;
+            } else {
+                area.innerHTML = `<h3 style="color:#fff;margin-bottom:16px;font-size:1rem;">🔑 بيانات الحساب المسترجعة</h3>
+                <div class="recovery-card">
+                    <div><div class="recovery-label">اسم المستخدم</div><div class="recovery-value">${target.username}</div></div>
+                    <div style="text-align:left;"><div class="recovery-label">كلمة المرور</div><div class="recovery-value">${target.password}</div></div>
+                </div>
+                <p style="color:#10b981;font-size:0.85rem;margin-top:8px;">✅ تم التحقق بنجاح</p>
+                <button class="btn-modal-confirm" style="width:100%;margin-top:16px;background:#1A9E9C;" onclick="closeSecurityModal()">حسناً، فهمت</button>`;
+            }
+        }
+
+        document.getElementById('master-pass-input').addEventListener('keypress', e => {
+            if (e.key === 'Enter') verifyMasterPassword();
+        });
+
+        /* ── Login Form ── */
+        document.getElementById('login-form').addEventListener('submit', e => {
+            e.preventDefault();
+            const err = document.getElementById('login-error');
+            const btn = document.getElementById('submit-btn');
+            err.style.display = 'none';
+            btn.disabled = true;
+            const orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const branchId = window.selectedBranchId;
+
+            setTimeout(() => {
+                const users = typeof Storage !== 'undefined' ? (Storage.get('users') || []) : [];
+                const user = users.find(u =>
+                    u.username.toLowerCase() === username.toLowerCase() &&
+                    u.password === password &&
+                    ((branchId === null && !u.branch) || (u.branch === parseInt(branchId)))
+                );
+
+                if (user) {
+                    const key = 'remember_branch_' + (branchId || 'HQ');
+                    const mem = {};
+                    if (document.getElementById('remember-user').checked) mem.username = username;
+                    if (document.getElementById('remember-pass').checked) mem.password = password;
+                    Object.keys(mem).length ? localStorage.setItem(key, JSON.stringify(mem)) : localStorage.removeItem(key);
+
+                    btn.style.background = 'linear-gradient(135deg,#059669,#10b981)';
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i> تم الدخول بنجاح';
+                    localStorage.setItem('edumaster_session', JSON.stringify(user));
+                    localStorage.removeItem('edumaster_logout_active'); // Clear logout flag
+                    sessionStorage.setItem('just_logged_in', 'true');
+                    setTimeout(() => { window.location.href = 'dashboard.html'; }, 600);
+                } else {
+                    err.style.display = 'block';
+                    btn.innerHTML = '❌ فشل الدخول – حاول مجدداً';
+                    setTimeout(() => { btn.disabled = false; btn.innerHTML = orig; btn.style.background = ''; }, 1600);
+                }
+            }, 800);
+        });
+
+        populateBranches();
+    </script>
+</body>
+</html>

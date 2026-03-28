@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة ولي الأمر - EduMaster Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a3a63;
+            --accent: #2dd4bf;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            padding-bottom: 50px;
+        }
+
+        /* Header Area */
+        .portal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #1a3a63 100%);
+            color: #fff;
+            padding: 40px 20px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(26, 58, 99, 0.2);
+        }
+
+        .avatar-circle {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid var(--accent);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 900;
+        }
+
+        .student-name {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+
+        .student-code {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-weight: 700;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            padding: 20px;
+            margin-top: -30px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-val {
+            display: block;
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        /* Sections */
+        .section-title {
+            padding: 20px 25px 10px;
+            font-size: 1.1rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--accent);
+        }
+
+        .content-card {
+            background: var(--card);
+            margin: 0 20px 15px;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+        }
+
+        /* Attendance List */
+        .att-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .att-item:last-child {
+            border-bottom: none;
+        }
+
+        .att-date {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .att-status {
+            font-size: 0.8rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 50px;
+        }
+
+        .status-present {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-absent {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Grades Bar */
+        .grade-row {
+            margin-bottom: 15px;
+        }
+
+        .grade-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .grade-bar-bg {
+            height: 8px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .grade-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 10px;
+        }
+
+        /* Achievement Cards */
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+            gap: 15px;
+            margin: 0 20px 20px;
+        }
+
+        .achievement-card {
+            background: white;
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border: 2px solid #f1f5f9;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .achievement-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+        }
+
+        .ach-icon {
+            font-size: 1.8rem;
+            color: #f59e0b;
+            margin-bottom: 8px;
+            display: block;
+            filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.2));
+        }
+
+        .ach-name {
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .ach-date {
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        /* Floating Contact */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: #25D366;
+            color: #fff;
+            padding: 15px;
+            border-radius: 50px;
+            text-align: center;
+            font-weight: 900;
+            text-decoration: none;
+            box-shadow: 0 10px 20px rgba(37, 211, 102, 0.3);
+            z-index: 100;
+        }
+
+        #login-screen {
+            position: fixed;
+            inset: 0;
+            background: var(--primary);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            padding: 40px;
+        }
+
+        .app-input {
+            width: 100%;
+            height: 55px;
+            border-radius: 15px;
+            border: none;
+            padding: 0 20px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .app-btn {
+            width: 100%;
+            height: 55px;
+            border-radius: 15px;
+            border: none;
+            background: var(--accent);
+            color: var(--primary);
+            font-weight: 900;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 🔑 Login Screen -->
+    <div id="login-screen">
+        <i class="fa-solid fa-graduation-cap" style="font-size: 4rem; margin-bottom: 20px; color: var(--accent);"></i>
+        <h1 style="font-weight: 900; margin-bottom: 10px;">بوابة الطالب / ولي الأمر</h1>
+        <p style="opacity: 0.7; margin-bottom: 30px; text-align: center;">يرجى إدخال بيانات التأكيد الخاصة بك لضمان الأمان
+        </p>
+        
+        <input type="text" id="student-code-input" class="app-input" placeholder="🔢 كود الطالب (مثال: S101)" required>
+        <input type="text" id="student-name-input" class="app-input" placeholder="👤 الاسم الأول أو بالكامل" required>
+        <input type="tel" id="student-phone-input" class="app-input" placeholder="📱 رقم الهاتف المسجل لدينا" required>
+        
+        <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; width: 100%; cursor: pointer;">
+            <input type="checkbox" id="remember-student" checked style="width: 20px; height: 20px; accent-color: var(--accent);">
+            <span style="font-weight: 700; opacity: 0.9;">تذكر بيانات الدخول على هذا الهاتف</span>
+        </label>
+
+        <button class="app-btn" onclick="portalAction.login()">دخول للمتابعة <i class="fa-solid fa-arrow-left" style="margin-right: 8px;"></i></button>
+        <p id="login-error" style="color: #fda4af; margin-top: 15px; font-weight: 700; display: none;">⚠️ البيانات غير صحيحة، يرجى المراجعة</p>
+    </div>
+
+    <!-- 📱 Portal Screen (Hidden by default) -->
+    <div id="portal-screen" style="display: none;">
+        <div class="portal-header">
+            <div class="avatar-circle" id="ui-avatar">؟</div>
+            <h1 class="student-name" id="ui-name">---</h1>
+            <p class="student-code">كود الطالب: <span id="ui-code">---</span></p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-val" id="ui-stat-attendance">0%</span>
+                <span class="stat-label">نسبة الحضور</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-val" id="ui-stat-grade">0%</span>
+                <span class="stat-label">متوسط الدرجات</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-val" id="ui-stat-balance">0</span>
+                <span class="stat-label">المدفوعات (ج.م)</span>
+            </div>
+        </div>
+
+        <h2 class="section-title"><i class="fa-solid fa-chart-line"></i> نتائج الاختبارات الأخيرة</h2>
+        <div class="content-card" id="ui-grades-list">
+            <!-- Grades injected here -->
+        </div>
+
+        <h2 class="section-title"><i class="fa-solid fa-medal"></i> إنجازاتي وأوسمتي</h2>
+        <div class="achievement-grid" id="ui-achievements-list">
+            <!-- Achievements Injected Here -->
+        </div>
+
+        <h2 class="section-title"><i class="fa-solid fa-calendar-check"></i> سجل الحضور الأخير</h2>
+        <div class="content-card" id="ui-attendance-list">
+            <!-- Attendance injected here -->
+        </div>
+
+        <a href="#" class="whatsapp-float">
+            <i class="fa-brands fa-whatsapp"></i> تواصل مع الإدارة الآن
+        </a>
+    </div>
+
+    <!-- Firebase Cloud Sync -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    
+    <script src="../js/core.js"></script>
+    <script>
+        const portalAction = {
+            init() {
+                const savedCode = localStorage.getItem('sp_code');
+                const savedName = localStorage.getItem('sp_name');
+                const savedPhone = localStorage.getItem('sp_phone');
+
+                if (savedCode && savedName && savedPhone) {
+                    document.getElementById('student-code-input').value = savedCode;
+                    document.getElementById('student-name-input').value = savedName;
+                    document.getElementById('student-phone-input').value = savedPhone;
+                }
+            },
+
+            login() {
+                const code = document.getElementById('student-code-input').value.trim();
+                const nameStr = document.getElementById('student-name-input').value.trim().toLowerCase();
+                const phone = document.getElementById('student-phone-input').value.trim();
+                const remember = document.getElementById('remember-student').checked;
+
+                if (!code || !nameStr || !phone) {
+                    this.showError("يرجى ملء جميع الحقول أولاً!");
+                    return;
+                }
+
+                const students = Storage.get('students') || [];
+                // Security Match: Needs to match Code EXACTLY AND (Phone matches OR Name contains)
+                const student = students.find(s => 
+                    (s.code === code || s.id === code) && 
+                    (s.phone === phone || (s.name && s.name.toLowerCase().includes(nameStr.split(' ')[0])))
+                );
+
+                if (student) {
+                    if (remember) {
+                        localStorage.setItem('sp_code', code);
+                        localStorage.setItem('sp_name', nameStr);
+                        localStorage.setItem('sp_phone', phone);
+                    } else {
+                        localStorage.removeItem('sp_code');
+                        localStorage.removeItem('sp_name');
+                        localStorage.removeItem('sp_phone');
+                    }
+
+                    this.render(student);
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('portal-screen').style.display = 'block';
+                } else {
+                    this.showError("⚠️ البيانات غير متطابقة مع سجلات السنتر");
+                }
+            },
+
+            showError(msg) {
+                const err = document.getElementById('login-error');
+                err.textContent = msg;
+                err.style.display = 'block';
+            },
+
+            render(student) {
+                document.getElementById('ui-name').innerText = student.name;
+                document.getElementById('ui-code').innerText = student.code || student.id;
+                document.getElementById('ui-avatar').innerText = student.name.substring(0, 1);
+
+                // Load Financials
+                const transactions = Storage.get('transactions') || [];
+                const studentPayments = transactions.filter(t => t.student_id == student.id && t.type === 'income');
+                const totalPaid = studentPayments.reduce((acc, t) => acc + (parseFloat(t.amount) || 0), 0);
+                document.getElementById('ui-stat-balance').innerText = totalPaid.toLocaleString();
+
+                // Load Grades (Simulation or Real)
+                const gradesData = Storage.get('student_grades') || {};
+                const studentGrades = gradesData[student.id] || [];
+                const gradesContainer = document.getElementById('ui-grades-list');
+
+                if (studentGrades.length === 0) {
+                    gradesContainer.innerHTML = '<p style="text-align:center; color:gray; font-size:0.8rem;">لا توجد نتائج مسجلة حالياً</p>';
+                } else {
+                    let totalGrade = 0;
+                    gradesContainer.innerHTML = studentGrades.slice(0, 3).map(g => {
+                        totalGrade += (g.grade || 0);
+                        return `
+                            <div class="grade-row">
+                                <div class="grade-info">
+                                    <span>${g.subject || 'اختبار شهري'}</span>
+                                    <span>${g.grade}%</span>
+                                </div>
+                                <div class="grade-bar-bg"><div class="grade-bar-fill" style="width: ${g.grade}%"></div></div>
+                            </div>
+                        `;
+                    }).join('');
+                    document.getElementById('ui-stat-grade').innerText = Math.round(totalGrade / Math.min(studentGrades.length, 3)) + '%';
+                }
+
+                // Load Attendance
+                const attendance = Storage.get('attendance') || {};
+                const attContainer = document.getElementById('ui-attendance-list');
+                const attRecords = [];
+
+                Object.entries(attendance).forEach(([date_group, records]) => {
+                    if (records[student.id]) {
+                        attRecords.push({ date: date_group.split('_')[0], status: records[student.id].status });
+                    }
+                });
+
+                if (attRecords.length === 0) {
+                    attContainer.innerHTML = '<p style="text-align:center; color:gray; font-size:0.8rem;">لا توجد سجلات حضور حالياً</p>';
+                } else {
+                    const sortedAtt = attRecords.sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+                    attContainer.innerHTML = sortedAtt.map(a => `
+                        <div class="att-item">
+                            <span class="att-date">${a.date}</span>
+                            <span class="att-status ${a.status === 'present' ? 'status-present' : 'status-absent'}">
+                                ${a.status === 'present' ? 'حاضر' : 'غائب'}
+                            </span>
+                        </div>
+                    `).join('');
+
+                    const presentCount = attRecords.filter(r => r.status === 'present').length;
+                    document.getElementById('ui-stat-attendance').innerText = Math.round((presentCount / attRecords.length) * 100) + '%';
+                }
+
+                this.renderAchievements(student.id);
+            },
+
+            renderAchievements(studentId) {
+                const certs = Storage.get('issued_certificates') || [];
+                const studentCerts = certs.filter(c => c.studentId == studentId);
+                const container = document.getElementById('ui-achievements-list');
+
+                if (studentCerts.length === 0) {
+                    container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding: 25px; background: rgba(0,0,0,0.02); border-radius: 20px; color: gray; font-size: 0.8rem; font-weight: 700;">ابذل قصارى جهدك لتظهر أول أوسمتك هنا! 👀</div>';
+                } else {
+                    container.innerHTML = studentCerts.map(c => `
+                        <div class="achievement-card" onclick="CertificationEngine.viewCertificate('${c.id}')">
+                            <i class="fa-solid ${c.type === 'STUDENT_OF_THE_MONTH' ? 'fa-star' : 'fa-award'} ach-icon"></i>
+                            <span class="ach-name">${c.examName}</span>
+                            <span class="ach-date">${new Date(c.date).toLocaleDateString('ar-EG')}</span>
+                        </div>
+                    `).join('');
+                }
+            }
+        };
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            portalAction.init();
+        });
+    </script>
+    <script src="../js/certification-engine.js"></script>
+</body>
+
+</html>
+
+

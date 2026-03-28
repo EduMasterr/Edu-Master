@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMaster Pro - فاتورة مشتريات</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-graduation-cap" style="color:var(--accent-blue);"></i>
+                <span>EduMaster Pro</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="../dashboard.html" class="nav-item"><i class="fa-solid fa-chart-pie"></i> <span>نظرة
+                        عامة</span></a>
+                <a href="branches.html" class="nav-item"><i class="fa-solid fa-building-columns"></i> <span>إدارة
+                        الفروع</span></a>
+                <div class="nav-divider" style="height:1px; background:var(--border-color); margin:10px 0;"></div>
+                <div class="nav-section-title"
+                    style="font-size:11px; color:var(--text-secondary); margin:10px 16px; font-weight:700; text-transform:uppercase;">
+                    المخزن والكتب</div>
+                <a href="books.html" class="nav-item"><i class="fa-solid fa-book"></i> <span>إدارة الكتب</span></a>
+                <a href="suppliers.html" class="nav-item"><i class="fa-solid fa-truck-field"></i>
+                    <span>الموردين</span></a>
+                <a href="purchase.html" class="nav-item active"><i class="fa-solid fa-cart-flatbed-suitcases"></i>
+                    <span>المشتريات</span></a>
+                <div class="nav-divider" style="height:1px; background:var(--border-color); margin:10px 0;"></div>
+                <a href="index.html" class="nav-item logout-link"><i class="fa-solid fa-right-from-bracket"></i>
+                    <span>خروج</span></a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar">
+                    <h1 class="page-title">تسجيل فاتورة توريد كتب</h1>
+                </header>
+
+                <div class="data-card" style="max-width: 800px; margin: 0 auto;">
+                    <form id="purchase-form">
+                        <div class="form-group">
+                            <label>المورد</label>
+                            <select name="supplier_id" class="form-control" required></select>
+                        </div>
+
+                        <div
+                            style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 15px; border: 1px solid var(--border-color); margin-bottom: 24px;">
+                            <h3 style="font-size: 1rem; margin-bottom: 15px; color: var(--accent-blue);">إضافة أصناف
+                                للفاتورة</h3>
+                            <div class="form-group">
+                                <label>الكتاب</label>
+                                <select name="book_id" class="form-control" required></select>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                                <div class="form-group">
+                                    <label>الكمية الموردة</label>
+                                    <input type="number" name="quantity" class="form-control" placeholder="0" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>سعر التكلفة للنسخة</label>
+                                    <input type="number" name="cost_price" class="form-control" placeholder="0.00"
+                                        required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: left; margin-bottom: 24px;">
+                            <p style="font-size: 14px; color: var(--text-secondary);">* سيتم إضافة القيمة الإجمالية
+                                لرصيد المورد المستحق وتحديث مخزون الكتاب فور الحفظ.</p>
+                        </div>
+
+                        <button type="submit" class="btn-neuro btn-primary" style="width: 100%; padding: 16px;">
+                            <i class="fa-solid fa-check-double"></i> حفظ الفاتورة وتأثيرها المالي
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { PurchaseUI } from './js/inventory-ops.js';
+        new PurchaseUI();
+    </script>
+</body>
+
+</html>
+
+

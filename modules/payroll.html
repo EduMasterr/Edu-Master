@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة رواتب وحصص المدرسين - EduMaster Pro</title>
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar"></aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar">
+                    <h1 class="page-title"><i class="fa-solid fa-money-check-dollar"></i> كشوف حساب المعلمين والمحاضرين
+                    </h1>
+                </header>
+
+                <div class="stats-overview"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                    <div class="stat-card" style="border-right: 5px solid #10b981;">
+                        <div class="stat-info">
+                            <h3 id="ui-total-earnings">0.00</h3>
+                            <p>مستحقات غير مدفوعة (تقديرية)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 350px 1fr; gap: 25px;">
+                    <!-- Settings Panel -->
+                    <div class="data-card">
+                        <h2 style="margin-bottom: 20px;"><i class="fa-solid fa-sliders"></i> إعدادات المحاضر</h2>
+                        <div class="form-group">
+                            <label>اختر المحاضر</label>
+                            <select id="payroll-trainer-select" class="app-input"
+                                onchange="loadTrainerSettings()"></select>
+                        </div>
+                        <div class="form-group">
+                            <label>نوع الحسبة</label>
+                            <select id="payroll-type" class="app-input">
+                                <option value="percentage">نسبة مئوية (%) من الدخل</option>
+                                <option value="fixed">مبلغ ثابت لكل طالب حاضر</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>القيمة (النسبة أو المبلغ)</label>
+                            <input type="number" id="payroll-value" class="app-input" value="50">
+                        </div>
+                        <button class="app-btn-primary" style="width: 100%; margin-top: 10px;"
+                            onclick="saveTrainerSettings()">
+                            حفظ الإعدادات المالية
+                        </button>
+
+                        <hr style="margin: 25px 0; border: none; border-top: 1px solid var(--border-soft);">
+
+                        <h3 style="margin-bottom: 15px; font-size: 1rem;">توليد التقرير</h3>
+                        <div class="form-group">
+                            <label>من تاريخ</label>
+                            <input type="date" id="start-date" class="app-input">
+                        </div>
+                        <div class="form-group">
+                            <label>إلى تاريخ</label>
+                            <input type="date" id="end-date" class="app-input">
+                        </div>
+                        <button class="app-btn-primary"
+                            style="width: 100%; height: 50px; background: var(--sidebar-bg) !important;"
+                            onclick="generateReport()">
+                            <i class="fa-solid fa-chart-line"></i> عرض كشف الحساب
+                        </button>
+                    </div>
+
+                    <!-- Report Results -->
+                    <div class="data-card" id="report-container" style="display: none;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; border-bottom: 2px solid var(--bg-main); padding-bottom: 15px;">
+                            <div>
+                                <h2 id="ui-report-title" style="margin: 0;">كشف حساب: ---</h2>
+                                <p id="ui-report-period" style="color: var(--text-muted); font-size: 0.85rem;"></p>
+                            </div>
+                            <div style="text-align: left;">
+                                <div style="font-size: 1.5rem; font-weight: 900; color: #10b981;" id="report-net-share">
+                                    0.00 ج.م</div>
+                                <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">صافي
+                                    المستحقات للمحاضر</div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="app-table">
+                                <thead>
+                                    <tr>
+                                        <th>التاريخ</th>
+                                        <th>المجموعة</th>
+                                        <th>عدد الطلاب</th>
+                                        <th>دخل الحصة</th>
+                                        <th>نصيب المدرس</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="report-tbody"></tbody>
+                            </table>
+                        </div>
+
+                        <div
+                            style="margin-top: 30px; padding: 20px; background: var(--bg-main); border-radius: 15px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4 style="margin:0;">تأكيد صرف المستحقات</h4>
+                                <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0;">عند الصرف سيتم
+                                    خصم المبلغ من الخزنة وتسجيل قيد محاسبي.</p>
+                            </div>
+                            <button class="app-btn-primary" style="background:#10b981 !important; height: 45px;"
+                                onclick="processPayout()">
+                                <i class="fa-solid fa-check-double"></i> إتمام عملية الصرف الآن
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+    <script src="../js/accounting-core.js"></script>
+    <script src="../js/payroll-engine.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            UICore.init();
+
+            // Set default dates (Current month)
+            const today = new Date();
+            const firstDay = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+            const lastDay = today.toISOString().split('T')[0];
+            document.getElementById('start-date').value = firstDay;
+            document.getElementById('end-date').value = lastDay;
+
+            loadTrainers();
+        });
+
+        function loadTrainers() {
+            const trainers = Storage.get('trainers') || [];
+            const select = document.getElementById('payroll-trainer-select');
+            select.innerHTML = '<option value="">-- اختر المدرس --</option>' +
+                trainers.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
+        }
+
+        function loadTrainerSettings() {
+            const tid = document.getElementById('payroll-trainer-select').value;
+            if (!tid) return;
+            const settings = PayrollEngine.getTeacherSettings(tid);
+            document.getElementById('payroll-type').value = settings.type;
+            document.getElementById('payroll-value').value = settings.value;
+        }
+
+        function saveTrainerSettings() {
+            const tid = document.getElementById('payroll-trainer-select').value;
+            const type = document.getElementById('payroll-type').value;
+            const value = document.getElementById('payroll-value').value;
+
+            if (!tid) return Toast.show('يرجى اختيار المحاضر أولاً', 'error');
+
+            PayrollEngine.setTeacherSettings(tid, type, value);
+            Toast.show('✅ تم حفظ الإعدادات المالية للمحاضر', 'success');
+        }
+
+        let currentReport = null;
+
+        function generateReport() {
+            const tid = document.getElementById('payroll-trainer-select').value;
+            const start = document.getElementById('start-date').value;
+            const end = document.getElementById('end-date').value;
+
+            if (!tid || !start || !end) return Toast.show('يرجى إكمال جميع الحقول', 'error');
+
+            const trainers = Storage.get('trainers') || [];
+            const trainer = trainers.find(t => t.id == tid);
+
+            currentReport = PayrollEngine.calculateEarnings(tid, start, end);
+            currentReport.trainerId = tid;
+
+            document.getElementById('report-container').style.display = 'block';
+            document.getElementById('ui-report-title').innerText = `كشف حساب: ${trainer.name}`;
+            document.getElementById('ui-report-period').innerText = `الفترة من ${start} إلى ${end}`;
+            document.getElementById('report-net-share').innerText = `${currentReport.teacherShare.toLocaleString()} ج.م`;
+
+            const tbody = document.getElementById('report-tbody');
+            tbody.innerHTML = currentReport.details.map(d => `
+                <tr>
+                    <td>${d.date}</td>
+                    <td style="font-weight:700;">${d.groupName}</td>
+                    <td>${d.students} طالب</td>
+                    <td>${d.income.toLocaleString()}</td>
+                    <td style="color: #10b981; font-weight: 900;">${d.share.toLocaleString()}</td>
+                </tr>
+            `).join('') || '<tr><td colspan="5" style="text-align:center; padding:30px;">لا توجد سجلات حضور لهذه الفترة</td></tr>';
+        }
+
+        function processPayout() {
+            if (!currentReport || currentReport.teacherShare <= 0) return;
+
+            const confirmMsg = `هل أنت متأكد من صرف مبلغ ${currentReport.teacherShare} ج.م للمحاضر؟\nسيتم تسجيل العملية كمصروف في الحسابات.`;
+            if (!confirm(confirmMsg)) return;
+
+            const success = PayrollEngine.processPayout(currentReport.trainerId, currentReport.teacherShare, `كشف الفترة ${document.getElementById('start-date').value}`);
+
+            if (success) {
+                Toast.show('🌟 تم إتمام عملية الصرف وتسجيلها محاسبياً', 'success');
+                document.getElementById('report-container').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+
+</html>
+
+

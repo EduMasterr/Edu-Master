@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMaster Pro - الرئيسية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <meta name="theme-color" content="#0F172A">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/edumaster-ui.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- 🔒 Security First: Instant session check and redirect -->
+    <script src="js/core.js"></script>
+    <script src="js/permissions.js"></script>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <!-- Injected by UICore -->
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+
+            <!-- Branch selection is handled via the sidebar dropdown -->
+
+            <!-- System Banner (hidden) -->
+            <div class="system-banner" style="position: relative; display: none;">
+                <h3><i class="fa-solid fa-bullhorn"></i> آخر التحديثات</h3>
+                <div class="banner-content"></div>
+            </div>
+
+            <!-- Quick Shortcuts are now globally injected by ui-core.js -->
+
+            <!-- Stats Grid - Premium Analytical Version -->
+            <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+                <div class="stat-card" id="total-students" style="border-right: 4px solid var(--accent-teal);">
+                    <div class="stat-icon teal-light"><i class="fa-solid fa-user-graduate"></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-students-count">0</h3>
+                        <p>قاعدة بيانات الطلاب</p>
+                    </div>
+                </div>
+                <div class="stat-card" id="total-attendance" style="border-right: 4px solid #10b981;">
+                    <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: #10b981;"><i
+                            class="fa-solid fa-calendar-check"></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-attendance-rate">0%</h3>
+                        <p>متوسط نسبة الحضور</p>
+                    </div>
+                </div>
+                <div class="stat-card" id="active-groups" style="border-right: 4px solid #6366f1;">
+                    <div class="stat-icon" style="background: rgba(99, 102, 241, 0.1); color: #6366f1;"><i
+                            class="fa-solid fa-layer-group"></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-groups-count">0</h3>
+                        <p>مجموعات نشطة</p>
+                    </div>
+                </div>
+                <div class="stat-card" id="total-revenue"
+                    style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important; border: 1px solid rgba(0, 234, 255, 0.2) !important;">
+                    <div class="stat-icon" style="background: rgba(0, 234, 255, 0.1); color: var(--accent-teal);"><i
+                            class="fa-solid fa-chart-line"></i></div>
+                    <div class="stat-info">
+                        <h3 id="stat-net-profit" style="color: var(--accent-teal) !important;">0</h3>
+                        <p style="color: rgba(255,255,255,0.7);">صافي الربح التراكمي</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section 1: Financials & Growth -->
+            <div style="display: grid; grid-template-columns: 1.8fr 1.2fr; gap: 24px; margin-bottom: 24px;">
+                <div class="data-card" style="position: relative;">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="margin: 0; font-size: 1.1rem;"><i class="fa-solid fa-wave-square"
+                                style="margin-left:8px; color:var(--accent-teal)"></i> مؤشر الربحية والنمو</h2>
+                        <span class="badge"
+                            style="background: rgba(0, 234, 255, 0.1); color: var(--accent-teal); font-size: 0.7rem; font-weight: 800;">Real-time
+                            Intelligence</span>
+                    </div>
+                    <div style="height: 380px;">
+                        <canvas id="revenue-chart"></canvas>
+                    </div>
+                </div>
+                <div class="data-card">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="margin: 0; font-size: 1.1rem;"><i class="fa-solid fa-chart-pie"
+                                style="margin-left:8px; color:#6366f1"></i> تحليل التوزيع</h2>
+                    </div>
+                    <div style="height: 380px;">
+                        <canvas id="student-distribution-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section 2: Attendance & Branch Performance -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                <div class="data-card">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="margin: 0; font-size: 1.1rem;"><i class="fa-solid fa-calendar-check"
+                                style="margin-left:8px; color:#10b981"></i> اتجاهات الحضور الأسبوعية</h2>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">آخر 7 أيام</div>
+                    </div>
+                    <div style="height: 300px;">
+                        <canvas id="attendance-trends-chart"></canvas>
+                    </div>
+                </div>
+                <div class="data-card" id="branch-performance-container">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h2 style="margin: 0; font-size: 1.1rem;"><i class="fa-solid fa-trophy"
+                                style="margin-left:8px; color:#f59e0b"></i> مقارنة أداء الفروع</h2>
+                        <span
+                            style="font-size: 0.7rem; color: #f59e0b; font-weight: 800; background: rgba(245, 158, 11, 0.1); padding: 4px 10px; border-radius: 50px;">Best
+                            Sellers</span>
+                    </div>
+                    <div style="height: 300px;">
+                        <canvas id="branch-performance-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="temp-move-box" style="padding: 15px; background: var(--bg-card); margin: 10px 0 20px 0; border-radius: 12px; border: 2px solid var(--accent-teal); display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 9999; box-shadow: var(--shadow-ui);">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <i class="fa-solid fa-circle-info" style="color: var(--accent-teal); font-size: 1.5rem;"></i>
+                    <div>
+                        <h3 style="margin:0; font-size: 1rem; color: var(--text-main);">تنبيه النظام</h3>
+                        <p style="margin:2px 0 0 0; font-size: 0.75rem; color: var(--text-muted);">هذا المربع مخصص للإعلانات والتحويلات الإدارية الهامة.</p>
+                    </div>
+                </div>
+                <button id="run-move-branch" class="app-btn-primary" style="background: var(--accent-teal) !important; padding: 8px 20px; font-size: 0.85rem;">عرض التفاصيل</button>
+            </div>
+
+            <script>
+                document.getElementById('run-move-branch').onclick = async () => {
+                    const btn = document.getElementById('run-move-branch');
+                    btn.disabled = true;
+                    btn.innerText = 'جاري النقل...';
+                    
+                    try {
+                        const targetBranchId = 8;
+                        let branches = Storage.get('branches') || [];
+                        let branch8 = branches.find(b => parseInt(b.id) === targetBranchId);
+                        
+                        if (!branch8) {
+                            branch8 = {
+                                id: targetBranchId,
+                                name: 'فرع 8',
+                                address: 'مدينة نصر - المنطقة الثامنة',
+                                phone: '0123456789',
+                                is_active: true,
+                                created_at: new Date().toISOString()
+                            };
+                            branches.push(branch8);
+                            await Storage.save('branches', branches);
+                        }
+
+                        let students = Storage.get('students') || [];
+                        let count = 0;
+                        students.forEach(s => {
+                            if (s.serial_id >= 6000 && s.serial_id <= 6009) {
+                                s.branch_id = targetBranchId;
+                                count++;
+                            }
+                        });
+                        
+                        if (count > 0) {
+                            await Storage.save('students', students);
+                            btn.innerText = `✅ تم نقل ${count} طلاب!`;
+                            btn.style.background = '#10b981';
+                            if (window.Toast) Toast.show(`تم نقل 10 طلاب إلى فرع 8`, 'success');
+                            setTimeout(() => location.reload(), 1500);
+                        } else {
+                            btn.innerText = '⚠️ لم يتم العثور على الطلاب';
+                            btn.style.background = '#f59e0b';
+                        }
+                    } catch (err) {
+                        btn.innerText = '❌ خطأ';
+                        console.error(err);
+                    }
+                };
+            </script>
+
+            <!-- 🧠 AI INTELLIGENCE COCKPIT (NEW) -->
+
+            <!-- 🧠 AI INTELLIGENCE COCKPIT (NEW) -->
+            <div class="data-card ai-cockpit-section" style="border-right: 5px solid #8b5cf6; margin-bottom: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                    <div>
+                        <h2 style="margin: 0; display: flex; align-items: center; gap: 12px; font-size: 1.4rem;">
+                            <i class="fa-solid fa-brain" style="color: #8b5cf6;"></i>
+                            مركز ذكاء <span class="app-brand-name">Edu-Master</span> <span class="premium-badge"
+                                style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; font-size: 10px;">AI
+                                PREDICTIVE</span>
+                        </h2>
+                        <p style="color: var(--text-muted); filter: brightness(1.2); font-size: 0.85rem; margin-top: 5px; font-weight: 500;">تحليل ذكي لسلوك الطلاب وتوقع نسب التوقف (Churn Analysis)</p>
+                    </div>
+                    <div id="ai-stats-summary" style="display: flex; gap: 20px;">
+                        <!-- AI Stats Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="at-risk-grid" id="at-risk-students-container"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">
+                    <!-- Risk Cards Populated by JS -->
+                    <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                        <i class="fa-solid fa-robot-astromech fa-spin"
+                            style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                        جاري تحليل بيانات الطلاب...
+                    </div>
+                </div>
+            </div>
+
+            <!-- 🏆 TOP STUDENTS LEADERBOARD (NEW) -->
+            <div class="data-card leaderboard-section" style="border-right: 5px solid #f59e0b; margin-bottom: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <h2 style="margin: 0; display: flex; align-items: center; gap: 12px; font-size: 1.3rem;">
+                            <i class="fa-solid fa-crown" style="color: #f59e0b;"></i>
+                            لوحة أبطال <span class="app-brand-name">Edu-Master</span> <span class="premium-badge"
+                                style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; font-size: 10px;">TOP
+                                PLAYERS</span>
+                        </h2>
+                        <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 4px;">الطلاب الأكثر نقاطاً
+                            هذا الشهر بناءً على الحضور والتفوق</p>
+                    </div>
+                </div>
+
+                <div id="leaderboard-container"
+                    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px;">
+                    <!-- Leaderboard Cards Injected by JS -->
+                    <div style="grid-column: 1/-1; text-align: center; padding: 30px; color: var(--text-muted);">
+                        جاري جمع النقاط وترتيب الأبطال...
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0;">آخر الأنشطة</h2>
+                    <button class="app-btn-primary"
+                        style="background: rgba(239, 68, 68, 0.1) !important; border: 1.5px solid rgba(239, 68, 68, 0.3) !important; color: #ef4444 !important; padding: 6px 15px; font-size: 13px;"
+                        onclick="window.clearDashboardActivities()">
+                        <i class="fa-solid fa-trash-can"></i> مسح السجل
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="app-table" id="recent-activity-table">
+                        <thead>
+                            <tr>
+                                <th>النشاط</th>
+                                <th>الوقت</th>
+                                <th>النوع</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="3" style="text-align:center; padding:40px;" class="text-muted">جارٍ
+                                    التحميل...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </div>
+    </main>
+    </div>
+
+    <!-- Messaging Modal -->
+    <div class="modal-overlay" id="message-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title"><i class="fa-solid fa-envelope"></i> مراسلة الطلاب والموظفين</h2>
+                <button class="close-modal" onclick="Modal.close('message-modal')">&times;</button>
+            </div>
+            <div style="padding: 20px;">
+                <div class="form-group">
+                    <label>المستلم</label>
+                    <select class="form-control">
+                        <option value="all_students">جميع الطلاب</option>
+                        <option value="all_staff">جميع الموظفين</option>
+                        <option value="specific_group">مجموعة محددة</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>عنوان الرسالة</label>
+                    <input type="text" class="form-control" placeholder="مثلاً: هام جداً بخصوص الامتحانات">
+                </div>
+                <div class="form-group">
+                    <label>نص الرسالة</label>
+                    <textarea class="form-control" style="height: 120px; resize: none;"
+                        placeholder="اكتب رسالتك هنا..."></textarea>
+                </div>
+                <button class="app-btn-primary" style="width: 100%; margin-top: 10px;" onclick="window.sendMessage()">
+                    <i class="fa-solid fa-paper-plane"></i> إرسال الآن
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Specific Overrides for Dashboard -->
+    <style>
+        /* 1️⃣ Dark Mode Overrides */
+        body.dark-mode .shortcut-item {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(0, 234, 255, 0.2);
+            color: #fff;
+        }
+
+        body.dark-mode .shortcut-item:hover {
+            background: rgba(0, 234, 255, 0.1);
+            border-color: var(--accent-teal);
+        }
+
+        body.dark-mode .stat-card,
+        body.dark-mode .data-card {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(0, 234, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode .data-card h2 {
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0, 234, 255, 0.3);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        body.dark-mode .stat-info h3 {
+            color: #fff !important;
+            text-shadow: 0 0 10px rgba(0, 234, 255, 0.4);
+        }
+
+        body.dark-mode .stat-info p {
+            color: #cbd5e1;
+        }
+
+        body.dark-mode .stat-icon.teal-light {
+            background: rgba(0, 234, 255, 0.1);
+            color: var(--accent-teal);
+        }
+
+        body.dark-mode .stat-icon.brick-light {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        /* 2️⃣ DASHBOARD EXCLUSIVE OVERRIDES (Cloudy Mode) */
+
+        /* Specific Color for "MIAMI" (Teachers/Branch Card) */
+        body.clinical-mode #total-teachers h3 {
+            color: #9b2226 !important;
+            /* Brick Red */
+        }
+
+        /* The Revenue Card stays Teal in Cloudy Mode */
+        body.clinical-mode #total-revenue {
+            background: var(--accent-teal) !important;
+            border: none !important;
+        }
+
+        body.clinical-mode #total-revenue * {
+            color: #FFFFFF !important;
+        }
+
+
+        body.clinical-mode #total-revenue .stat-icon {
+            background: rgba(255, 255, 255, 0.2) !important;
+        }
+
+        /* Shortcuts in Cloudy Mode */
+        body.clinical-mode .shortcut-item {
+            background: transparent !important;
+        }
+
+        body.clinical-mode .shortcut-label {
+            color: #4A5568 !important;
+            font-weight: 700 !important;
+        }
+
+        /* Table & Data Cards in Cloudy Mode */
+        body.clinical-mode .data-card {
+            background: #FFFFFF !important;
+            border: 1px solid #E5E9F0 !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+        }
+
+        body.clinical-mode .data-card h2 {
+            color: #2D3748 !important;
+            text-shadow: none !important;
+        }
+
+        body.clinical-mode .app-table td {
+            background: #fff !important;
+            color: #2D3748 !important;
+        }
+    </style>
+
+    <!-- Global Scripts (Compatible with file://) -->
+    <script>console.log('Starting script load...');</script>
+    <script src="js/inventory-engine.js"></script>
+    <script src="js/inventory-engine.js"></script>
+    <script src="js/accounting-core.js"></script>
+    <script src="js/ai-engine.js"></script>
+    <script src="js/gamification-engine.js"></script>
+    <script>console.log('Accounting-core.js loaded. Accounting:', typeof AccountingCore);</script>
+    <script src="js/ui-core.js"></script>
+    <script>console.log('UI-core.js loaded. UICore:', typeof UICore);</script>
+    <script>
+        // ── Force Professional Theme: downgrade 'clinical' to 'light' permanently ──
+        (function() {
+            const t = localStorage.getItem('edumaster-theme');
+            if (!t || t === 'clinical') {
+                localStorage.setItem('edumaster-theme', 'light');
+            }
+        })();
+    </script>
+    <script src="js/theme-toggle.js"></script>
+    <script>console.log('Theme-toggle.js loaded.');</script>
+    <script src="js/dashboard-controller.js"></script>
+    <script>console.log('Dashboard-controller.js loaded.');</script>
+
+    <script>
+        // Initializing UI permissions
+        if (window.Permissions) {
+            window.Permissions.applyUIPermissions();
+        }
+
+        // Messaging Functions
+        window.openMessageModal = () => {
+            Modal.open('message-modal');
+        }
+
+        window.sendMessage = () => {
+            Toast.show('تم إرسال الرسالة إلى قائمة المستلمين بنجاح', 'success');
+            Modal.close('message-modal');
+        }
+
+        // Emergency Failsafe: if sidebar is still empty, try one last time
+        window.addEventListener('load', () => {
+            if (typeof UICore !== 'undefined' && document.querySelector('.sidebar').innerHTML.trim() === '') {
+                console.log('Emergency sidebar render triggered');
+                UICore.renderSidebar();
+            }
+        });
+    </script>
+</body>
+
+</html>

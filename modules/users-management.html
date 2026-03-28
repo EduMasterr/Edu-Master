@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المستخدمين والصلاحيات - EduMaster Pro</title>
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            padding: 10px 0;
+        }
+
+        .settings-section {
+            background: #FFFFFF;
+            border: 1px solid var(--border-soft);
+            border-radius: 16px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-ui);
+            transition: 0.3s;
+        }
+
+        /* Dark Mode Override for Sections */
+        body.dark-mode .settings-section {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(0, 234, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .settings-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--accent-teal);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-soft);
+            padding-bottom: 18px;
+        }
+
+        body.dark-mode .section-header {
+            border-bottom-color: rgba(0, 234, 255, 0.2);
+        }
+
+        .section-header i {
+            font-size: 1.6rem;
+            color: var(--accent-teal);
+        }
+
+        body.dark-mode .section-header h2 {
+            color: #fff !important;
+            text-shadow: 0 0 10px rgba(0, 234, 255, 0.4);
+        }
+
+        .section-header h2 {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--sidebar-bg);
+            margin: 0;
+            text-shadow: 1px 1px 4px rgba(26, 158, 156, 0.1);
+        }
+
+        .control-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .role-card {
+            background: #F8FAFC;
+            border: 1px solid var(--border-soft);
+            border-radius: 12px;
+            padding: 20px;
+            transition: 0.3s;
+            border-right: 4px solid var(--accent-teal);
+        }
+
+        body.dark-mode .role-card {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: rgba(0, 234, 255, 0.2);
+        }
+
+        body.dark-mode .role-card strong {
+            color: #fff !important;
+        }
+
+        .role-card:hover {
+            background: #FFFFFF;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(26, 158, 156, 0.1);
+        }
+
+        body.dark-mode .role-card:hover {
+            background: rgba(0, 234, 255, 0.1);
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 15px rgba(0, 234, 255, 0.2);
+        }
+
+        /* High Visibility Table Styles */
+        .neuro-table td div.user-name {
+            font-weight: 900;
+            color: var(--text-main) !important;
+            display: flex;
+            align-items: center;
+        }
+
+        body.dark-mode .neuro-table td div.user-name {
+            color: #FFFFFF !important;
+        }
+
+        .user-login-code {
+            background: var(--accent-teal-soft);
+            color: var(--accent-teal);
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-family: 'Consolas', monospace;
+            border: 1px solid transparent;
+        }
+
+        body.dark-mode .user-login-code {
+            background: rgba(0, 234, 255, 0.1) !important;
+            color: #00E9FF !important;
+            border-color: rgba(0, 234, 255, 0.3);
+            text-shadow: 0 0 8px rgba(0, 234, 255, 0.3);
+        }
+
+        .neuro-table td {
+            color: var(--text-main) !important;
+        }
+
+        body.dark-mode .neuro-table td {
+            color: #cbd5e1 !important;
+        }
+
+        .neuro-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode .neuro-table tbody tr:hover {
+            background: rgba(0, 234, 255, 0.05) !important;
+        }
+
+        body.dark-mode .audit-item-time {
+            color: #94a3b8 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar"></aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar">
+                    <div class="action-group">
+                        <h1 class="page-title">🔐 إدارة المستخدمين والوصول</h1>
+                    </div>
+                    <div class="action-group" style="gap: 10px; flex-wrap: wrap;">
+                        <button class="app-btn-primary" style="height: 38px;" onclick="window.openUserModal()">
+                            <i class="fa-solid fa-user-plus"></i> إضافة مستخدم جديد
+                        </button>
+                    </div>
+                </header>
+
+                <div class="settings-grid">
+                    <!-- Users Section -->
+                    <section class="settings-section">
+                        <div class="section-header">
+                            <i class="fa-solid fa-users"></i>
+                            <h2>المستخدمين النشطين في النظام</h2>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="neuro-table">
+                                <thead>
+                                    <tr>
+                                        <th>الاسم الكامل</th>
+                                        <th>اسم المستخدم</th>
+                                        <th>الصلاحية</th>
+                                        <th>الفرع / الموقع</th>
+                                        <th>إجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body"></tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Roles Section -->
+                    <section class="settings-section">
+                        <div class="section-header">
+                            <i class="fa-solid fa-user-shield"></i>
+                            <h2>تعريفات الأدوار الوظيفية</h2>
+                            <button class="app-btn-primary" style="margin-right: auto;"
+                                onclick="Toast.show('تعديل المصفوفة متاح في النسخة الكاملة', 'info')">
+                                <i class="fa-solid fa-layer-group"></i> تعديل مصفوفة الصلاحيات
+                            </button>
+                        </div>
+                        <div class="control-row" id="role-list"></div>
+                    </section>
+
+                    <!-- Audit Trail Section -->
+                    <section class="settings-section" style="border-right-color: var(--sidebar-bg);">
+                        <style>
+                            .audit-sec::before {
+                                background: var(--sidebar-bg);
+                            }
+                        </style>
+                        <div class="section-header">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            <h2>سجل الرقابة والأمان (Audit Trail)</h2>
+                            <button class="app-btn-primary"
+                                style="margin-right: auto; background: rgba(239, 68, 68, 0.1) !important; border-color: rgba(239, 68, 68, 0.3) !important; color: #ef4444 !important;"
+                                onclick="window.clearAuditLogs()">
+                                <i class="fa-solid fa-trash-can"></i> مسح السجل
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="neuro-table" id="audit-table">
+                                <thead>
+                                    <tr>
+                                        <th>التاريخ والوقت</th>
+                                        <th>المستخدم</th>
+                                        <th>الإجراء المتخذ</th>
+                                        <th>تفاصيل العملية</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal User -->
+    <div class="modal-overlay" id="user-modal">
+        <div class="modal-container" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title">إضافة مستخدم جديد للنظام</h2>
+                <button class="close-modal" onclick="Modal.close('user-modal')">&times;</button>
+            </div>
+            <form id="user-form" style="padding: 25px;">
+                <div class="form-group" style="margin-top:15px;">
+                    <input type="hidden" id="u-edit-id">
+                    <label>الاسم الكامل</label>
+                    <input type="text" id="u-name" class="app-input" required placeholder="مثلاً: محمد علي">
+                </div>
+                <div class="form-group" style="margin-top:15px;">
+                    <label>اسم المستخدم (Login)</label>
+                    <input type="text" id="u-login" class="app-input" required placeholder="user123">
+                </div>
+                <div class="form-group" style="margin-top:15px;">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="u-pass" class="app-input" placeholder="اتركه فارغاً للحفاظ على القديمة">
+                </div>
+                <div class="form-group" style="margin-top:15px;">
+                    <label>الدور الوظيفي</label>
+                    <select id="u-role" class="app-input" required></select>
+                </div>
+                <div class="form-group" style="margin-top:15px;">
+                    <label>الفرع التابع له</label>
+                    <select id="u-branch" class="app-input" required>
+                        <option value="">إدارة عامة (بدون فرع)</option>
+                    </select>
+                </div>
+                <div style="margin-top: 35px; display:flex; gap:12px;">
+                    <button type="submit" class="app-btn-primary" style="flex:1; justify-content: center;">حفظ
+                        المستخدم</button>
+                    <button type="button" class="app-btn-primary"
+                        style="flex:1; justify-content: center; background:var(--text-muted) !important;"
+                        onclick="Modal.close('user-modal')">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Global Scripts -->
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            UICore.init();
+            renderPage();
+
+            // 🔄 Listen for Cross-Tab Sync Signals
+            window.addEventListener('edumaster:sync', (e) => {
+                if (e.detail.key === 'users' || e.detail.key === 'roles' || e.detail.key === 'branches') {
+                    renderPage();
+                }
+            });
+        });
+
+        function renderPage() {
+            const users = Storage.get('users') || [];
+            const roles = Storage.get('roles') || [];
+            const audit = Storage.get('audit_logs') || [];
+            const branches = Storage.get('branches') || [];
+            const userBody = document.getElementById('users-table-body');
+            const activeBranchId = window.Permissions?.getActiveBranchId();
+
+            // 🛡️ SECURITY: Filter Users by Branch
+            // If I am in a branch, show ONLY my branch users.
+            // If I am HQ, show EVERYONE.
+            let displayedUsers = users;
+            if (activeBranchId) {
+                displayedUsers = users.filter(u => u.branch == activeBranchId);
+            }
+
+            const label = document.getElementById('branch-nav-label');
+            if (label) {
+                label.innerHTML = `<i class="fa-solid fa-user-shield" style="color:var(--accent-teal); margin-left:5px;"></i> ${displayedUsers.length}`;
+                label.style.color = 'var(--accent-teal)';
+                label.style.fontWeight = '900';
+                label.style.fontSize = '14px';
+                label.title = `إجمالي مستخدمي النظام (في هذا النطاق): ${displayedUsers.length}`;
+                
+                // Fix container width constraint
+                const parent = label.closest('#branch-switcher-nav');
+                if (parent) {
+                    parent.style.minWidth = 'auto';
+                    parent.style.padding = '5px 12px';
+                }
+            }
+
+            if (userBody) {
+                if (displayedUsers.length === 0) {
+                    userBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:30px; color:var(--text-muted);">لا يوجد مستخدمين في هذا النطاق</td></tr>`;
+                } else {
+                    userBody.innerHTML = displayedUsers.map(user => {
+                        const role = roles.find(r => r.id === user.role_id) || { name: 'غير محدد' };
+                        const branch = branches.find(b => b.id === user.branch);
+                        const branchName = branch ? branch.name : (user.branch ? 'غير معروف' : 'الإدارة المركزية');
+
+                        return `
+                            <tr>
+                                 <td><div class="user-name"><img src="../education.png" style="width: 24px; height: 24px; border-radius: 50%; object-fit: contain; margin-left: 8px; opacity: 0.7;"> ${user.name}</div></td>
+                                <td><code class="user-login-code">${user.username}</code></td>
+                                <td><span class="status-badge" style="background: var(--accent-teal-soft); color: var(--accent-teal); border: 1px solid var(--accent-teal); font-weight:800;">${role.name}</span></td>
+                                <td><span style="font-size:13px; font-weight: 700;"><i class="fa-solid fa-building" style="margin-left:5px; color:var(--accent-teal)"></i> ${branchName}</span></td>
+                                <td>
+                                    <div style="display:flex; gap:8px;">
+                                        <button class="action-btn" style="color: var(--accent-teal)" onclick="window.openUserModal(${user.id})"><i class="fa-solid fa-pen-to-square"></i></button>
+                                        ${(Permissions.isAdmin() || activeBranchId) && user.role_id !== 1 ? `
+                                            <button class="action-btn" style="color: #ef4444" onclick="window.deleteUser(${user.id})"><i class="fa-solid fa-trash-can"></i></button>
+                                        ` : ''}
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                }
+            }
+
+            // Role Definition Cards (Static for now)
+            const roleList = document.getElementById('role-list');
+            if (roleList) {
+                roleList.innerHTML = roles.map(role => `
+                    <div class="role-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                            <strong style="color: var(--sidebar-bg); font-size: 1.1rem; font-weight:900;">${role.name}</strong>
+                            <i class="fa-solid ${role.id === 1 ? 'fa-shield-halved' : 'fa-user-tag'}" style="color:var(--accent-teal); font-size:1.2rem;"></i>
+                        </div>
+                        <p style="font-size:13px; color:var(--text-muted); font-weight: 700; margin:0;">${role.permissions ? role.permissions.length : 0} صلاحيات نشطة في النظام</p>
+                    </div>
+                `).join('');
+            }
+
+            // Audit Trail Table (Filter by branch logic could be added here too if audit logs have branchId)
+            const auditBody = document.querySelector('#audit-table tbody');
+            if (auditBody) {
+                // For now, showing latest logs
+                auditBody.innerHTML = audit.slice(0, 15).reverse().map(log => `
+                    <tr>
+                        <td class="audit-item-time" style="font-size:12px; font-weight: 800;">${log.timestamp}</td>
+                        <td style="font-weight: 900; color: var(--accent-teal);">${log.user}</td>
+                        <td><span style="background: var(--sidebar-bg); color: #fff; padding: 4px 12px; border-radius: 6px; font-size: 11px; font-weight: 800;">${log.action}</span></td>
+                        <td style="font-size: 13px; font-weight: 700;">${log.details}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // Populate Dropdowns
+            const roleSel = document.getElementById('u-role');
+            if (roleSel) roleSel.innerHTML = roles.map(r => `<option value="${r.id}">${r.label || r.name}</option>`).join('');
+
+            const branchSel = document.getElementById('u-branch');
+            if (branchSel) {
+                // 🛡️ SECURITY: If I am in a branch, I can ONLY add users to MY branch.
+                if (activeBranchId) {
+                    const myBranch = branches.find(b => b.id == activeBranchId);
+                    branchSel.innerHTML = `<option value="${activeBranchId}" selected>${myBranch ? myBranch.name : 'Unknown Branch'}</option>`;
+                    branchSel.parentElement.style.display = 'none'; // Hide it visually, force value
+                } else {
+                    // HQ sees all
+                    branchSel.innerHTML = `<option value="">إدارة عامة (بدون فرع)</option>` +
+                        branches.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
+                    branchSel.parentElement.style.display = 'block';
+                }
+            }
+        }
+
+        window.openUserModal = (userId = null) => {
+            const form = document.getElementById('user-form');
+            const title = document.querySelector('.modal-title');
+            if (form) form.reset();
+
+            document.getElementById('u-edit-id').value = userId || '';
+            const activeBranchId = window.Permissions?.getActiveBranchId();
+
+            if (userId) {
+                title.innerText = 'تعديل بيانات المستخدم';
+                const users = Storage.get('users') || [];
+                const user = users.find(u => u.id === parseFloat(userId));
+                if (user) {
+                    document.getElementById('u-name').value = user.name;
+                    document.getElementById('u-login').value = user.username;
+                    document.getElementById('u-pass').required = false;
+                    document.getElementById('u-role').value = user.role_id;
+                    const bSel = document.getElementById('u-branch');
+                    if (bSel) bSel.value = user.branch || (activeBranchId || '');
+                }
+            } else {
+                title.innerText = 'إضافة مستخدم جديد للنظام';
+                document.getElementById('u-pass').required = true;
+                // Auto set branch if locked
+                if (activeBranchId) {
+                    const bSel = document.getElementById('u-branch');
+                    if (bSel) bSel.value = activeBranchId;
+                }
+            }
+
+            Modal.open('user-modal');
+        };
+
+
+
+        window.deleteUser = (userId) => {
+            Modal.confirm({
+                title: 'تأكيد الحذف',
+                message: 'هل أنت متأكد من حذف هذا المستخدم؟',
+                confirmText: 'نعم، حذف',
+                onConfirm: () => {
+                    const users = Storage.get('users') || [];
+                    const updated = users.filter(u => u.id !== parseFloat(userId));
+                    Storage.save('users', updated);
+                    Toast.show('تم حذف المستخدم بنجاح', 'success');
+                    renderPage();
+                }
+            });
+        };
+
+        window.clearAuditLogs = () => {
+            // simplified for brevity
+            Storage.save('audit_logs', []);
+            renderPage();
+            Toast.show('تم مسح السجل', 'success');
+        };
+
+        const uForm = document.getElementById('user-form');
+        if (uForm) {
+            uForm.onsubmit = (e) => {
+                e.preventDefault();
+                
+                const uNameInput = document.getElementById('u-name');
+                const uLoginInput = document.getElementById('u-login');
+                const passInput = document.getElementById('u-pass');
+
+                let isValid = true;
+                if (!uNameInput.value.trim()) {
+                    uNameInput.style.borderColor = '#ef4444';
+                    setTimeout(() => uNameInput.style.borderColor = '', 3000);
+                    isValid = false;
+                }
+                if (!uLoginInput.value.trim()) {
+                    uLoginInput.style.borderColor = '#ef4444';
+                    setTimeout(() => uLoginInput.style.borderColor = '', 3000);
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    Toast.show('يرجى إكمال الحقول الأساسية', 'error');
+                    if (!uNameInput.value.trim()) {
+                        uNameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        uNameInput.focus();
+                    } else if (!uLoginInput.value.trim()) {
+                        uLoginInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        uLoginInput.focus();
+                    }
+                    return;
+                }
+
+                const editId = document.getElementById('u-edit-id').value;
+                let users = Storage.get('users') || [];
+                const activeBranchId = window.Permissions?.getActiveBranchId();
+
+                const roleId = parseInt(document.getElementById('u-role').value);
+                // If branch locked, force it. Use existing logic in dropdown (which is hidden but valuable)
+                // Or just read the value.
+                let branchVal = document.getElementById('u-branch').value;
+                if (!branchVal && activeBranchId) branchVal = activeBranchId;
+                const branchId = branchVal ? parseInt(branchVal) : null;
+
+                const pass = passInput.value;
+
+                if (editId) {
+                    const idx = users.findIndex(u => u.id == editId);
+                    if (idx !== -1) {
+                        const userData = {
+                            name: uNameInput.value.trim(),
+                            username: uLoginInput.value.trim(),
+                            role_id: roleId,
+                            branch: branchId
+                        };
+                        // Keep old password if not changed
+                        if (pass) userData.password = pass;
+                        else userData.password = users[idx].password;
+
+                        users[idx] = { ...users[idx], ...userData };
+                    }
+                } else {
+                    if (!passInput.value) {
+                         passInput.style.borderColor = '#ef4444';
+                         setTimeout(() => passInput.style.borderColor = '', 3000);
+                         Toast.show('كلمة المرور مطلوبة للمستخدم الجديد', 'error');
+                         return;
+                    }
+                    const eCode = Utils.generateSecretCode('EMP');
+
+                    const userData = {
+                        id: Date.now(),
+                        name: uNameInput.value.trim(),
+                        username: uLoginInput.value.trim(),
+                        code: eCode,
+                        role_id: roleId,
+                        branch: branchId,
+                        password: pass,
+                        user_code: eCode // Store for compatibility
+                    };
+                    users.push(userData);
+                }
+
+                Storage.save('users', users);
+                Modal.close('user-modal');
+                renderPage();
+                Toast.show('تم حفظ البيانات بنجاح', 'success');
+            };
+        }
+
+        // Add Enter key listener for the modal form
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const tag = e.target.tagName.toLowerCase();
+                const modal = document.getElementById('user-modal');
+                // Check if the modal is currently active/visible
+                if (modal && window.getComputedStyle(modal).display !== 'none' && tag !== 'textarea' && tag !== 'button') {
+                    e.preventDefault();
+                    if (uForm) uForm.dispatchEvent(new Event('submit'));
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
+

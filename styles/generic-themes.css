@@ -1,0 +1,233 @@
+/* 
+ * GENERIC DUAL-THEME FRAMEWORK (V1.0)
+ * -----------------------------------
+ * This file contains standalone, reusable CSS themes:
+ * 1. Royal White (Professional & Clean)
+ * 2. Navy Deep Tech (Futuristic & Cyberpunk)
+ * 
+ * Usage: Apply .theme-royal or .theme-navy-tech to the <body> or main container.
+ */
+
+/* ==========================================================================
+   1. ROYAL WHITE THEME (Default Professional)
+   ========================================================================== */
+.theme-royal {
+    /* Primary Colors */
+    --u-bg-main: #F3F7FA;
+    --u-bg-card: #FFFFFF;
+    --u-primary: #2B5A9E;
+    --u-accent: #1A9E9C;
+    --u-accent-alt: #9b2226;
+
+    /* Text Colors */
+    --u-text-main: #2D3748;
+    --u-text-muted: #718096;
+    --u-text-on-primary: #FFFFFF;
+
+    /* UI Elements */
+    --u-border: #E5E9F0;
+    --u-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    --u-radius: 12px;
+}
+
+/* ==========================================================================
+   2. NAVY DEEP TECH THEME (Futuristic / Dark Mode)
+   ========================================================================== */
+.theme-navy-tech {
+    /* Primary Colors */
+    --u-bg-main: #0a192f;
+    --u-bg-card: #112240;
+    --u-primary: #0f172a;
+    --u-accent: #00eaff;
+    --u-accent-alt: #f43f5e;
+    /* Rose for highlights */
+
+    /* Text Colors */
+    --u-text-main: #ffffff;
+    --u-text-muted: #a8b2d1;
+    --u-text-on-primary: #ffffff;
+
+    /* UI Elements */
+    --u-border: rgba(0, 234, 255, 0.2);
+    --u-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    --u-radius: 16px;
+
+    /* Gradients & Special Effects */
+    --u-glass-bg: rgba(30, 41, 59, 0.85);
+    --u-glow: 0 0 15px rgba(0, 234, 255, 0.3);
+    background: radial-gradient(circle at 50% 50%, #1e293b 0%, #07090f 100%) fixed !important;
+}
+
+/* ==========================================================================
+   GENERIC UTILITY CLASSES (Reuses Variables Above)
+   ========================================================================== */
+
+/* ==========================================================================
+   3. CLINICAL MODERN THEME (Neuro-Clinic Inspired)
+   ========================================================================== */
+.theme-clinical {
+    /* Primary Colors */
+    --u-bg-main: #f0f4f8;
+    --u-bg-card: #ffffff;
+    --u-primary: #10b981;
+    --u-accent: #10b981;
+    --u-accent-alt: #3b82f6;
+
+    /* Text Colors */
+    --u-text-main: #1e293b;
+    --u-text-muted: #64748b;
+    --u-text-on-primary: #ffffff;
+
+    /* UI Elements */
+    --u-border: #e2e8f0;
+    --u-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    --u-radius: 16px;
+}
+
+/* Layout & Backgrounds */
+.u-page-wrapper {
+    background-color: var(--u-bg-main);
+    color: var(--u-text-main);
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+/* Containers & Cards */
+.u-card {
+    background: var(--u-bg-card);
+    border: 1px solid var(--u-border);
+    border-radius: var(--u-radius);
+    padding: 25px;
+    box-shadow: var(--u-shadow);
+    transition: 0.3s;
+}
+
+/* Sticky Header Effect for Navy/Dark Theme */
+.theme-navy-tech .u-card {
+    background: var(--u-glass-bg) !important;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+
+/* Responsive Grid Helper */
+.u-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Typography Headings */
+.u-heading {
+    color: var(--u-text-main);
+    font-weight: 800;
+    margin-bottom: 20px;
+    text-shadow: none;
+}
+
+.theme-navy-tech .u-heading {
+    text-shadow: 0 0 10px rgba(0, 234, 255, 0.3);
+}
+
+/* Status Badges */
+.u-badge {
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--u-border);
+    color: var(--u-text-muted);
+}
+
+.u-badge-primary {
+    background: rgba(0, 234, 255, 0.1);
+    color: var(--u-accent);
+    border: 1px solid var(--u-accent);
+}
+
+/* Buttons (Premium Style) */
+.u-btn {
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.u-btn-primary {
+    background-color: var(--u-accent);
+    color: #fff;
+}
+
+.theme-navy-tech .u-btn-primary {
+    background: #0f172a !important;
+    border: 2px solid var(--u-accent) !important;
+    box-shadow: 0 0 15px rgba(0, 234, 255, 0.2);
+    animation: u-pulse 2s infinite;
+}
+
+.theme-navy-tech .u-btn-primary:hover {
+    background: var(--u-accent) !important;
+    color: #000 !important;
+    box-shadow: 0 0 30px var(--u-accent);
+    transform: translateY(-2px);
+}
+
+/* Inputs & Form Elements */
+.u-input {
+    width: 100%;
+    padding: 12px 18px;
+    background: var(--u-bg-card);
+    border: 1px solid var(--u-border);
+    border-radius: 8px;
+    color: var(--u-text-main);
+    font-size: 1rem;
+    transition: 0.3s;
+}
+
+.u-input:focus {
+    outline: none;
+    border-color: var(--u-accent);
+    box-shadow: 0 0 0 3px rgba(0, 234, 255, 0.1);
+}
+
+.theme-navy-tech .u-input {
+    background: rgba(15, 23, 42, 0.7) !important;
+}
+
+/* ==========================================================================
+   ANIMATIONS
+   ========================================================================== */
+@keyframes u-pulse {
+    0% {
+        box-shadow: 0 0 10px rgba(0, 234, 255, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 25px rgba(0, 234, 255, 0.4);
+    }
+
+    100% {
+        box-shadow: 0 0 10px rgba(0, 234, 255, 0.2);
+    }
+}
+
+/* Utilities */
+.u-text-accent {
+    color: var(--u-accent);
+}
+
+.u-mt-10 {
+    margin-top: 10px;
+}
+
+.u-mb-20 {
+    margin-bottom: 20px;
+}

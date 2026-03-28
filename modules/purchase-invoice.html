@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMaster Pro - فاتورة شراء كتب</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar">
+            <!-- Injected by UICore -->
+        </aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar">
+                    <div class="action-group">
+                        <h1 class="page-title">📚 تسجيل فاتورة توريد كتب (Purchase)</h1>
+                    </div>
+                    <div class="action-group">
+                        <button class="app-btn-primary btn-back-custom" onclick="history.back()">
+                            <i class="fa-solid fa-arrow-right"></i> رجوع
+                        </button>
+                    </div>
+                </header>
+
+                <div class="data-card">
+                    <form id="purchase-form">
+                        <!-- Invoice Header -->
+                        <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:20px; margin-bottom:30px;">
+                            <div class="form-group">
+                                <label>المورد</label>
+                                <select id="supplier-id" class="form-control" required></select>
+                            </div>
+                            <div class="form-group">
+                                <label>رقم الفاتورة</label>
+                                <input type="text" id="invoice-no" class="form-control" required
+                                    placeholder="مثلاً: INV-9901">
+                            </div>
+                            <div class="form-group">
+                                <label>التاريخ</label>
+                                <input type="date" id="invoice-date" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <!-- Invoice Items -->
+                        <div style="margin-top:20px;">
+                            <h3
+                                style="font-size:16px; margin-bottom:15px; color:var(--accent-teal); font-weight: 800; border-right: 4px solid var(--accent-teal); padding-right: 12px;">
+                                أصناف الفاتورة الموردة</h3>
+                            <div id="items-container">
+                                <!-- Multi-item rows will be added here -->
+                                <div class="invoice-item-row"
+                                    style="display:grid; grid-template-columns: 2fr 1fr 1fr 1.2fr 0.5fr; gap:10px; margin-bottom:10px; align-items:end;">
+                                    <div class="form-group">
+                                        <label style="font-size:12px;">الكتاب</label>
+                                        <select class="form-control item-book" required></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:12px;">الكمية</label>
+                                        <input type="number" class="form-control item-qty" value="1" min="1" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:12px;">سعر التكلفة</label>
+                                        <input type="number" class="form-control item-price" value="0" step="0.01"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size:12px;">الإجمالي</label>
+                                        <input type="text" class="form-control item-total" readonly value="0.00">
+                                    </div>
+                                    <button type="button" class="action-btn text-danger"
+                                        onclick="this.parentElement.remove(); updateGrandTotal();"><i
+                                            class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <button type="button" class="app-btn-primary"
+                                style="margin-top:10px; background: var(--bg-main) !important; color: var(--accent-teal) !important; border: 1px dashed var(--accent-teal) !important;"
+                                onclick="window.addItemRow()">
+                                <i class="fa-solid fa-circle-plus"></i> إضافة صنف جديد
+                            </button>
+                        </div>
+
+                        <!-- Totals & Payment -->
+                        <div
+                            style="margin-top:40px; padding-top:20px; border-top:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                            <div style="display:flex; gap:20px;">
+                                <div class="form-group">
+                                    <label>طريقة السداد</label>
+                                    <select id="payment-method" class="form-control" style="width:150px;">
+                                        <option value="cash">نقداً (كاش)</option>
+                                        <option value="credit">آجل (ذمم موردين)</option>
+                                        <option value="bank">تحويل بنكي</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="total-section">
+                                <div class="total-label">إجمالي الفاتورة النهائي:</div>
+                                <div id="grand-total" class="total-amount">0.00 ج.م</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top:40px; display:flex; justify-content:flex-end; gap:12px;">
+                            <button type="button" class="app-btn-primary btn-back-custom" onclick="history.back()">إلغاء
+                                وفقد
+                                البيانات</button>
+                            <button type="submit" class="app-btn-primary" style="padding:12px 60px;">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> حفظ وترحيل الفاتورة للمخازن
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Global Scripts -->
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/accounting-core.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+    <script src="../js/inventory-engine.js"></script>
+
+    <style>
+        /* Local Fixes for Dark Mode */
+        body.dark-mode .action-btn {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        body.dark-mode .action-btn:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        /* Fix Back Button Overrides */
+        .btn-back-custom {
+            padding: 10px 24px !important;
+            white-space: nowrap;
+            min-width: 140px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.dark-mode .btn-back-custom {
+            color: #fff !important;
+            border-color: rgba(255, 255, 255, 0.2) !important;
+            background: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        body.dark-mode .btn-back-custom:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: #fff !important;
+        }
+
+        /* Fix Input Numbers Visibility */
+        body.dark-mode .form-control {
+            background-color: rgba(255, 255, 255, 0.05);
+            /* Slightly lighter than card */
+            border-color: rgba(255, 255, 255, 0.1);
+            color: #fff !important;
+            /* White text for info */
+        }
+
+        body.dark-mode .form-control:focus {
+            border-color: var(--accent-teal);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Fix Select Dropdown Arrows/Text */
+        body.dark-mode select.form-control {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ffffff' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            color: #fff;
+        }
+
+        body.dark-mode .total-amount {
+            color: #2dd4bf;
+            /* Brighter teal for dark mode */
+            text-shadow: 0 0 10px rgba(45, 212, 191, 0.3);
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid #fee2e2;
+            background: #fef2f2;
+            color: #ef4444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .total-label {
+            color: var(--text-muted);
+            font-size: 16px;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .total-amount {
+            color: var(--accent-teal);
+            font-size: 32px;
+            font-weight: 900;
+        }
+
+        body.dark-mode .total-label {
+            color: #e2e8f0;
+            /* Clearer white */
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark-mode .total-amount {
+            color: #2dd4bf;
+            /* Brighter teal for dark mode */
+            text-shadow: 0 0 10px rgba(45, 212, 191, 0.3);
+        }
+
+        /* Invoice Total Frame */
+        .total-section {
+            border: 2px dashed var(--border-soft);
+            padding: 15px 25px;
+            border-radius: 12px;
+            background: #f8fafc;
+            text-align: left;
+            min-width: 280px;
+        }
+
+        body.dark-mode .total-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 15px rgba(45, 212, 191, 0.1);
+        }
+    </style>
+
+    <script>
+        function initPurchasePage() {
+            if (typeof Storage === 'undefined') return;
+
+            const suppliers = Storage.get('suppliers') || [];
+            const books = Storage.get('books') || [];
+
+            const suppSel = document.getElementById('supplier-id');
+            if (suppSel) {
+                suppSel.innerHTML = suppliers.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+            }
+
+            const dateInput = document.getElementById('invoice-date');
+            if (dateInput) dateInput.valueAsDate = new Date();
+
+            window.addItemRow = () => {
+                const container = document.getElementById('items-container');
+                if (!container) return;
+                const row = document.createElement('div');
+                row.className = 'invoice-item-row';
+                row.style = 'display:grid; grid-template-columns: 2fr 1fr 1fr 1.2fr 0.5fr; gap:10px; margin-bottom:10px; align-items:end;';
+                row.innerHTML = `
+                    <div class="form-group">
+                        <select class="form-control item-book" required>${books.map(b => `<option value="${b.id}">${b.name}</option>`).join('')}</select>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control item-qty" value="1" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="number" class="form-control item-price" value="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control item-total" readonly value="0.00">
+                    </div>
+                    <button type="button" class="action-btn text-danger" onclick="this.parentElement.remove(); updateGrandTotal();"><i class="fa-solid fa-trash"></i></button>
+                `;
+                container.appendChild(row);
+                setupRowListeners(row);
+            };
+
+            function setupRowListeners(row) {
+                const qty = row.querySelector('.item-qty');
+                const price = row.querySelector('.item-price');
+                const total = row.querySelector('.item-total');
+
+                const calc = () => {
+                    const val = (parseFloat(qty.value) || 0) * (parseFloat(price.value) || 0);
+                    total.value = val.toFixed(2);
+                    updateGrandTotal();
+                };
+
+                qty.oninput = calc;
+                price.oninput = calc;
+            }
+
+            window.updateGrandTotal = () => {
+                let grand = 0;
+                document.querySelectorAll('.item-total').forEach(inp => {
+                    grand += parseFloat(inp.value) || 0;
+                });
+                const grandEl = document.getElementById('grand-total');
+                if (grandEl) grandEl.innerText = Formatter.formatCurrency(grand) + ' ج.م';
+            }
+
+            // Init first row
+            const firstBookSel = document.querySelector('.item-book');
+            if (firstBookSel) {
+                firstBookSel.innerHTML = books.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
+                setupRowListeners(document.querySelector('.invoice-item-row'));
+            }
+
+            const form = document.getElementById('purchase-form');
+            if (form) {
+                form.onsubmit = (e) => {
+                    e.preventDefault();
+                    const invoice = {
+                        id: Date.now(),
+                        supplier_id: document.getElementById('supplier-id').value,
+                        invoice_no: document.getElementById('invoice-no').value,
+                        date: document.getElementById('invoice-date').value,
+                        payment_method: document.getElementById('payment-method').value,
+                        items: Array.from(document.querySelectorAll('.invoice-item-row')).map(row => ({
+                            book_id: row.querySelector('.item-book').value,
+                            qty: parseInt(row.querySelector('.item-qty').value),
+                            price: parseFloat(row.querySelector('.item-price').value)
+                        }))
+                    };
+
+                    try {
+                        if (typeof InventoryEngine !== 'undefined') {
+                            InventoryEngine.recordBulkPurchase(invoice);
+                            Toast.show('تم ترحيل فاتورة الشراء وتحديث المخزون بنجاح', 'success');
+                            setTimeout(() => location.href = 'books.html', 1000);
+                        }
+                    } catch (err) {
+                        Toast.show('خطأ في العملية: ' + err.message, 'error');
+                    }
+                };
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initPurchasePage);
+        } else {
+            initPurchasePage();
+        }
+    </script>
+</body>
+
+</html>
+
+

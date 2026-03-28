@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل طالب جديد - EduMaster Pro</title>
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-header-pill {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-ui);
+            margin-bottom: 25px;
+            border: 1px solid var(--border-soft);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .breadcrumb i {
+            color: var(--accent-teal);
+            font-size: 1.2rem;
+        }
+
+        .top-action-bar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-pill-group {
+            background: var(--bg-main);
+            padding: 5px;
+            border-radius: 12px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-pill {
+            padding: 8px 20px;
+            border-radius: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 800;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-pill.active {
+            background: var(--accent-teal);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(26, 158, 156, 0.2);
+        }
+
+        .form-section-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: var(--shadow-ui);
+            border: 1px solid var(--border-soft);
+            margin-bottom: 25px;
+        }
+
+        .field-label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 800;
+            color: var(--sidebar-bg);
+            font-size: 1.05rem;
+            /* Increased from 0.9rem */
+        }
+
+        .field-label span {
+            color: #ef4444;
+        }
+
+        .name-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        .oval-input {
+            width: 100%;
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: 1.5px solid var(--border-soft);
+            background: #fff;
+            font-family: inherit;
+            font-size: 1rem;
+            /* Added for clarity */
+            transition: 0.3s;
+        }
+
+        .oval-input:focus {
+            border-color: var(--accent-teal);
+            outline: none;
+            box-shadow: 0 0 10px rgba(26, 158, 156, 0.1);
+        }
+
+        .accordion-item {
+            border: 1px solid var(--border-soft);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .accordion-header {
+            padding: 15px 24px;
+            background: #F8FAFC;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .accordion-header:hover {
+            background: #F1F5F9;
+        }
+
+        .accordion-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 900;
+            color: var(--accent-teal);
+            font-size: 1.15rem;
+            /* Increased from 0.95rem */
+        }
+
+        .accordion-content {
+            padding: 24px;
+            border-top: 1px solid var(--border-soft);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .profile-pic-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 15px;
+            background: var(--bg-main);
+            border-radius: 12px;
+            border: 1px dashed var(--border-soft);
+        }
+
+        .pic-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid var(--accent-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .pic-preview i {
+            font-size: 2.5rem;
+            color: var(--border-soft);
+        }
+
+        .premium-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-soft);
+        }
+
+        .check-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            color: var(--accent-teal);
+        }
+
+        .check-group input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-teal);
+        }
+
+        /* Dark Mode Overrides for Local Components */
+        body.dark-mode .page-header-pill,
+        body.dark-mode .form-section-card,
+        body.dark-mode .accordion-item,
+        body.dark-mode .accordion-header,
+        body.dark-mode .accordion-content,
+        body.dark-mode .oval-input {
+            background: var(--bg-card);
+            border-color: var(--border-soft);
+            color: #fff;
+        }
+
+        body.dark-mode .accordion-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        body.dark-mode .field-label {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .pic-preview {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent-teal);
+        }
+
+        body.dark-mode .pic-preview i {
+            color: var(--accent-teal);
+        }
+
+        body.dark-mode .btn-pill-group {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode .btn-pill {
+            color: #94a3b8;
+        }
+
+        body.dark-mode .btn-pill.active {
+            color: #fff;
+            background: var(--accent-teal);
+        }
+
+
+        /* 🆕 Luxury QR & Receipt Styles */
+        .qr-placeholder-card {
+            background: linear-gradient(135deg, rgba(26, 158, 156, 0.05) 0%, rgba(14, 115, 113, 0.1) 100%);
+            border: 2px dashed var(--accent-teal);
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            transition: 0.4s;
+            height: 100%;
+        }
+
+        .qr-placeholder-card i {
+            font-size: 3.5rem;
+            color: var(--accent-teal);
+            margin-bottom: 12px;
+            opacity: 0.7;
+            text-shadow: 0 0 15px rgba(26, 158, 156, 0.3);
+        }
+
+        .qr-placeholder-card span {
+            font-weight: 800;
+            font-size: 0.7rem;
+            color: var(--accent-teal);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .qr-overlay-text {
+            position: absolute;
+            bottom: 10px;
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            background: var(--bg-card);
+            padding: 2px 10px;
+            border-radius: 10px;
+        }
+
+        .branch-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent-teal-soft);
+            color: var(--accent-teal);
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        /* 🗓️ Clean Date Input: Hide native browser icon */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            display: none;
+            -webkit-appearance: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar"></aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <!-- Top Navigation Pill -->
+                <header class="page-header-pill">
+                    <div class="breadcrumb">
+                        <i class="fa-solid fa-users-viewfinder"></i>
+                        <span>الطلاب</span>
+                        <i class="fa-solid fa-chevron-left" style="font-size: 0.7rem; opacity: 0.5;"></i>
+                        <span class="premium-heading">تسجيل طالب جديد</span>
+                    </div>
+
+                    <div class="top-action-bar">
+                        <div class="btn-pill-group">
+                            <button type="button" class="btn-pill active"
+                                onclick="window.location.href='students.html'">
+                                <i class="fa-solid fa-list-check"></i> عرض الكل
+                            </button>
+                        </div>
+                    </div>
+                </header>
+
+                <div id="duplicate-alert" class="alert-premium"
+                    style="display:none; margin-bottom:20px; background:linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <div style="flex:1;">
+                        <span style="font-weight:900;">⚠️ تنبيه: طالب مسجل مسبقاً!</span>
+                        <p id="duplicate-msg" style="margin:5px 0 0; font-size:0.85rem; font-weight:700; opacity:0.9;">
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 👨‍👩‍👧‍👦 SMART SIBLING LINKING -->
+                <div class="form-section-card"
+                    style="margin-bottom: 25px; border: 1px dashed var(--accent-teal); background: rgba(26, 158, 156, 0.02);">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div
+                            style="background: var(--accent-teal); color: #fff; width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                            <i class="fa-solid fa-people-group"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <h3 style="margin: 0; font-size: 1rem; font-weight: 900; color: var(--sidebar-bg);">ربط شقيق
+                                (اختياري)</h3>
+                            <p style="margin: 2px 0 0; font-size: 0.75rem; color: var(--text-muted); font-weight: 700;">
+                                ابحث عن شقيق لسحب بيانات العائلة تلقائياً</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; position: relative;">
+                        <i class="fa-solid fa-search"
+                            style="position: absolute; right: 15px; top: 15px; color: var(--accent-teal);"></i>
+                        <input type="text" id="sibling-search" class="oval-input"
+                            placeholder="اكتب اسم الشقيق هنا للبحث..."
+                            style="width: 100%; padding-right: 45px; border-style: dashed; background: #fff;">
+                        <div id="sibling-results"
+                            style="position: absolute; top: 100%; left: 0; right: 0; background: #fff; z-index: 100; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 12px; display: none; max-height: 200px; overflow-y: auto; border: 1px solid var(--border-soft); margin-top: 5px;">
+                        </div>
+                    </div>
+                    <div id="selected-sibling-pill"
+                        style="display: none; margin-top: 10px; background: var(--accent-teal-soft); color: var(--accent-teal); padding: 8px 15px; border-radius: 50px; align-items: center; gap: 10px; font-weight: 800; font-size: 0.85rem; width: fit-content;">
+                        <i class="fa-solid fa-link"></i> <span id="sibling-name-display"></span>
+                        <i class="fa-solid fa-times-circle" onclick="clearSelectedSibling()"
+                            style="cursor: pointer; opacity: 0.7;"></i>
+                    </div>
+                </div>
+
+                <form id="add-student-form">
+                    <div class="form-section-card">
+                        <!-- New Premium Layout: Name gets full space, Meta data below -->
+                        <div style="display: flex; flex-direction: column; gap: 25px;">
+
+                            <!-- Row 1: Full Name (Wide) -->
+                            <div class="field-group">
+                                <label class="field-label">إسم الطالب الجديـد (ثلاثي على الأقل) <span>*</span></label>
+                                <input type="text" class="oval-input" placeholder="مثال: أحمد محمد علي حسن"
+                                    id="full-student-name" style="font-size: 1.2rem; font-weight: 700;">
+                            </div>
+
+                            <!-- Row 2: Metadata (Branch & Phone) -->
+                            <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 24px;">
+                                <div class="field-group">
+                                    <div class="branch-badge"><i class="fa-solid fa-code-branch"></i> تحديد الفرع
+                                        المستهدف</div>
+                                    <select class="oval-input" id="branch-select"
+                                        style="border-color: var(--accent-teal); font-weight: 800;">
+                                        <!-- Populated by JS -->
+                                    </select>
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">رقم الهاتف الجوال <span>*</span></label>
+                                    <input type="tel" class="oval-input" placeholder="01xxxxxxxxx" maxlength="13"
+                                        id="phone-number" style="letter-spacing: 2px; font-weight: 700;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible: Additional Info -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">
+                                <i class="fa-solid fa-circle-plus"></i>
+                                <span>معلومات إضافية</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem;"></i>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="field-group">
+                                <div
+                                    style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                                    <label class="field-label" style="margin-bottom:0;">معرفة الطالب بالمعهد</label>
+                                    <button type="button" class="btn-manage-cats admin-only"
+                                        onclick="event.stopPropagation(); window.openStudentSourceModal()"
+                                        style="background:rgba(26,158,156,0.1); color:var(--accent-teal); border:none; padding:6px 12px; border-radius:8px; cursor:pointer; font-weight:800; font-size:0.75rem; display:flex; align-items:center; gap:6px; transition:0.3s;">
+                                        <i class="fa-solid fa-sliders"></i> إدارة البنود
+                                    </button>
+                                </div>
+                                <select class="oval-input" id="student-source-select">
+                                    <option value="">اختر المصدر...</option>
+                                    <option>فيسبوك</option>
+                                    <option>صديق</option>
+                                    <option>إعلان ممول</option>
+                                </select>
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label">رقم تليفون آخر</label>
+                                <input type="tel" class="oval-input" id="phone-number-extra" placeholder="رقم احتياطي"
+                                    maxlength="13">
+                            </div>
+                            <div class="field-group">
+                                <label class="field-label">العنوان بالتفصيل <span>*</span></label>
+                                <input type="text" class="oval-input" id="extra-address"
+                                    placeholder="المحافظة - المدينة - الحي - الشارع">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible: Personal Data -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">
+                                <i class="fa-solid fa-id-card"></i>
+                                <span>بيانات شخصية</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-up" style="font-size: 0.8rem;"></i>
+                        </div>
+                        <div class="accordion-content"
+                            style="display: grid; padding: 25px; grid-template-columns: 1fr;">
+                            <!-- Layout Container: Text Fields (Right) + Visuals (Left) -->
+                            <div
+                                style="display: grid; grid-template-columns: 1fr 340px; gap: 30px; align-items: start;">
+
+                                <!-- Text Data Column -->
+                                <div style="display: flex; flex-direction: column; gap: 24px;">
+
+                                    <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px;">
+                                        <div class="field-group">
+                                            <label class="field-label">المحافظة <span>*</span></label>
+                                            <select class="oval-input" id="personal-address"
+                                                onchange="saveLastGovernorate(this.value)">
+                                                <option value="">اختر المحافظة...</option>
+                                                <option value="الإسكندرية">الإسكندرية</option>
+                                                <option value="القاهرة">القاهرة</option>
+                                                <option value="الجيزة">الجيزة</option>
+                                                <option value="القليوبية">القليوبية</option>
+                                                <option value="الدقهلية">الدقهلية</option>
+                                                <option value="الشرقية">الشرقية</option>
+                                                <option value="المنوفية">المنوفية</option>
+                                                <option value="الغربية">الغربية</option>
+                                                <option value="كفر الشيخ">كفر الشيخ</option>
+                                                <option value="البحيرة">البحيرة</option>
+                                                <option value="دمياط">دمياط</option>
+                                                <option value="بورسعيد">بورسعيد</option>
+                                                <option value="الإسماعيلية">الإسماعيلية</option>
+                                                <option value="السويس">السويس</option>
+                                                <option value="الفيوم">الفيوم</option>
+                                                <option value="بني سويف">بني سويف</option>
+                                                <option value="المنيا">المنيا</option>
+                                                <option value="أسيوط">أسيوط</option>
+                                                <option value="سوهاج">سوهاج</option>
+                                                <option value="قنا">قنا</option>
+                                                <option value="الأقصر">الأقصر</option>
+                                                <option value="أسوان">أسوان</option>
+                                                <option value="البحر الأحمر">البحر الأحمر</option>
+                                                <option value="الوادي الجديد">الوادي الجديد</option>
+                                                <option value="مطروح">مطروح</option>
+                                                <option value="شمال سيناء">شمال سيناء</option>
+                                                <option value="جنوب سيناء">جنوب سيناء</option>
+                                            </select>
+                                        </div>
+                                        <div class="field-group">
+                                            <label class="field-label">رقم الإيصال اليدوي (Serial)
+                                                <span>*</span></label>
+                                            <input type="text" class="oval-input" id="receipt-no"
+                                                placeholder="مثلاً: 5520"
+                                                style="border-color: var(--accent-teal); color: var(--accent-teal); font-weight: 800;">
+                                        </div>
+                                    </div>
+
+                                    <!-- Row 2: ID & Email -->
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                                        <div class="field-group">
+                                            <label class="field-label">الرقم القومي <span>*</span></label>
+                                            <input type="text" class="oval-input numeric-only" id="national-id"
+                                                placeholder="299xxxxxxxxxxx" maxlength="14">
+                                        </div>
+                                        <div class="field-group">
+                                            <label class="field-label">البريد الإلكتروني</label>
+                                            <input type="email" class="oval-input" id="student-email"
+                                                placeholder="example@mail.com">
+                                        </div>
+                                    </div>
+
+                                    <!-- Row 3: Job & Birthday -->
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                                        <div class="field-group">
+                                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                                                <label class="field-label" style="margin:0;">الوظيفة / المهنة</label>
+                                                <button type="button" title="إدارة قائمة المهن" onclick="event.stopPropagation(); window.openJobsModal()"
+                                                    style="background: var(--accent-teal-soft); border: 1px solid var(--accent-teal); color: var(--accent-teal); border-radius: 8px; padding: 3px 10px; font-size: 0.75rem; cursor: pointer; font-family: inherit; font-weight: 700; display:flex; align-items:center; gap:5px;">
+                                                    <i class="fa-solid fa-pen-to-square"></i> تعديل
+                                                </button>
+                                            </div>
+                                            <select class="oval-input" id="student-job" style="cursor:pointer; font-weight: 700;">
+                                                <option value="">-- اختر المهنة --</option>
+                                            </select>
+                                        </div>
+                                        <div class="field-group">
+                                            <label class="field-label">تاريخ الميلاد <span>*</span></label>
+                                            <!-- Hidden input for saving -->
+                                            <input type="hidden" id="birth-date">
+                                            <div style="display: grid; grid-template-columns: 1fr 1.4fr 1.2fr; gap: 8px;"
+                                                id="birth-date-group">
+                                                <!-- Day -->
+                                                <select id="bd-day" class="oval-input"
+                                                    style="padding: 11px 12px; cursor:pointer;"
+                                                    onchange="updateBirthDate()">
+                                                    <option value="">يوم</option>
+                                                </select>
+                                                <!-- Month -->
+                                                <select id="bd-month" class="oval-input"
+                                                    style="padding: 11px 12px; cursor:pointer;"
+                                                    onchange="updateBirthDate()">
+                                                    <option value="">الشهر</option>
+                                                    <option value="01">يناير</option>
+                                                    <option value="02">فبراير</option>
+                                                    <option value="03">مارس</option>
+                                                    <option value="04">أبريل</option>
+                                                    <option value="05">مايو</option>
+                                                    <option value="06">يونيو</option>
+                                                    <option value="07">يوليو</option>
+                                                    <option value="08">أغسطس</option>
+                                                    <option value="09">سبتمبر</option>
+                                                    <option value="10">أكتوبر</option>
+                                                    <option value="11">نوفمبر</option>
+                                                    <option value="12">ديسمبر</option>
+                                                </select>
+                                                <!-- Year -->
+                                                <select id="bd-year" class="oval-input"
+                                                    style="padding: 11px 12px; cursor:pointer;"
+                                                    onchange="updateBirthDate()">
+                                                    <option value="">السنة</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Visuals & Meta Column -->
+                                <div
+                                    style="background: rgba(15, 23, 42, 0.4); border: 1px solid var(--border-soft); border-radius: 18px; padding: 20px; display: flex; flex-direction: column; gap: 20px;">
+                                    <div class="field-group">
+                                        <label class="field-label">النوع (Gender) <span>*</span></label>
+                                        <div
+                                            style="display: flex; justify-content: space-around; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 10px;">
+                                            <label
+                                                style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-main); font-weight: 700;">
+                                                <input type="radio" name="gender" value="male"
+                                                    style="accent-color: var(--accent-teal);"> ذكر
+                                            </label>
+                                            <label
+                                                style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-main); font-weight: 700;">
+                                                <input type="radio" name="gender" value="female"
+                                                    style="accent-color: var(--accent-teal);"> أنثى
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="field-group">
+                                        <label class="field-label" style="text-align: center; display: block; margin-bottom: 15px;">الصورة الشخصية</label>
+                                        <div class="profile-pic-container" style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+                                            <div class="pic-preview" id="photo-preview-container" onclick="document.getElementById('photo-input').click()" style="width: 120px; height: 120px; border-radius: 50%; background: #f1f5f9; border: 3px solid var(--saas-primary, #2563EB); display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer; position: relative;">
+                                                <i class="fa-solid fa-user-plus" id="default-photo-icon" style="font-size: 2.5rem; color: #94a3b8;"></i>
+                                                <img id="photo-preview-img" style="display:none; width:100%; height:100%; object-fit:cover;">
+                                            </div>
+                                            <input type="file" id="photo-input" hidden accept="image/*" onchange="previewPhoto(this)">
+                                            
+                                            <button type="button" onclick="openCameraModal()" style="display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 220px; height: 45px; background: rgba(37, 99, 235, 0.1); color: var(--saas-primary, #2563EB); border: 2px solid var(--saas-primary, #2563EB); border-radius: 12px; font-weight: 900; font-size: 0.85rem; cursor: pointer; transition: 0.3s; font-family: inherit;">
+                                                <i class="fa-solid fa-camera"></i> التقاط من الكاميرا
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="qr-placeholder-card" style="margin-top: 0px;">
+                                        <i class="fa-solid fa-qrcode"></i>
+                                        <span>Student QR Space</span>
+                                        <div class="qr-overlay-text">سيتم التوليد تلقائياً</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Notes Section -->
+                    <div class="form-section-card">
+                        <label class="field-label">ملحوظات عن الطالب</label>
+                        <textarea class="oval-input" style="border-radius: 12px; height: 100px; resize: none;"
+                            placeholder="أدخل أي ملاحظات إضافية هنا..."></textarea>
+                    </div>
+
+                    <!-- Footer -->
+                    <footer class="premium-footer">
+                        <div class="check-group">
+                            <input type="checkbox" id="create-acc">
+                            <label for="create-acc">إنشاء حساب دخول للعميل الجديد تلقائياً</label>
+                        </div>
+                        <div style="display: flex; gap: 15px;">
+                            <button type="button" id="btn-save-another" class="app-btn-primary"
+                                style="background: var(--bg-main) !important; border: 1.5px solid var(--accent-teal) !important; color: var(--accent-teal) !important;">
+                                <i class="fa-solid fa-save"></i> حفظ ثم إضافة عميل آخر
+                            </button>
+                            <button type="submit" id="btn-save-main" class="app-btn-primary"
+                                style="padding: 12px 60px;">
+                                <i class="fa-solid fa-user-plus"></i> إضافة العميل الآن
+                            </button>
+                        </div>
+                    </footer>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Student Source Category Manager Modal -->
+    <div class="modal-overlay" id="modal-student-source">
+        <div class="modal-container" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fa-solid fa-list-ul" style="color:var(--accent-teal); margin-left:8px;"></i>
+                    إدارة مصادر المعرفة
+                </h3>
+                <button type="button" class="close-modal" onclick="window.closeStudentSourceModal()">&times;</button>
+            </div>
+            <div style="padding: 25px;">
+                <div id="source-list-container" style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
+                    <!-- Populated by JS -->
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="new-source-input" class="oval-input" placeholder="أضف مصدر جديد..."
+                        style="flex:1;">
+                    <button type="button" class="app-btn-primary" onclick="addStudentSource()"
+                        style="padding:10px 20px;">إضافة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jobs Manager Modal -->
+    <div class="modal-overlay" id="modal-student-jobs">
+        <div class="modal-container" style="max-width: 450px;">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fa-solid fa-briefcase" style="color:var(--accent-teal); margin-left:8px;"></i>
+                    إدارة قائمة الوظائف / المهن
+                </h3>
+                <button type="button" class="close-modal" onclick="window.closeJobsModal()">&times;</button>
+            </div>
+            <div style="padding: 25px;">
+                <div id="jobs-list-container" style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
+                    <!-- Populated by JS -->
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="new-job-input" class="oval-input" placeholder="أضف وظيفة جديدة..."
+                        style="flex:1;" onkeydown="if(event.key==='Enter'){event.preventDefault(); window.addJobItem();}">
+                    <button type="button" class="app-btn-primary" onclick="window.addJobItem()"
+                        style="padding:10px 20px; white-space:nowrap;">
+                        <i class="fa-solid fa-plus"></i> إضافة
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Camera Modal -->
+    <div class="modal-overlay" id="modal-camera">
+        <div class="modal-container" style="max-width: 500px; padding: 0;">
+            <div class="modal-header">
+                <h3 class="modal-title"><i class="fa-solid fa-camera" style="color:var(--accent-teal);"></i> التقاط صورة الطالب</h3>
+                <button type="button" class="close-modal" onclick="closeCameraModal()">&times;</button>
+            </div>
+            <div style="padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+                <div style="width: 100%; height: 350px; background: #000; border-radius: 20px; overflow: hidden; position: relative;">
+                    <video id="capture-video" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover;"></video>
+                </div>
+                <button type="button" onclick="takeSnapshot()" class="app-btn-primary" style="width: 100%; height: 55px; font-size: 1.1rem;">
+                    <i class="fa-solid fa-shutter-speed"></i> التقاط الصورة الآن
+                </button>
+            </div>
+        </div>
+    </div>
+    <canvas id="capture-canvas" style="display: none;"></canvas>
+
+
+
+    <!-- Scripts -->
+    <!-- Firebase Cloud Sync (v3.0) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="../js/firebase-config.js"></script>
+
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+    <script>
+        let cameraStream = null;
+        let currentPhotoBase64 = '';
+
+        window.openCameraModal = async function() {
+            try {
+                Modal.open('modal-camera');
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
+                document.getElementById('capture-video').srcObject = cameraStream;
+            } catch (err) {
+                console.error('Camera Error:', err);
+                Toast.show('فشل الوصول للكاميرا', 'error');
+                Modal.close('modal-camera');
+            }
+        };
+
+        window.closeCameraModal = function() {
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+            Modal.close('modal-camera');
+        };
+
+        window.takeSnapshot = function() {
+            const video = document.getElementById('capture-video');
+            const canvas = document.getElementById('capture-canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0);
+            currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+            
+            const preview = document.getElementById('photo-preview-img');
+            const icon = document.getElementById('default-photo-icon');
+            if (preview) {
+                preview.src = currentPhotoBase64;
+                preview.style.display = 'block';
+                if (icon) icon.style.display = 'none';
+            }
+            closeCameraModal();
+            Toast.show('تم التقاط الصورة', 'success');
+        };
+
+        function previewPhoto(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentPhotoBase64 = e.target.result;
+                    const preview = document.getElementById('photo-preview-img');
+                    const icon = document.getElementById('default-photo-icon');
+                    if (preview) {
+                        preview.src = currentPhotoBase64;
+                        preview.style.display = 'block';
+                        if (icon) icon.style.display = 'none';
+                    }
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            const content = item.querySelector('.accordion-content');
+            const icon = header.querySelector('.fa-chevron-down, .fa-chevron-up');
+
+            const currentDisplay = window.getComputedStyle(content).display;
+
+            if (currentDisplay === 'none') {
+                content.style.display = 'grid'; // Originally 'block', now 'grid' matches CSS
+                icon.className = 'fa-solid fa-chevron-up';
+            } else {
+                content.style.display = 'none';
+                icon.className = 'fa-solid fa-chevron-down';
+            }
+        }
+        // ── Jobs / Professions Management ─────────────────────────────────
+        const DEFAULT_JOBS = ['طالب', 'طالبة', 'موظف', 'موظفة', 'أعمال حرة', 'مهندس', 'طبيب', 'محاسب', 'محامي', 'معلم', 'ربة منزل', 'متقاعد', 'بدون عمل', 'أخرى'];
+
+        function loadJobsList() {
+            const stored = Storage.get('student_jobs') || [];
+            const allJobs = [...new Set([...DEFAULT_JOBS, ...stored])];
+
+            // Populate dropdown
+            const sel = document.getElementById('student-job');
+            if (sel) {
+                const currentVal = sel.value;
+                sel.innerHTML = '<option value="">-- اختر المهنة --</option>' +
+                    allJobs.map(j => `<option value="${j}">${j}</option>`).join('');
+                if (currentVal) sel.value = currentVal;
+            }
+
+            // Populate modal list
+            const container = document.getElementById('jobs-list-container');
+            if (container) {
+                if (allJobs.length === 0) {
+                    container.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">لا توجد وظائف مسجلة</p>';
+                } else {
+                    container.innerHTML = allJobs.map((job, idx) => {
+                        const isDefault = DEFAULT_JOBS.includes(job);
+                        return `<div style="display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:rgba(0,0,0,0.15); border-radius:10px; border:1px solid var(--border-soft);">
+                            <span style="font-weight:800; color:var(--text-main); font-size:0.95rem;">
+                                <i class="fa-solid fa-briefcase" style="color:var(--accent-teal); margin-left:8px; font-size:0.8rem;"></i>${job}
+                            </span>
+                            ${isDefault ? '<span style="font-size:0.7rem; color:var(--text-muted); font-weight:600;">افتراضي</span>' :
+                            `<button type="button" onclick="window.deleteJobItem(${idx})"
+                                style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); color:#ef4444; border-radius:8px; padding:4px 12px; cursor:pointer; font-size:0.75rem; font-weight:700; font-family:inherit;">
+                                <i class="fa-solid fa-trash-can"></i> حذف
+                            </button>`}
+                        </div>`;
+                    }).join('');
+                }
+            }
+        }
+
+        window.openJobsModal = function () {
+            loadJobsList();
+            Modal.open('modal-student-jobs');
+            const input = document.getElementById('new-job-input');
+            if (input) { input.value = ''; setTimeout(() => input.focus(), 150); }
+        };
+
+        window.closeJobsModal = function () {
+            Modal.close('modal-student-jobs');
+        };
+
+        window.addJobItem = function () {
+            const input = document.getElementById('new-job-input');
+            if (!input || !input.value.trim()) return;
+
+            const val = input.value.trim();
+            let stored = Storage.get('student_jobs') || [];
+            const allExisting = [...new Set([...DEFAULT_JOBS, ...stored])];
+
+            if (allExisting.includes(val)) {
+                Toast.show('هذه الوظيفة موجودة بالفعل', 'info');
+                return;
+            }
+
+            stored.push(val);
+            Storage.save('student_jobs', stored);
+            input.value = '';
+            loadJobsList();
+            Toast.show('تم إضافة "' + val + '" بنجاح', 'success');
+        };
+
+        window.deleteJobItem = function (idx) {
+            const stored = Storage.get('student_jobs') || [];
+            const allJobs = [...new Set([...DEFAULT_JOBS, ...stored])];
+            const itemToDelete = allJobs[idx];
+
+            if (DEFAULT_JOBS.includes(itemToDelete)) return;
+
+            const newStored = stored.filter(j => j !== itemToDelete);
+            Storage.save('student_jobs', newStored);
+            loadJobsList();
+            Toast.show('تم حذف "' + itemToDelete + '"', 'info');
+        };
+
+        // ── Birth Date Helpers ──────────────────────────────────────────
+        function updateBirthDate() {
+            const d = document.getElementById('bd-day').value;
+            const m = document.getElementById('bd-month').value;
+            const y = document.getElementById('bd-year').value;
+            const hidden = document.getElementById('birth-date');
+            if (d && m && y) {
+                hidden.value = `${y}-${m}-${d}`;
+                // Highlight indicator
+                document.getElementById('birth-date-group').style.outline = 'none';
+            } else {
+                hidden.value = '';
+            }
+        }
+
+        function resetBirthDate() {
+            document.getElementById('bd-day').value = '';
+            document.getElementById('bd-month').value = '';
+            document.getElementById('bd-year').value = '';
+            document.getElementById('birth-date').value = '';
+        }
+
+        // ── Photo Upload Helpers ────────────────────────────────────────
+        let currentStudentPhotoBase64 = null;
+        function handlePhotoUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            // Check size (2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                Toast.show('حجم الصورة كبير جداً (الأقصى 2 ميجابايت)', 'error');
+                input.value = '';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                currentStudentPhotoBase64 = e.target.result;
+                const img = document.getElementById('photo-preview-img');
+                const icon = document.getElementById('default-photo-icon');
+                img.src = currentStudentPhotoBase64;
+                img.style.display = 'block';
+                icon.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function resetPhotoPreview() {
+            currentStudentPhotoBase64 = null;
+            const img = document.getElementById('photo-preview-img');
+            const icon = document.getElementById('default-photo-icon');
+            const input = document.getElementById('student-photo-input');
+            img.style.display = 'none';
+            img.src = '';
+            icon.style.display = 'block';
+            if (input) input.value = '';
+        }
+
+        // ── Governorate Helpers ─────────────────────────────────────────
+        function saveLastGovernorate(val) {
+            if (val) localStorage.setItem('edumaster_last_gov', val);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            UICore.init();
+            loadJobsList(); // Populate jobs dropdown
+
+            // ========== 👨‍👩‍👧‍👦 SMART SIBLING & DUPLICATE LOGIC ==========
+            let selectedSiblingId = null;
+
+            // ==========================================
+            // EDIT MODE INITIALIZATION (Single Source of Truth)
+            // ==========================================
+            const urlParams = new URLSearchParams(window.location.search);
+            const editId = urlParams.get('editId') || urlParams.get('edit');
+
+            if (editId) {
+                document.title = "تعديل بيانات الطالب - EduMaster Pro";
+
+                // Morph UI
+                const pageTitle = document.querySelector('.page-header-pill h2');
+                if (pageTitle) pageTitle.innerHTML = `<i class="fa-solid fa-user-pen" style="color:var(--accent-teal);"></i> تعديل بيانات الطالب`;
+
+                const submitBtn = document.querySelector('button[type="submit"]');
+                if (submitBtn) submitBtn.innerHTML = `<i class="fa-solid fa-save"></i> حفظ جميع التعديلات`;
+
+                const saveAnotherBtn = document.getElementById('btn-save-another');
+                if (saveAnotherBtn) saveAnotherBtn.style.display = 'none';
+
+                // Load Data
+                const students = Storage.get('students') || [];
+                const studentToEdit = students.find(s => String(s.id) === String(editId));
+
+                if (studentToEdit) {
+                    setTimeout(() => {
+                        document.getElementById('full-student-name').value = studentToEdit.name || '';
+                        document.getElementById('phone-number').value = studentToEdit.phone || '';
+                        const phoneExtra = document.getElementById('phone-number-extra');
+                        if (phoneExtra) phoneExtra.value = studentToEdit.phoneExtra || '';
+
+                        document.getElementById('national-id').value = studentToEdit.nationalId || '';
+                        document.getElementById('birth-date').value = studentToEdit.birthDate || '';
+
+                        if (studentToEdit.gender) {
+                            const genderRadio = document.querySelector(`input[name="gender"][value="${studentToEdit.gender}"]`);
+                            if (genderRadio) genderRadio.checked = true;
+                        }
+
+                        const emailInput = document.getElementById('student-email');
+                        if (emailInput) emailInput.value = studentToEdit.email || '';
+
+                        const jobInput = document.getElementById('student-job');
+                        if (jobInput) jobInput.value = studentToEdit.job || '';
+
+                        document.getElementById('personal-address').value = studentToEdit.addressPersonal || 'Cairo';
+                        document.getElementById('extra-address').value = studentToEdit.addressExtra || '';
+
+                        const sourceSelect = document.getElementById('student-source-select');
+                        if (sourceSelect && studentToEdit.source) sourceSelect.value = studentToEdit.source;
+
+                        const branchSelect = document.getElementById('branch-select');
+                        if (branchSelect && studentToEdit.branch) branchSelect.value = studentToEdit.branch;
+
+                        const receiptInput = document.getElementById('receipt-no');
+                        if (receiptInput) receiptInput.value = studentToEdit.receipt_no || '';
+
+                        if (studentToEdit.photo) {
+                            currentStudentPhotoBase64 = studentToEdit.photo;
+                            const img = document.getElementById('photo-preview-img');
+                            const icon = document.getElementById('default-photo-icon');
+                            img.src = currentStudentPhotoBase64;
+                            img.style.display = 'block';
+                            icon.style.display = 'none';
+                        }
+
+                        // Open accordions
+                        document.querySelectorAll('.accordion-content').forEach(c => c.style.display = 'grid'); // Changed from 'block' to 'grid' to match original accordion style
+                        document.querySelectorAll('.accordion-header i').forEach(i => i.className = 'fa-solid fa-chevron-up');
+
+                        // Pre-fill birth date selects if birthDate is available
+                        if (studentToEdit.birthDate) {
+                            const [year, month, day] = studentToEdit.birthDate.split('-');
+                            document.getElementById('bd-day').value = day;
+                            document.getElementById('bd-month').value = month;
+                            document.getElementById('bd-year').value = year;
+                            document.getElementById('birth-date').value = studentToEdit.birthDate;
+                        }
+
+                    }, 50); // slight delay to ensure dynamic options render
+                }
+            }
+
+            // --- Auto Format SSN & Dates ---
+            const ssnInput = document.getElementById('national-id');
+            ssnInput.addEventListener('input', (e) => {
+                let val = e.target.value.replace(/[^0-9]/g, '');
+                if (val.length > 14) val = val.substring(0, 14);
+                e.target.value = val;
+            });
+
+            // Helper to get branch name
+            const getBranchName = (id) => {
+                const branches = Storage.get('branches') || [];
+                const b = branches.find(x => String(x.id) === String(id));
+                return b ? b.name : `فرع ${id}`;
+            };
+
+            // 1. DUPLICATE CHECK
+            const nameInput = document.getElementById('full-student-name');
+            const phoneInput = document.getElementById('phone-number');
+            const alertBox = document.getElementById('duplicate-alert');
+            const alertMsg = document.getElementById('duplicate-msg');
+
+            const checkDuplicates = () => {
+                if (editId) return; // Skip duplicate checks when editing
+
+                const name = Formatter.normalizeArabic(nameInput.value.trim());
+                const phone = phoneInput.value.trim();
+
+                if (name.length < 4 && phone.length < 5) {
+                    alertBox.style.display = 'none';
+                    return;
+                }
+
+                const students = Storage.get('students') || [];
+                const duplicate = students.find(s => {
+                    // Ignore the duplicate check if the matched record is the selected sibling
+                    if (selectedSiblingId && s.id === selectedSiblingId) return false;
+
+                    const sName = Formatter.normalizeArabic(s.name || '');
+                    const sPhone = (s.phone || '').trim();
+                    const nameMatch = (name.length > 5 && sName === name);
+
+                    // If a sibling is linked, the phone number WILL match other family members.
+                    // So we only check if the new student's NAME is duplicated.
+                    if (selectedSiblingId) {
+                        return nameMatch;
+                    }
+
+                    const phoneMatch = (phone.length > 8 && sPhone === phone);
+                    return nameMatch || phoneMatch;
+                });
+
+                if (duplicate) {
+                    alertBox.style.display = 'flex';
+                    alertMsg.innerHTML = `هذا الطالب مسجل بالفعل في فرع <b>(${getBranchName(duplicate.branch_id || duplicate.branch)})</b> باسم <b>${duplicate.name}</b>.`;
+                } else {
+                    alertBox.style.display = 'none';
+                }
+            };
+
+            nameInput.addEventListener('input', checkDuplicates);
+            phoneInput.addEventListener('input', checkDuplicates);
+
+            // 2. SIBLING SEARCH
+            const siblingInput = document.getElementById('sibling-search');
+            const siblingResults = document.getElementById('sibling-results');
+            const siblingPill = document.getElementById('selected-sibling-pill');
+            const siblingNameDisplay = document.getElementById('sibling-name-display');
+
+            siblingInput.addEventListener('input', (e) => {
+                const query = Formatter.normalizeArabic(e.target.value);
+                if (query.length < 2) {
+                    siblingResults.style.display = 'none';
+                    return;
+                }
+
+                const students = Storage.get('students') || [];
+                // ENHANCED SEARCH: Name, Phone, National ID (SSN), or Address
+                const matches = students.filter(s => {
+                    const sName = Formatter.normalizeArabic(s.name || '');
+                    const sPhone = (s.phone || '').trim();
+                    const sSSN = (s.nationalId || '').trim();
+                    const sAddr = Formatter.normalizeArabic((s.addressExtra || s.address || '') + ' ' + (s.addressPersonal || ''));
+                    
+                    return sName.includes(query) || 
+                           sPhone.includes(query) || 
+                           sSSN.includes(query) || 
+                           sAddr.includes(query);
+                }).slice(0, 5);
+
+                if (matches.length > 0) {
+                    siblingResults.innerHTML = matches.map(s => `
+                        <div class="result-item" onclick="selectSibling(${s.id}, \`${s.name.replace(/'/g, "\\'")}\`)" 
+                             style="padding: 12px 15px; cursor: pointer; border-bottom: 1px solid #f1f5f9; transition: 0.2s;">
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <div style="font-weight: 800; font-size: 0.95rem; color:var(--accent-teal);">${s.name}</div>
+                                <div style="font-size: 0.7rem; color: var(--text-muted); background:var(--bg-main); padding:2px 8px; border-radius:5px;">ID: ${s.nationalId || '---'}</div>
+                            </div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top:4px;">
+                                <i class="fa-solid fa-phone" style="font-size:0.7rem;"></i> ${s.phone || 'بدون هاتف'} 
+                                <span style="margin:0 8px; opacity:0.3;">|</span>
+                                <i class="fa-solid fa-map-marker-alt" style="font-size:0.7rem;"></i> ${s.addressPersonal || ''} ${s.addressExtra || s.address || ''}
+                            </div>
+                        </div>
+                    `).join('');
+                    siblingResults.style.display = 'block';
+                } else {
+                    siblingResults.style.display = 'none';
+                }
+            });
+
+            window.selectSibling = function (id, name) {
+                selectedSiblingId = id;
+                siblingNameDisplay.innerText = name;
+                siblingPill.style.display = 'flex';
+                siblingInput.value = '';
+                siblingResults.style.display = 'none';
+
+                // AUTO-FILL DATA FROM SIBLING (Total Family Mirror)
+                const students = Storage.get('students') || [];
+                const sibling = students.find(s => s.id === id);
+                if (sibling) {
+                    const fieldsToFlash = [];
+
+                    // 1. Name: Focus and select only the first name part for replacement
+                    const nameInput = document.getElementById('full-student-name');
+                    if (nameInput) {
+                        nameInput.value = sibling.name;
+                        fieldsToFlash.push(nameInput);
+
+                        setTimeout(() => {
+                            nameInput.focus();
+                            // Select first word (the sibling's first name)
+                            const firstSpaceIdx = (sibling.name || '').indexOf(' ');
+                            if (firstSpaceIdx > 0) {
+                                nameInput.setSelectionRange(0, firstSpaceIdx);
+                            } else {
+                                nameInput.select();
+                            }
+                        }, 100);
+                    }
+
+                    // 2. Contact Metadata
+                    if (sibling.phone) {
+                        const pInput = document.getElementById('phone-number');
+                        if (pInput) { pInput.value = sibling.phone; fieldsToFlash.push(pInput); }
+                    }
+                    if (sibling.phoneExtra) {
+                        const peInput = document.getElementById('phone-number-extra');
+                        if (peInput) { peInput.value = sibling.phoneExtra; fieldsToFlash.push(peInput); }
+                    }
+                    if (sibling.email) {
+                        const emailInput = document.getElementById('student-email');
+                        if (emailInput) { emailInput.value = sibling.email; fieldsToFlash.push(emailInput); }
+                    }
+
+                    // 3. Location & Family Info
+                    if (sibling.addressPersonal) {
+                        const govSelect = document.getElementById('personal-address');
+                        if (govSelect) { govSelect.value = sibling.addressPersonal; fieldsToFlash.push(govSelect); }
+                    }
+                    if (sibling.addressExtra || sibling.address) {
+                        const addrInput = document.getElementById('extra-address');
+                        if (addrInput) { addrInput.value = sibling.addressExtra || sibling.address; fieldsToFlash.push(addrInput); }
+                    }
+                    if (sibling.job) {
+                        const jobSelect = document.getElementById('student-job');
+                        if (jobSelect) { jobSelect.value = sibling.job; fieldsToFlash.push(jobSelect); }
+                    }
+
+                    // 4. Source Metadata
+                    if (sibling.source) {
+                        const sourceSelect = document.getElementById('student-source-select');
+                        if (sourceSelect) { sourceSelect.value = sibling.source; fieldsToFlash.push(sourceSelect); }
+                    }
+
+                    // 5. National ID (Mirror for consistency)
+                    if (sibling.nationalId) {
+                        const nidInput = document.getElementById('national-id');
+                        if (nidInput) { nidInput.value = sibling.nationalId; fieldsToFlash.push(nidInput); }
+                    }
+
+                    // 6. Gender
+                    if (sibling.gender) {
+                        const genderRadio = document.querySelector(`input[name="gender"][value="${sibling.gender}"]`);
+                        if (genderRadio) genderRadio.checked = true;
+                    }
+
+                    // AUTO-EXPAND Accordions to reveal data
+                    document.querySelectorAll('.accordion-item').forEach(item => {
+                        const content = item.querySelector('.accordion-content');
+                        const icon = item.querySelector('.fa-chevron-down, .fa-chevron-up');
+                        if (content) {
+                            content.style.display = 'block';
+                            if (icon) {
+                                icon.classList.remove('fa-chevron-down');
+                                icon.classList.add('fa-chevron-up');
+                            }
+                        }
+                    });
+
+                    // Premium Visual Feedback
+                    fieldsToFlash.forEach(el => {
+                        el.style.transition = '0.3s';
+                        el.style.backgroundColor = 'rgba(26, 158, 156, 0.2)';
+                        el.style.borderColor = 'var(--accent-teal)';
+                        setTimeout(() => {
+                            el.style.backgroundColor = '';
+                            el.style.borderColor = '';
+                        }, 1000);
+                    });
+
+                    Toast.show(`✅ تم استيراد بيانات عائلة ${name} لشقيق جديد.`, 'success');
+                }
+            };
+
+
+            window.clearSelectedSibling = function () {
+                selectedSiblingId = null;
+                siblingPill.style.display = 'none';
+            };
+
+            // Global click to hide results
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#sibling-search') && !e.target.closest('#sibling-results')) {
+                    siblingResults.style.display = 'none';
+                }
+            });
+
+            // ── Birth Date: Populate Days & Years ─────────────────────
+            const daySelect = document.getElementById('bd-day');
+            const yearSelect = document.getElementById('bd-year');
+
+            // Days 1-31
+            for (let d = 1; d <= 31; d++) {
+                const o = document.createElement('option');
+                o.value = String(d).padStart(2, '0');
+                o.textContent = d;
+                daySelect.appendChild(o);
+            }
+
+            // Years: current year down to 1940
+            const currentYear = new Date().getFullYear();
+            for (let y = currentYear; y >= 1940; y--) {
+                const o = document.createElement('option');
+                o.value = y;
+                o.textContent = y;
+                yearSelect.appendChild(o);
+            }
+
+            // Restore Last Governorate
+            const lastGov = localStorage.getItem('edumaster_last_gov');
+            if (lastGov) {
+                const govSelect = document.getElementById('personal-address');
+                if (govSelect) govSelect.value = lastGov;
+            }
+            // Populate Branches
+            const branches = Storage.get('branches') || [];
+            const branchSelect = document.getElementById('branch-select');
+            if (branchSelect) {
+                const activeBranchId = Permissions.getActiveBranchId();
+                branchSelect.innerHTML = `
+                    <option value="" disabled ${!activeBranchId ? 'selected' : ''}>-- اختر الفرع --</option>
+                    ${branches.map(b => `<option value="${b.id}" ${activeBranchId == b.id ? 'selected' : ''}>${b.name}</option>`).join('')}
+                `;
+
+                // 🔒 RESTRICTION: Hide branch select if in a specific Branch (Not HQ)
+                // "If I am in a branch... it adds automatically to the branch I am standing in."
+                if (activeBranchId) {
+                    const branchContainer = branchSelect.closest('.field-group');
+                    if (branchContainer) branchContainer.style.display = 'none';
+                    branchSelect.value = activeBranchId; // Ensure it's set
+                }
+            }
+
+            // Name Jumper Logic
+            const nameInputs = document.querySelectorAll('.name-jumper');
+            nameInputs.forEach((input, index) => {
+                input.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        if (input.value.trim() !== "" && index < nameInputs.length - 1) {
+                            nameInputs[index + 1].focus();
+                        }
+                    }
+                });
+            });
+
+            // ========== ROBUST STUDENT SOURCE MANAGEMENT (Senior Fix) ==========
+
+            window.openStudentSourceModal = function () {
+                Modal.open('modal-student-source');
+                loadStudentSources();
+            };
+
+            window.closeStudentSourceModal = function () {
+                Modal.close('modal-student-source');
+            };
+
+            window.loadStudentSources = function () {
+                try {
+                    const defaults = ['فيسبوك', 'صديق', 'إعلان ممول'];
+                    const stored = Storage.get('student_sources') || [];
+                    // Merge unique items
+                    const sources = [...new Set([...defaults, ...stored])];
+
+                    const listEl = document.getElementById('source-list-container');
+                    const selectEl = document.getElementById('student-source-select');
+
+                    if (listEl) {
+                        listEl.innerHTML = sources.map((src, idx) => `
+                        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:var(--bg-main); border-radius:8px; margin-bottom:8px; border:1px solid var(--border-soft);">
+                            <span style="font-weight:700; color:var(--text-main);">${src}</span>
+                            ${!defaults.includes(src) ? `
+                                <button type="button" onclick="deleteStudentSource(${idx})" style="background:rgba(239,68,68,0.1); color:#ef4444; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:800; font-size:0.75rem;"><i class="fa-solid fa-trash"></i></button>
+                            ` : '<span style="font-size:0.6rem; color:var(--text-muted); opacity:0.5;">أساسي</span>'}
+                        </div>
+                    `).join('');
+                    }
+
+                    if (selectEl) {
+                        const currentVal = selectEl.value;
+                        selectEl.innerHTML = `<option value="">اختر المصدر...</option>` +
+                            sources.map(s => `<option value="${s}" ${currentVal === s ? 'selected' : ''}>${s}</option>`).join('');
+                    }
+                } catch (err) {
+                    console.error("[Source Modal] Load Error:", err);
+                }
+            };
+
+            window.addStudentSource = function () {
+                try {
+                    const input = document.getElementById('new-source-input');
+                    if (!input || !input.value.trim()) return;
+
+                    const val = input.value.trim();
+                    let stored = Storage.get('student_sources') || [];
+
+                    if (stored.includes(val) || ['فيسبوك', 'صديق', 'إعلان ممول'].includes(val)) {
+                        return Toast.show("هذا المصدر موجود بالفعل", "info");
+                    }
+
+                    stored.push(val);
+                    Storage.save('student_sources', stored);
+                    input.value = '';
+
+                    loadStudentSources();
+                    Toast.show("تم إضافة البند بنجاح", "success");
+                } catch (err) {
+                    console.error("[Source Modal] Add Error:", err);
+                }
+            };
+
+            window.deleteStudentSource = function (idx) {
+                try {
+                    const stored = Storage.get('student_sources') || [];
+                    // Handle index carefully since sources list is merged
+                    // Better approach: find item by value or adjust logic
+                    // For simplicity, we'll just reload the actual stored list and delete
+                    const defaults = ['فيسبوك', 'صديق', 'إعلان ممول'];
+                    const sources = [...new Set([...defaults, ...stored])];
+                    const itemToDelete = sources[idx];
+
+                    if (defaults.includes(itemToDelete)) return;
+
+                    const newStored = stored.filter(s => s !== itemToDelete);
+                    Storage.save('student_sources', newStored);
+
+                    loadStudentSources();
+                    Toast.show("تم الحذف", "info");
+                } catch (err) {
+                    console.error("[Source Modal] Delete Error:", err);
+                }
+            };
+
+            // Initialize display
+            loadStudentSources();
+
+
+            const form = document.getElementById('add-student-form');
+            const saveAnotherBtn = document.getElementById('btn-save-another');
+
+            async function performSave(shouldRedirect) {
+                try {
+                    const nameInput = document.getElementById('full-student-name');
+                    const phoneInput = document.getElementById('phone-number');
+                    const nationalIdInput = document.getElementById('national-id');
+                    const birthDateInput = document.getElementById('birth-date');
+                    const receiptInput = document.getElementById('receipt-no');
+                    const genderChecked = document.querySelector('input[name="gender"]:checked');
+                    const fullName = nameInput.value.trim();
+
+                    const students = Storage.get('students') || [];
+                    const isEdit = !!editId;
+                    const existingStudent = isEdit ? students.find(s => String(s.id) === String(editId)) : null;
+
+                    const selectEl = document.getElementById('branch-select');
+                    let selectVal = selectEl && selectEl.value ? parseInt(selectEl.value) : NaN;
+                    let activeBranchId = (window.Permissions && typeof Permissions.getActiveBranchId === 'function') ? parseInt(Permissions.getActiveBranchId()) : NaN;
+                    let branchId = !isNaN(selectVal) ? selectVal : (!isNaN(activeBranchId) ? activeBranchId : (existingStudent?.branch_id || existingStudent?.branch || 1));
+
+                    const nameParts = fullName.split(/\s+/).filter(part => part.length > 0);
+                    if (nameParts.length < 3 && !isEdit) {
+                        Toast.show('يرجى إدخال الاسم كاملاً (ثلاثي على الأقل)', 'info');
+                        nameInput.style.borderColor = '#ef4444';
+                        setTimeout(() => nameInput.style.borderColor = '', 3000);
+                        nameInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        nameInput.focus();
+                        return;
+                    }
+
+                    if (!phoneInput.value.trim() && !isEdit) {
+                        Toast.show('رقم الهاتف مطلوب', 'error');
+                        phoneInput.style.borderColor = '#ef4444';
+                        setTimeout(() => phoneInput.style.borderColor = '', 3000);
+                        phoneInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        phoneInput.focus();
+                        return;
+                    }
+
+                    const ssn = nationalIdInput.value.trim();
+                    if (ssn.length !== 14) {
+                        if (!isEdit || (ssn.length > 0 && ssn.length !== 14)) {
+                            Toast.show('الرقم القومي يجب أن يكون 14 رقماً', 'error');
+                            nationalIdInput.style.borderColor = '#ef4444';
+                            setTimeout(() => nationalIdInput.style.borderColor = '', 3000);
+                            nationalIdInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            nationalIdInput.focus();
+                            return;
+                        }
+                    }
+
+                    if (!receiptInput.value.trim() && !isEdit) {
+                        Toast.show('رقم الإيصال اليدوي مطلوب للتوثيق', 'error');
+                        receiptInput.style.borderColor = '#ef4444';
+                        setTimeout(() => receiptInput.style.borderColor = '', 3000);
+                        receiptInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        receiptInput.focus();
+                        return;
+                    }
+
+                    if (!genderChecked && !isEdit) {
+                        Toast.show('يرجى تحديد النوع (ذكر/أنثى)', 'error');
+                        const genderElement = document.querySelector('input[name="gender"]');
+                        if (genderElement) {
+                            genderElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            genderElement.focus();
+                        }
+                        return;
+                    }
+
+                    if (!birthDateInput.value && !isEdit) {
+                        Toast.show('تاريخ الميلاد مطلوب', 'error');
+                        const selects = ['bd-day', 'bd-month', 'bd-year'];
+                        selects.forEach(id => {
+                            let el = document.getElementById(id);
+                            if(el) {
+                                el.style.borderColor = '#ef4444';
+                                setTimeout(() => el.style.borderColor = '', 3000);
+                            }
+                        });
+                        const firstSelect = document.getElementById('bd-day');
+                        if (firstSelect) {
+                            firstSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            firstSelect.focus();
+                        }
+                        return;
+                    }
+
+                    if (!branchId) {
+                        Toast.show('يرجى تحديد الفرع أولاً', 'error');
+                        const branchSelectElement = document.getElementById('branch-select');
+                        if (branchSelectElement) {
+                            branchSelectElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            branchSelectElement.focus();
+                        }
+                        return;
+                    }
+
+                    if (isEdit && existingStudent) {
+                        const idx = students.findIndex(s => String(s.id) === String(editId));
+                        if (idx !== -1) {
+                            students[idx] = {
+                                ...existingStudent,
+                                name: fullName,
+                                phone: phoneInput.value || existingStudent.phone,
+                                phoneExtra: document.getElementById('phone-number-extra') ? document.getElementById('phone-number-extra').value : (existingStudent.phoneExtra || ''),
+                                nationalId: ssn || existingStudent.nationalId || '',
+                                birthDate: birthDateInput.value || existingStudent.birthDate || '',
+                                gender: genderChecked ? genderChecked.value : (existingStudent.gender || 'male'),
+                                email: document.getElementById('student-email') ? document.getElementById('student-email').value : (existingStudent.email || ''),
+                                job: document.getElementById('student-job') ? document.getElementById('student-job').value : (existingStudent.job || ''),
+                                addressPersonal: document.getElementById('personal-address') ? document.getElementById('personal-address').value : (existingStudent.addressPersonal || ''),
+                                addressExtra: document.getElementById('extra-address') ? document.getElementById('extra-address').value : (existingStudent.addressExtra || ''),
+                                source: document.getElementById('student-source-select') ? document.getElementById('student-source-select').value : (existingStudent.source || ''),
+                                photo: currentStudentPhotoBase64 || existingStudent.photo,
+                                branch: branchId,
+                                branch_id: branchId,
+                                receipt_no: receiptInput.value || existingStudent.receipt_no || '',
+                                siblingId: typeof selectedSiblingId !== 'undefined' && selectedSiblingId !== null ? selectedSiblingId : existingStudent.siblingId
+                            };
+
+                            // 🚀 الانتظار حتى تكتمل عملية الحفظ في قاعدة البيانات
+                            await Storage.save('students', students);
+
+                            if (window.BroadcastChannel) {
+                                new BroadcastChannel('edumaster_sync').postMessage({ type: 'STUDENT_UPDATED' });
+                            }
+
+                            if (window.AudioCore) AudioCore.playSaveVoice();
+
+                            Modal.success({
+                                title: 'تم التحديث بنجاح',
+                                message: `تم تحديث بيانات الطالب "${fullName.split(' ')[0]}" وحفظها بشكل نهائي!`,
+                                onComplete: () => {
+                                    window.location.replace('students.html');
+                                }
+                            });
+                            return;
+                        } else {
+                            Toast.show(`لم يتم العثور على الطالب بنظام التخزين!`, 'error');
+                            return;
+                        }
+                    }
+
+                    const studentCode = Utils.generateStudentSerial();
+
+                    const studentData = {
+                        id: Date.now(),
+                        code: studentCode,
+                        serial_id: studentCode,
+                        name: fullName,
+                        phone: phoneInput.value,
+                        phoneExtra: document.getElementById('phone-number-extra') ? document.getElementById('phone-number-extra').value : '',
+                        nationalId: ssn,
+                        birthDate: birthDateInput.value,
+                        gender: genderChecked ? genderChecked.value : 'male',
+                        email: document.getElementById('student-email') ? document.getElementById('student-email').value : '',
+                        job: document.getElementById('student-job') ? document.getElementById('student-job').value : '',
+                        addressPersonal: document.getElementById('personal-address') ? document.getElementById('personal-address').value : '',
+                        addressExtra: document.getElementById('extra-address') ? document.getElementById('extra-address').value : '',
+                        source: document.getElementById('student-source-select') ? document.getElementById('student-source-select').value : '',
+                        photo: currentStudentPhotoBase64,
+                        branch: branchId,
+                        branch_id: branchId,
+                        receipt_no: receiptInput.value,
+                        addedBy: (window.Permissions && Permissions.getCurrentUser()) ? Permissions.getCurrentUser().name : 'غير معروف',
+                        status: 'Active',
+                        enrollmentDate: new Date().toISOString().split('T')[0],
+                        siblingId: typeof selectedSiblingId !== 'undefined' ? selectedSiblingId : null
+                    };
+
+                    students.push(studentData);
+                    await Storage.save('students', students);
+
+                    // ☁️ CLOUD SYNC: Push student registration pulse to Firebase
+                    if (window.Cloud && window.Cloud.pushStudent) {
+                        setTimeout(() => {
+                            try {
+                                window.Cloud.pushStudent(branchId, {
+                                    ...studentData,
+                                    syncTimestamp: Date.now()
+                                });
+                            } catch (e) {
+                                console.warn("Cloud Sync Pulse (Student) Failed:", e);
+                            }
+                        }, 500);
+                    }
+
+                    if (window.AudioCore) AudioCore.playSaveVoice();
+
+                    Modal.success({
+                        title: 'عملية ناجحة',
+                        message: `تم حفظ بيانات الطالب الجديد "${fullName.split(' ')[0]}" بنجاح.`,
+                        onComplete: () => {
+                            if (shouldRedirect) {
+                                window.location.replace('students.html');
+                            } else {
+                                document.getElementById('add-student-form').reset();
+                                resetBirthDate();
+                                resetPhotoPreview();
+                                const lastGov = localStorage.getItem('edumaster_last_gov');
+                                if (lastGov) document.getElementById('personal-address').value = lastGov;
+                                window.clearSelectedSibling();
+                                nameInput.focus();
+                            }
+                        }
+                    });
+                } catch (error) {
+                    alert("نظام الإنقاذ العاجل 🚨: " + error.message);
+                    console.error("Save Error: ", error);
+                }
+            }
+
+            function firstNameOnly(name) {
+                return name.split(' ')[0] || name;
+            }
+
+            if (form) {
+                form.onsubmit = (e) => {
+                    e.preventDefault();
+                    performSave(true);
+                };
+            }
+
+            if (saveAnotherBtn) {
+                saveAnotherBtn.onclick = () => performSave(false);
+            }
+
+            // Global Enter key to Save
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    const tag = e.target.tagName.toLowerCase();
+                    if (tag === 'textarea' || tag === 'button' || e.target.id === 'sibling-search') return;
+                    e.preventDefault();
+                    performSave(true);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
+
+

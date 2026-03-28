@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الطالب - EduMaster Pro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <style>
+        :root {
+            --portal-primary: #6366f1;
+            --portal-bg: #f8fafc;
+        }
+
+        body {
+            background: var(--portal-bg);
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* ── Login Container ── */
+        .login-card {
+            background: #fff;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #6366f1, #a855f7);
+        }
+
+        .logo-portal {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--portal-primary);
+            margin-bottom: 30px;
+        }
+
+        .welcome-msg {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .sub-msg {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 35px;
+        }
+
+        .portal-input {
+            width: 100%;
+            height: 55px;
+            border-radius: 15px;
+            border: 2px solid #e2e8f0;
+            background: #fdfdfd;
+            padding: 0 20px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            transition: 0.3s;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .portal-input:focus {
+            border-color: var(--portal-primary);
+            background: #fff;
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.1);
+            outline: none;
+        }
+
+        .portal-btn {
+            width: 100%;
+            height: 55px;
+            border-radius: 15px;
+            background: var(--portal-primary);
+            color: #fff;
+            border: none;
+            font-size: 1.15rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .portal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(99, 102, 241, 0.4);
+            filter: brightness(1.1);
+        }
+
+        /* ── Dashboard (Hidden Initially) ── */
+        .portal-dashboard {
+            display: none;
+            width: 100%;
+            max-width: 900px;
+            padding: 30px;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border-radius: 25px;
+            padding: 40px;
+            color: #fff;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.2);
+        }
+
+        .dashboard-header::after {
+            content: '';
+            position: absolute;
+            right: -50px;
+            top: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 50%;
+        }
+
+        .profile-info h3 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 900;
+        }
+
+        .profile-info p {
+            margin: 5px 0 0 0;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 700;
+        }
+
+        .status-badge-portal {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 25px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .portal-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            transition: 0.3s;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-header-portal {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .icon-box-portal {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .card-title-portal {
+            font-weight: 800;
+            color: #1e293b;
+            font-size: 1.1rem;
+        }
+
+        .big-number {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .small-label {
+            color: #64748b;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .logout-btn {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            background: #fff;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            color: #ef4444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        @media (max-width: 480px) {
+            .login-card {
+                border-radius: 0;
+                height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .portal-dashboard {
+                padding: 15px;
+            }
+
+            .dashboard-header {
+                padding: 25px;
+                flex-direction: column;
+                text-align: center;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Login Area -->
+    <div class="login-card" id="login-section">
+        <div class="logo-portal"><i class="fa-solid fa-graduation-cap"></i> EduMaster</div>
+        <div class="welcome-msg">بوابة الطالب</div>
+        <p class="sub-msg">أهلاً بك في منصتك التعليمية المتطورة. سجل دخولك للمتابعة.</p>
+
+        <form id="portal-login-form">
+            <input type="text" id="student-id" class="portal-input" placeholder="أدخل كود الطالب أو رقم الهاتف"
+                required>
+            <button type="submit" class="portal-btn">
+                دخول الطالب <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </form>
+
+        <p style="margin-top: 30px; font-size: 0.8rem; color: #94a3b8; font-weight: 700;">
+            حقوق الملكية © 2026 محفوظة لـ EduMaster Pro
+        </p>
+    </div>
+
+    <!-- Dashboard Area -->
+    <div class="portal-dashboard" id="portal-main">
+        <button class="logout-btn" onclick="portalLogout()"><i class="fa-solid fa-power-off"></i></button>
+
+        <div class="dashboard-header">
+            <div class="profile-info">
+                <p>أهلاً بك يا بطل 🚀</p>
+                <h3 id="display-name">---</h3>
+                <p id="display-group">مجموعة: ---</p>
+            </div>
+            <div class="status-badge-portal">
+                <i class="fa-solid fa-circle" style="font-size: 0.6rem; color: #10b981;"></i>
+                طالب نشط
+            </div>
+        </div>
+
+        <div class="portal-grid">
+            <!-- Attendance Card -->
+            <div class="portal-card">
+                <div class="card-header-portal">
+                    <div class="icon-box-portal" style="background: rgba(16, 185, 129, 0.1); color: #10b981;">
+                        <i class="fa-solid fa-calendar-check"></i>
+                    </div>
+                    <div class="card-title-portal">سجل الحضور</div>
+                </div>
+                <div class="big-number" id="portal-att-rate">0%</div>
+                <div class="small-label" id="portal-att-summary">تاريخ الالتزام هذا الشهر</div>
+            </div>
+
+            <!-- Financials Card -->
+            <div class="portal-card">
+                <div class="card-header-portal">
+                    <div class="icon-box-portal" style="background: rgba(99, 102, 241, 0.1); color: #6366f1;">
+                        <i class="fa-solid fa-wallet"></i>
+                    </div>
+                    <div class="card-title-portal">المستحقات المالية</div>
+                </div>
+                <div class="big-number" id="portal-balance">0.00</div>
+                <div class="small-label">الرصيد المتبقي (ج.م)</div>
+            </div>
+
+            <!-- Last Grade Card (Simulated) -->
+            <div class="portal-card">
+                <div class="card-header-portal">
+                    <div class="icon-box-portal" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <div class="card-title-portal">آخر تقييم</div>
+                </div>
+                <div class="big-number">ممتـاز</div>
+                <div class="small-label">أداء أكاديمي مرتفع</div>
+            </div>
+        </div>
+
+        <div class="portal-card" style="margin-top: 30px;">
+            <div class="card-header-portal">
+                <i class="fa-solid fa-bell" style="color: #6366f1;"></i>
+                <div class="card-title-portal">تنبيهات هامة</div>
+            </div>
+            <div style="font-size: 0.95rem; line-height: 1.8; color: #475569;" id="portal-notifications">
+                لا توجد تنبيهات حالياً. نتمنى لك التوفيق في دراستك!
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/core.js"></script>
+    <script src="../js/accounting-core.js"></script>
+
+    <script>
+        document.getElementById('portal-login-form').onsubmit = function (e) {
+            e.preventDefault();
+            const input = document.getElementById('student-id').value.trim();
+            if (!input) return;
+
+            const students = Storage.get('students') || [];
+
+            // 1. Search by exact Code or ID first (these are always unique)
+            const exactMatch = students.find(s => s.code === input || s.id === input);
+            if (exactMatch) {
+                return showPortalDashboard(exactMatch);
+            }
+
+            // 2. If not a code, let's search by phone (which might have duplicates for siblings)
+            const phoneMatches = students.filter(s => s.phone === input || s.parent_phone === input);
+
+            if (phoneMatches.length === 1) {
+                // Only one student has this phone, proceed normally
+                showPortalDashboard(phoneMatches[0]);
+            } else if (phoneMatches.length > 1) {
+                // Multiple students found! (Siblings sharing the same phone)
+                showSiblingSelection(phoneMatches);
+            } else {
+                alert('عذراً، لم يتم العثور على بيانات لهذا الطالب. يرجى التأكد من الرقم المسجل.');
+            }
+        };
+
+        function showSiblingSelection(siblings) {
+            const loginSection = document.getElementById('login-section');
+            const portalMain = document.getElementById('portal-main');
+
+            loginSection.innerHTML = `
+                <div class="logo-portal"><i class="fa-solid fa-users"></i> EduMaster</div>
+                <div class="welcome-msg">مرحباً!</div>
+                <p class="sub-msg">يبدو أن هذا الرقم مسجل لأكثر من طالب. يرجى الاختيار:</p>
+                <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;" id="siblings-list">
+                </div>
+                <button onclick="location.reload()" class="portal-btn" style="background:#e2e8f0; color:#333; margin-top: 20px;">
+                    <i class="fa-solid fa-rotate-right"></i> رجوع
+                </button>
+            `;
+
+            const listDiv = document.getElementById('siblings-list');
+            siblings.forEach(student => {
+                const btn = document.createElement('button');
+                btn.className = 'portal-btn';
+                btn.style.justifyContent = 'space-between';
+                btn.style.padding = '0 20px';
+                btn.innerHTML = `<span>${student.name}</span> <span style="font-size:0.8rem; opacity:0.8;">تحديد <i class="fa-solid fa-chevron-left"></i></span>`;
+                btn.onclick = () => showPortalDashboard(student);
+                listDiv.appendChild(btn);
+            });
+        }
+
+        function showPortalDashboard(student) {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('portal-main').style.display = 'block';
+            document.body.style.display = 'block';
+
+            // Populate Info
+            document.getElementById('display-name').innerText = student.name;
+            document.getElementById('display-group').innerText = `مجموعة: ${student.group || 'غير محددة'}`;
+
+            // Calculate Attendance
+            calculateStudentAttendance(student.id);
+
+            // Calculate Balance
+            const balanceData = window.AccountingCore?.getStudentBalance ? window.AccountingCore.getStudentBalance(student.id) : { balance: 0 };
+            document.getElementById('portal-balance').innerText = (balanceData.balance || 0).toLocaleString();
+
+            // Visual Flourish
+            Toast.show(`أهلاً بك يا ${student.name.split(' ')[0]}`, 'success');
+        }
+
+        function calculateStudentAttendance(studentId) {
+            const attendance = Storage.get('attendance') || {};
+            let total = 0, present = 0;
+
+            Object.values(attendance).forEach(session => {
+                if (session[studentId]) {
+                    total++;
+                    if (session[studentId].status === 'present' || session[studentId].status === 'late') {
+                        present++;
+                    }
+                }
+            });
+
+            const rate = total > 0 ? Math.round((present / total) * 100) : 0;
+            document.getElementById('portal-att-rate').innerText = rate + '%';
+            document.getElementById('portal-att-summary').innerText = `حضور ${present} من أصل ${total} جلسة`;
+        }
+
+        function portalLogout() {
+            location.reload();
+        }
+
+        const Toast = {
+            show(msg, type) {
+                alert(msg);
+            }
+        };
+    </script>
+</body>
+
+</html>
+
+

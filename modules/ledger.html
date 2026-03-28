@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMaster Pro - قيود اليومية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-soft);
+            padding: 22px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+
+        body.dark-mode .stat-card {
+            background: rgba(30, 41, 59, 0.7);
+            border-color: rgba(0, 234, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-icon-box {
+            width: 55px;
+            height: 55px;
+            border-radius: 14px;
+            background: rgba(0, 234, 255, 0.1);
+            color: var(--cyan-accent, #00eaff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+        }
+
+        #card-expense .stat-icon-box {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .stat-info-box {
+            flex: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        body.cloudy-mode .stat-label,
+        body:not(.dark-mode) .stat-label {
+            color: #475569;
+        }
+
+        .stat-value-text {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+
+        .teal-grad {
+            background: linear-gradient(135deg, #00eaff 0%, #00acc1 100%) !important;
+        }
+
+        body.cloudy-mode .teal-grad {
+            background: #ffffff !important;
+            border: 2px solid #6366f1 !important;
+        }
+
+        /* Table Contrast Fixes */
+        .je-group-row td {
+            color: var(--text-main) !important;
+        }
+
+        body:not(.dark-mode) .je-group-row td {
+            color: #1e293b !important;
+        }
+
+        .je-group-row code {
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        /* Dynamic Profit Visibility Fix */
+        .profit-pos {
+            color: #020617 !important;
+            transition: color 0.3s;
+        }
+
+        .profit-neg {
+            color: #ef4444 !important;
+        }
+
+        body.dark-mode .profit-pos {
+            color: #00eaff !important;
+            text-shadow: 0 0 15px rgba(0, 234, 255, 0.4);
+        }
+
+        body.cloudy-mode .profit-pos {
+            color: #1e293b !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar">
+            <!-- Injected by UICore -->
+        </aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar" style="border-bottom: 1px solid rgba(0, 234, 255, 0.1); padding-bottom: 20px;">
+                    <h1 class="page-title">دفتر اليومية المالي (Enterprise)</h1>
+                    <div class="action-group" style="display:flex; gap:10px;">
+                        <button class="btn-neuro" onclick="window.resetLedgerNumbers()"
+                            style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2);">
+                            <i class="fa-solid fa-trash-can"></i> تصفير السجلات
+                        </button>
+                        <button class="btn-neuro btn-primary" onclick="window.openJournalModal()">
+                            <i class="fa-solid fa-plus-circle"></i> قيد جديد
+                        </button>
+                        <button class="btn-neuro btn-secondary" onclick="window.print()">
+                            <i class="fa-solid fa-print"></i> طباعة السجل
+                        </button>
+                    </div>
+                </header>
+
+                <div class="summary-grid"
+                    style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 25px; margin-top: 20px;">
+                    <div class="stat-card" id="card-revenue">
+                        <div class="stat-icon-box">
+                            <i class="fa-solid fa-vault"></i>
+                        </div>
+                        <div class="stat-info-box">
+                            <div class="stat-label">إجمالي الإيرادات</div>
+                            <div id="total-revenue" class="stat-value-text">0.00 ج.م</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" id="card-expense">
+                        <div class="stat-icon-box">
+                            <i class="fa-solid fa-money-bill-transfer"></i>
+                        </div>
+                        <div class="stat-info-box">
+                            <div class="stat-label">إجمالي المصروفات</div>
+                            <div id="total-expense" class="stat-value-text">0.00 ج.م</div>
+                        </div>
+                    </div>
+                    <div class="stat-card teal-grad" id="card-net">
+                        <div class="stat-icon-box">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        <div class="stat-info-box">
+                            <div class="stat-label">صافي الربح</div>
+                            <div id="net-profit" class="stat-value-text">0.00 ج.م</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-card">
+                    <div class="table-responsive">
+                        <table class="neuro-table" id="ledger-table"
+                            style="border-collapse: separate; border-spacing: 0 8px;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 140px;">التاريخ / المرجع</th>
+                                    <th>الوصف المالي</th>
+                                    <th style="width: 120px;">المسؤول</th>
+                                    <th style="width: 250px;">الحساب</th>
+                                    <th style="text-align:center; width: 140px;">مدين (Debit)</th>
+                                    <th style="text-align:center; width: 140px;">دائن (Credit)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- JS Populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Journal Entry Modal -->
+    <div class="modal-overlay" id="journal-modal">
+        <div class="modal-container" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 class="modal-title">تسجيل قيد محاسبي جديد</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="journal-form" onsubmit="window.handleJournalSubmit(event)">
+                <div class="form-group">
+                    <label>وصف القيد (البيان)</label>
+                    <input type="text" id="je-desc" class="form-control" required
+                        placeholder="مثلاً: سداد إيجار فرع القاهرة">
+                </div>
+
+                <div
+                    style="background:rgba(255,255,255,0.02); padding:15px; border-radius:10px; border:1px solid var(--border-color); margin-bottom:20px;">
+                    <div style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:10px; margin-bottom:10px;">
+                        <label>الحساب</label>
+                        <label>مدين</label>
+                        <label>دائن</label>
+                    </div>
+                    <!-- Row 1 -->
+                    <div class="je-row"
+                        style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:10px; margin-bottom:10px;">
+                        <select class="form-control acc-sel" required></select>
+                        <input type="number" class="form-control je-debit" value="0" step="0.01">
+                        <input type="number" class="form-control je-credit" value="0" step="0.01">
+                    </div>
+                    <!-- Row 2 -->
+                    <div class="je-row" style="display:grid; grid-template-columns: 2fr 1fr 1fr; gap:10px;">
+                        <select class="form-control acc-sel" required></select>
+                        <input type="number" class="form-control je-debit" value="0" step="0.01">
+                        <input type="number" class="form-control je-credit" value="0" step="0.01">
+                    </div>
+                </div>
+
+                <div style="text-align:left; font-size:12px; color:var(--text-secondary); margin-bottom:20px;">
+                    * يجب أن يكون مجموع المدين مساوياً لمجموع الدائن (قيد متزن).
+                </div>
+
+                <button type="submit" class="btn-neuro btn-primary" style="width:100%;">ترحيل القيد (Post
+                    Entry)</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase Cloud Sync (v3.0) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="../js/firebase-config.js"></script>
+
+    <!-- Global Scripts -->
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/accounting-core.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/inventory.js"></script>
+
+    <script>
+        const ledger = new LedgerUI();
+
+        // Update Summary Stats - Unified Source
+        window.updateLedgerStats = () => {
+            try {
+                const activeBranchId = window.Permissions?.getActiveBranchId();
+                const pl = AccountingCore.generateProfitLoss(activeBranchId);
+
+                const format = (num) => Formatter.formatCurrency(num) + ' ج.م';
+
+                document.getElementById('total-revenue').innerText = format(pl.summary.totalRevenue);
+                document.getElementById('total-expense').innerText = format(pl.summary.totalExpense);
+                document.getElementById('net-profit').innerText = format(pl.summary.netProfit);
+
+                // Handle Dynamic Contrast via CSS Classes
+                const netEl = document.getElementById('net-profit');
+                netEl.style.color = ''; // Reset inline styles
+
+                if (pl.summary.netProfit >= 0) {
+                    netEl.classList.add('profit-pos');
+                    netEl.classList.remove('profit-neg');
+                } else {
+                    netEl.classList.add('profit-neg');
+                    netEl.classList.remove('profit-pos');
+                }
+
+                console.log("Unified Stats Updated:", pl.summary);
+            } catch (err) {
+                console.error("Stats Update Error:", err);
+            }
+        };
+
+        // Aggressive Reset Function - Now Unified
+        window.resetLedgerNumbers = () => {
+            Modal.confirm({
+                title: 'تصفير كافة السجلات المالية',
+                message: '⚠️ تحذير: هذا الإجراء سيقوم بحذف كافة القيود والميزانيات بشكل نهائي. هل أنت متأكد؟',
+                icon: 'fa-triangle-exclamation',
+                confirmText: 'تصفير شامل الآن',
+                onConfirm: () => {
+                    AccountingCore.resetFinancials();
+                    Toast.show('تم تصفير النظام المالي بالكامل', 'success');
+                    setTimeout(() => location.reload(), 500);
+                }
+            });
+        };
+
+        window.handleJournalSubmit = (e) => {
+            if (e) e.preventDefault();
+            const desc = document.getElementById('je-desc').value;
+            const lines = [];
+            const rows = document.querySelectorAll('.je-row');
+
+            rows.forEach(row => {
+                const accId = row.querySelector('.acc-sel').value;
+                const debit = parseFloat(row.querySelector('.je-debit').value) || 0;
+                const credit = parseFloat(row.querySelector('.je-credit').value) || 0;
+                if (accId && (debit > 0 || credit > 0)) lines.push({ account_id: accId, debit, credit });
+            });
+
+            try {
+                AccountingCore.postJournal(desc, lines);
+                Toast.show('تم ترحيل القيد بنجاح', 'success');
+                Modal.close('journal-modal');
+                setTimeout(() => location.reload(), 500);
+            } catch (err) {
+                Toast.show(err.message, 'error');
+            }
+        };
+
+        window.openJournalModal = () => {
+            const coa = Storage.get('coa') || [];
+            const selects = document.querySelectorAll('.acc-sel');
+            selects.forEach(sel => {
+                sel.innerHTML = `<option value="" disabled selected>اختر الحساب...</option>` +
+                    coa.map(a => `<option value="${a.id}">${a.name} (${a.id})</option>`).join('');
+            });
+            Modal.open('journal-modal');
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            window.updateLedgerStats();
+        });
+    </script>
+</body>
+
+</html>
+
+

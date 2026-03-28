@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMaster Pro | Ultimate Configurator</title>
+    <link rel="stylesheet" href="styles/edumaster-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --accent-indigo: #6366f1;
+            --save-green: #10b981;
+            --border-soft: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Outfit', 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #login-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.5s;
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .config-wrapper {
+            width: 96%;
+            max-width: 1400px;
+            height: 92vh;
+            background: var(--glass-bg);
+            border-radius: 32px;
+            display: flex;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: none;
+        }
+
+        .sidebar {
+            width: 280px;
+            min-width: 280px;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 30px 15px;
+            border-left: 1px solid var(--border-soft);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-item {
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #64748b;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .nav-item.active {
+            background: var(--accent-indigo);
+            color: white;
+            box-shadow: 0 8px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .nav-item.log-nav {
+            margin-top: 10px;
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.1);
+        }
+        .nav-item.log-nav:hover { background: rgba(245, 158, 11, 0.1); }
+        .nav-item.log-nav.active { background: #f59e0b; color: white; }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .section {
+            display: none;
+            width: 100%;
+            padding-bottom: 80px;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-sidebar-save {
+            width: 100%;
+            height: 50px;
+            background: var(--save-green);
+            color: white;
+            border-radius: 14px;
+            border: none;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        .btn-sidebar-exit {
+            width: 100%;
+            height: 45px;
+            background: transparent;
+            color: #ef4444;
+            border: 2px solid #fee2e2;
+            border-radius: 14px;
+            font-weight: 800;
+            margin-top: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #1e293b;
+            font-size: 0.9rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 2px solid #e2e8f0;
+            font-weight: 600;
+            box-sizing: border-box;
+        }
+
+        .list-manager {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 10px;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card-header {
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header i {
+            color: var(--accent-indigo);
+        }
+
+        /* Hide default browser password reveal icons */
+        input[type="password"]::-ms-reveal,
+        input[type="password"]::-ms-clear {
+            display: none;
+        }
+        input[type="password"]::-webkit-credentials-auto-fill-button {
+            visibility: hidden;
+            pointer-events: none;
+            position: absolute;
+            right: 0;
+        }
+        /* Visual Color Previews & Reset Styles */
+        .color-control-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fff;
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .color-preview-shape {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            transition: 0.3s;
+            cursor: pointer;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .shape-circle { border-radius: 50%; }
+        .shape-square { border-radius: 6px; }
+        .shape-triangle {
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        .btn-reset-field {
+            background: #f1f5f9;
+            color: #64748b;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            font-size: 0.85rem;
+        }
+
+        .btn-reset-field:hover {
+            background: #e2e8f0;
+            color: #ef4444;
+        }
+
+        .theme-section-divider {
+            margin: 40px 0 20px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-right: 5px solid var(--accent-indigo);
+            font-weight: 900;
+            color: var(--accent-indigo);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Toggle Switch Styles */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 46px; 
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .switch input { opacity: 0; width: 0; height: 0; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px; width: 18px;
+            left: 3px; bottom: 3px;
+            background-color: white;
+            transition: .3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        input:checked + .slider { background-color: var(--save-green); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        .btn-reset-group {
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            background: #fee2e2;
+            color: #ef4444;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 800;
+        }
+        .logo-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 40px);
+            gap: 8px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        .logo-ctrl-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+        .logo-ctrl-btn:hover { 
+            background: #f1f5f9;
+            color: var(--accent-indigo);
+            border-color: var(--accent-indigo);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="login-overlay">
+        <div class="login-card">
+            <i class="fa-solid fa-user-gear"
+                style="font-size: 3rem; color: var(--accent-indigo); margin-bottom: 20px;"></i>
+            <h2 style="font-weight: 900;">Admin Central Control</h2>
+            <input type="text" id="admin_user"
+                style="width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #ddd; text-align: center; margin-bottom: 15px;"
+                placeholder="اسم المستخدم" value="admin">
+            <div style="position: relative; width: 100%; margin-bottom: 15px;">
+                <input type="password" id="admin_pass"
+                    style="width: 100%; padding: 15px; padding-left: 45px; border-radius: 12px; border: 2px solid #ddd; text-align: center; box-sizing: border-box;"
+                    placeholder="كلمة المرور">
+                <i class="fa-solid fa-eye" id="toggleAdminPass"
+                    style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8;"
+                    onclick="toggleAdminPassword()"></i>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px;">
+                <input type="checkbox" id="remember_me"> <label for="remember_me">تذكرني</label>
+            </div>
+            <button onclick="checkPass()" class="app-btn-primary"
+                style="width: 100%; height: 50px; border-radius: 12px;">دخول</button>
+        </div>
+    </div>
+
+    <div class="config-wrapper" id="main-ui">
+        <div class="sidebar">
+            <div class="nav-container">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <h3 style="margin: 0; font-weight: 900;">Master Config</h3>
+                    <small style="color: #94a3b8;">v4.0.0 Ultimate</small>
+                </div>
+                <div class="nav-item active" onclick="showSection('general', this)"><i class="fa-solid fa-palette"></i>
+                    الهوية والألوان</div>
+                <div class="nav-item" onclick="showSection('academic', this)"><i class="fa-solid fa-book-open"></i>
+                    المناهج والكتب</div>
+                <div class="nav-item" onclick="showSection('staff', this)"><i class="fa-solid fa-chalkboard-user"></i>
+                    شؤون المحاضرين</div>
+                <div class="nav-item" onclick="showSection('students', this)"><i class="fa-solid fa-users-gear"></i>
+                    شؤون الطلاب</div>
+                <div class="nav-item" onclick="showSection('branches', this)"><i class="fa-solid fa-map-location"></i>
+                    الفروع والمالية</div>
+                <div class="nav-item" onclick="showSection('users', this)"><i class="fa-solid fa-users-gear"></i>
+                    إدارة المستخدمين</div>
+                <div class="nav-item" onclick="showSection('reset', this)" style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> تصفير
+                    وصيانة</div>
+                <div class="nav-item log-nav" onclick="showSection('logs', this)" style="margin-top: 10px; color: #f59e0b; background: rgba(245, 158, 11, 0.05); border: 1px solid rgba(245, 158, 11, 0.1);"><i class="fa-solid fa-clock-rotate-left"></i>
+                    سجل الصيانة</div>
+            </div>
+            <button onclick="saveAll()" class="btn-sidebar-save"><i class="fa-solid fa-check-double"></i> حفظ
+                التغييرات</button>
+            <button onclick="logout()" class="btn-sidebar-exit"><i class="fa-solid fa-sign-out"></i> خروج</button>
+        </div>
+
+        <div class="main-content">
+            <!-- Section: Identity -->
+            <div id="section-general" class="section active">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-id-card"></i> هوية النظام</h3>
+                </div>
+                <div class="grid-2">
+                    <div class="input-group"><label>إسم التطبيق</label><input type="text" id="appName"></div>
+                    <div class="input-group"><label>لون الهوية</label><input type="color" id="primaryColor"
+                            style="height:50px; padding:5px;"></div>
+                </div>
+                <div class="input-group">
+                    <label>اللوجو (شعار المنصة)</label>
+                    <div style="display: flex; align-items: start; gap: 20px; background: #f8fafc; padding: 20px; border-radius: 15px; border: 1px solid #e2e8f0;">
+                        <div style="text-align: center;">
+                            <div id="logo-preview-container" style="width: 100px; height: 100px; background: #fff; border: 3px solid var(--accent-indigo); border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.1); position: relative;">
+                                <img id="logo-preview-img" style="width: 100%; height: 100%; display: none; position: absolute; top: 0; left: 0; transform-origin: center center; object-fit: contain;">
+                                <i id="logo-placeholder-icon" class="fa-solid fa-graduation-cap" style="color: var(--accent-indigo); font-size: 2.5rem;"></i>
+                            </div>
+                            <small style="display: block; margin-top: 8px; font-weight: 800; color: #64748b;">المعاينة</small>
+                        </div>
+                        
+                        <div style="flex-grow: 1;">
+                            <div style="display: flex; gap: 10px; margin-bottom: 5px;">
+                                <input type="text" id="logoUrl" placeholder="رابط خارجي أو اختر صورة..." style="flex-grow: 1;">
+                                <input type="file" id="logoFile" accept="image/*" style="display: none;" onchange="handleLogoUpload(this)">
+                                <button onclick="document.getElementById('logoFile').click()" class="app-btn-secondary" style="width: 120px; border-radius: 10px; font-weight: 800;">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i> رفع صورة
+                                </button>
+                            </div>
+                            <small style="color: #94a3b8; margin-bottom: 15px; display: block;">* سيعمل اللوجو المرفوع كبديل لأيقونة السايدبار الرئيسية.</small>
+
+                            <div id="logo-edit-panel" style="border-top: 1px solid #e2e8f0; padding-top: 15px; display: none;">
+                                <div style="display: flex; align-items: center; justify-content: space-between;">
+                                    <label style="margin: 0;">أدوات ضبط الصورة:</label>
+                                    <button onclick="resetLogoPos()" style="font-size: 0.75rem; color: #ef4444; border: none; background: none; cursor: pointer; font-weight: 800;"><i class="fa-solid fa-rotate-left"></i> إعادة التوسيط</button>
+                                </div>
+                                <div style="display: flex; gap: 30px; align-items: center;">
+                                    <div class="logo-controls">
+                                        <div></div>
+                                        <button class="logo-ctrl-btn" onclick="adjustLogo('y', -5)" title="تحريك لأعلى"><i class="fa-solid fa-arrow-up"></i></button>
+                                        <div></div>
+                                        <button class="logo-ctrl-btn" onclick="adjustLogo('x', 5)" title="تحريك لليمين"><i class="fa-solid fa-arrow-right"></i></button>
+                                        <div class="logo-ctrl-btn" style="cursor: default; opacity: 0.5;"><i class="fa-solid fa-arrows-to-circle"></i></div>
+                                        <button class="logo-ctrl-btn" onclick="adjustLogo('x', -5)" title="تحريك لليسار"><i class="fa-solid fa-arrow-left"></i></button>
+                                        <div></div>
+                                        <button class="logo-ctrl-btn" onclick="adjustLogo('y', 5)" title="تحريك لأسفل"><i class="fa-solid fa-arrow-down"></i></button>
+                                        <div></div>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; gap: 10px; flex-grow: 1;">
+                                        <button class="app-btn-secondary" style="width: 100%; border-radius: 10px; height: 40px;" onclick="adjustLogo('s', 0.05)"><i class="fa-solid fa-magnifying-glass-plus"></i> تكبير الصورة</button>
+                                        <button class="app-btn-secondary" style="width: 100%; border-radius: 10px; height: 40px;" onclick="adjustLogo('s', -0.05)"><i class="fa-solid fa-magnifying-glass-minus"></i> تصغير الصورة</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group"><label>نص حقوق المنصة (Footer)</label><input type="text" id="footerText"></div>
+
+                <div class="theme-section-divider">
+                    <span>👑 إعدادات الثيم الملكي (Royal White)</span>
+                    <button class="btn-reset-group" onclick="resetThemeGroup('royal')"><i class="fa-solid fa-rotate-left"></i> إعادة ضبط الثيم</button>
+                </div>
+                <div style="background: #eff6ff; color: #1e40af; padding: 10px 15px; border-radius: 10px; font-size: 0.85rem; margin-bottom: 20px; border: 1px solid #bfdbfe;">
+                    <i class="fa-solid fa-circle-info"></i> الإعدادات أدناه تظهر فقط عند اختيار نمط <b>Royal White</b> من القائمة الجانبية.
+                </div>
+                
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label>تدرج عناوين الأقسام (بداية)</label>
+                        <div class="color-control-wrapper">
+                            <div class="color-preview-shape shape-circle" id="prev-sidebarTitleStart"></div>
+                            <input type="color" id="sidebarTitleStart" style="flex-grow:1; border:none; height:36px; padding:0; background:none;">
+                            <button class="btn-reset-field" onclick="resetColorField('sidebarTitleStart')" title="إعادة ضبط"><i class="fa-solid fa-undo"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>تدرج عناوين الأقسام (نهاية)</label>
+                        <div class="color-control-wrapper">
+                            <div class="color-preview-shape shape-square" id="prev-sidebarTitleEnd"></div>
+                            <input type="color" id="sidebarTitleEnd" style="flex-grow:1; border:none; height:36px; padding:0; background:none;">
+                            <button class="btn-reset-field" onclick="resetColorField('sidebarTitleEnd')" title="إعادة ضبط"><i class="fa-solid fa-undo"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label>خلفية القائمة (Sidebar)</label>
+                        <div class="color-control-wrapper">
+                            <div class="color-preview-shape shape-triangle" id="prev-sidebarBg"></div>
+                            <input type="color" id="sidebarBg" style="flex-grow:1; border:none; height:36px; padding:0; background:none;">
+                            <button class="btn-reset-field" onclick="resetColorField('sidebarBg')" title="إعادة ضبط"><i class="fa-solid fa-undo"></i></button>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>خلفية العنصر النشط</label>
+                        <div class="color-control-wrapper">
+                            <div class="color-preview-shape shape-circle" id="prev-sidebarActiveBg"></div>
+                            <input type="color" id="sidebarActiveBg" style="flex-grow:1; border:none; height:36px; padding:0; background:none;">
+                            <button class="btn-reset-field" onclick="resetColorField('sidebarActiveBg')" title="إعادة ضبط"><i class="fa-solid fa-undo"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label>لون نص العنصر النشط</label>
+                        <div class="color-control-wrapper">
+                            <div class="color-preview-shape shape-square" id="prev-sidebarActiveText"></div>
+                            <input type="color" id="sidebarActiveText" style="flex-grow:1; border:none; height:36px; padding:0; background:none;">
+                            <button class="btn-reset-field" onclick="resetColorField('sidebarActiveText')" title="إعادة ضبط"><i class="fa-solid fa-undo"></i></button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Section: Curriculums & Books -->
+            <div id="section-academic" class="section">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-book"></i> المناهج والكتب الدراسية</h3>
+                </div>
+                <div class="input-group">
+                    <label>قائمة الكتب والمواد</label>
+                    <div id="books-list" class="list-manager"></div>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="new-book" placeholder="أضف اسم كتاب أو منهج...">
+                        <button onclick="addItem('books')" class="app-btn-primary" style="width: 50px;"><i
+                                class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>المراحل الدراسية / المستويات</label>
+                    <div id="levels-list" class="list-manager"></div>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="new-level" placeholder="أضف مستوى (مثلاً: Beginner 1)...">
+                        <button onclick="addItem('levels')" class="app-btn-primary" style="width: 50px;"><i
+                                class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Staff -->
+            <div id="section-staff" class="section">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-user-graduate"></i> إدارة شؤون المحاضرين</h3>
+                </div>
+                <div class="input-group">
+                    <label>أسماء المحاضرين (Lecturers)</label>
+                    <div id="lecturers-list" class="list-manager"></div>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="new-lecturer" placeholder="أضف إسم محاضر جديد...">
+                        <button onclick="addItem('lecturers')" class="app-btn-primary" style="width: 50px;"><i
+                                class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>تخصصات المحاضرين</label>
+                    <div id="specs-list" class="list-manager"></div>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="new-spec" placeholder="تخصص جديد (ماث، إنجليزي)...">
+                        <button onclick="addItem('specs')" class="app-btn-primary" style="width: 50px;"><i
+                                class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Students -->
+            <div id="section-students" class="section">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-user-group"></i> إعدادات الطلاب</h3>
+                </div>
+                <div class="input-group">
+                    <label>مصادر تسجيل الطلاب (Lead Sources)</label>
+                    <div id="sources-list" class="list-manager"></div>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="new-source" placeholder="مصدر جديد (فيسبوك، ترشيح)...">
+                        <button onclick="addItem('sources')" class="app-btn-primary" style="width: 50px;"><i
+                                class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>مسميات مجموعات الطلاب (Group Patterns)</label>
+                    <div id="groups-list" class="list-manager"></div>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="new-group" placeholder="نمط مجموعة (مثلاً: G1, Session A)...">
+                        <button onclick="addItem('groups')" class="app-btn-primary" style="width: 50px;"><i
+                                class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+
+                <div class="theme-section-divider" style="border-right-color: #f59e0b; color: #f59e0b; background: #fffcf0;">
+                    <span>🕒 التحكم في كونسول الحضور</span>
+                </div>
+                <div style="background: #fffcf0; color: #92400e; padding: 20px; border-radius: 15px; font-size: 0.9rem; margin-bottom: 25px; border: 1px solid #fef3c7;">
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px 18px; border-radius: 12px; border: 1px solid #fde68a;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 40px; height: 40px; background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                                    <i class="fa-solid fa-qrcode"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 900; font-size: 1rem;">إخفاء كود الـ QR من الكونسول</div>
+                                    <div style="font-size: 0.75rem; color: #b45309; font-weight: 600;">يخفي المربع الأبيض الكبير من منتصف الشاشة (للخصوصية)</div>
+                                </div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="hideConsoleQR">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div style="display: flex; align-items: center; justify-content: space-between; background: white; padding: 12px 18px; border-radius: 12px; border: 1px solid #fde68a;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 40px; height: 40px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">
+                                    <i class="fa-solid fa-keyboard"></i>
+                                </div>
+                                <div>
+                                    <div style="font-weight: 900; font-size: 1rem;">تعطيل الكتابة اليدوية (Ghost Mode)</div>
+                                    <div style="font-size: 0.75rem; color: #b45309; font-weight: 600;">يخفي مستطيل إدخال الكود ويجبر الموظف على استخدام الماسح فقط</div>
+                                </div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="disableManualAttendance">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <!-- 🛡️ NEW: ID Card Info Customization -->
+                        <div style="background: #fffbeb; padding: 15px; border-radius: 12px; border: 1px solid #fde68a; margin-top: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; color: #b45309;">
+                                <i class="fa-solid fa-id-card"></i>
+                                <div style="font-weight: 900; font-size: 0.95rem;">تخصيص معلومات الكارنيه (مكان الباركود القديم)</div>
+                            </div>
+                            <div class="grid-2">
+                                <div class="input-group">
+                                    <label>نوع المعلومة المعروضة</label>
+                                    <select id="idCardInfoType" class="app-input" onchange="toggleCustomCardText()">
+                                        <option value="group">📚 المجموعة الدراسية للطالب</option>
+                                        <option value="center">🏢 اسم المركز / الأكاديمية</option>
+                                        <option value="custom">✍️ نص مخصص (من اختيارك)</option>
+                                    </select>
+                                </div>
+                                <div class="input-group" id="customCardTextGroup" style="display: none;">
+                                    <label>النص المخصص لعرضه</label>
+                                    <input type="text" id="idCardCustomText" class="app-input" placeholder="مثلاً: العام الدراسي 2026">
+                                </div>
+                                <div class="input-group">
+                                    <label>حجم الخط للبيانات المطبوعة</label>
+                                    <select id="idCardFontSize" class="app-input">
+                                        <option value="1rem">صغير (1rem)</option>
+                                        <option value="1.1rem" selected>متوسط الافتراضي (1.1rem)</option>
+                                        <option value="1.3rem">كبير (1.3rem)</option>
+                                        <option value="1.5rem">كبير جداً (1.5rem)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- 🚀 Relocated from Identity: Communication Hub -->
+                <div class="theme-section-divider" style="border-right-color: #10b981; color: #10b981; background: #ecfdf5;">
+                    <span>💬 بوابة الربط والمراسلة (WhatsApp / SMS)</span>
+                </div>
+                <div style="background: #ecfdf5; color: #065f46; padding: 20px; border-radius: 15px; font-size: 0.9rem; margin-bottom: 25px; border: 1px solid #d1fae5;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                        <i class="fa-solid fa-comments" style="font-size: 1.5rem;"></i>
+                        <div style="font-weight: 900; font-size: 1.05rem;">إعدادات بوابة الإشعارات التلقائية</div>
+                    </div>
+                    <div class="grid-2">
+                        <div class="input-group">
+                            <label>رابط بوابة الربط (Gateway API URL)</label>
+                            <input type="text" id="msgGatewayUrl" placeholder="https://api.ultramsg.com/...">
+                        </div>
+                        <div class="input-group">
+                            <label>مفتاح الوصول (API Key / Instance ID)</label>
+                            <input type="text" id="msgApiKey" placeholder="Token / Instance ID">
+                        </div>
+                    </div>
+                    <div class="input-group" style="margin-top: 15px;">
+                        <label>قالب رسالة الحضور (Attendance Template)</label>
+                        <textarea id="msgAttendTemplate" style="width: 100%; height: 60px; border-radius: 8px; border: 1px solid #a7f3d0; padding: 10px; font-weight: 600;" 
+                            placeholder="تم تسجيل حضور {name} في {time}"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Branches & Finance -->
+            <div id="section-branches" class="section">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-landmark"></i> الفروع والمالية</h3>
+                </div>
+                <div class="input-group">
+                    <label>قائمة الفروع النشطة</label>
+                    <div id="branch-inputs" class="list-manager" style="max-height: 400px;"></div>
+                    <button onclick="addBranch()" class="app-btn-secondary" style="width: 100%; margin-top: 10px; border-radius: 12px; border: 2px dashed var(--accent-indigo); color: var(--accent-indigo); font-weight: 800; cursor: pointer;">
+                        <i class="fa-solid fa-plus-circle"></i> إضافة فرع جديد للنظام
+                    </button>
+                </div>
+                <div class="grid-2">
+                    <div class="input-group"><label>العملة الافتراضية</label><input type="text" id="currency"
+                            value="ج.م"></div>
+                    <div class="input-group"><label>نسبة الضريبة / الرسوم %</label><input type="number" id="tax"
+                            value="0"></div>
+                </div>
+
+                <!-- 🚀 Relocated from Identity: Broadcast System -->
+                <div class="theme-section-divider" style="border-right-color: #6366f1; color: #6366f1; background: #f5f3ff;">
+                    <span>📢 نظام البث العام والتنبيهات</span>
+                </div>
+                <div style="background: #f5f3ff; color: #4338ca; padding: 20px; border-radius: 15px; font-size: 0.9rem; margin-bottom: 25px; border: 1px solid #ddd6fe;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 15px;">
+                        <i class="fa-solid fa-bullhorn" style="font-size: 1.5rem;"></i>
+                        <div style="font-weight: 900; font-size: 1.05rem;">رسالة البث الموحدة (System Broadcast)</div>
+                    </div>
+                    <div class="input-group" style="margin-bottom: 10px;">
+                        <label>نص التنبيه (يظهر لجميع الموظفين في أعلى الشاشة)</label>
+                        <textarea id="broadcastMessage" placeholder="اكتب التنبيه هنا... (مثال: اجتماع طارئ لمديري الفروع اليوم الساعة 5 مساءً)" 
+                            style="width: 100%; height: 80px; padding: 12px; border-radius: 10px; border: 2px solid #ddd6fe; font-family: inherit; font-weight: 600; resize: vertical; box-sizing: border-box;"></textarea>
+                    </div>
+                    <div style="font-size: 0.8rem; opacity: 0.8; font-weight: 600;">
+                        <i class="fa-solid fa-lightbulb"></i> اترك الحقل فارغاً لإخفاء التنبيه من النظام.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Users -->
+            <div id="section-users" class="section">
+                <div class="card-header" style="justify-content: space-between; flex-wrap: wrap; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <h3><i class="fa-solid fa-users"></i> قائمة مستخدمي النظام</h3>
+                    </div>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="app-btn-secondary" style="height: 35px; font-size: 0.8rem; border-color: var(--accent-indigo); color: var(--accent-indigo);" onclick="bulkSelectInEditor(true)">
+                            <i class="fa-solid fa-check-double"></i> تحديد الكل
+                        </button>
+                        <button class="app-btn-secondary" style="height: 35px; font-size: 0.8rem;" onclick="bulkSelectInEditor(false)">
+                            <i class="fa-solid fa-xmark"></i> إلغاء التحديد
+                        </button>
+                        <button class="app-btn-primary" style="background: #ef4444 !important; height: 35px; font-size: 0.8rem;" onclick="deleteSelectedUsersInEditor()" id="bulk-delete-users-btn" disabled>
+                            <i class="fa-solid fa-trash-can"></i> حذف المحدد
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responsive" style="background: white; border-radius: 15px; border: 1px solid var(--border-soft); max-height: 60vh; overflow-y: auto;">
+                    <table class="neuro-table" style="width: 100%; border-collapse: collapse;">
+                        <thead style="position: sticky; top: 0; z-index: 10;">
+                            <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+                                <th style="padding: 15px; text-align: center; width: 40px; background: #f8fafc; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 10;"><input type="checkbox" id="select-all-editor" onchange="toggleAllUsersInEditor(this)"></th>
+                                <th style="padding: 15px; text-align: right; background: #f8fafc; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 10; cursor: pointer;" onclick="sortUsersEditor('name')">الاسم الكامل <i class="fa-solid fa-sort" style="color: #94a3b8; font-size: 0.8rem; margin-right: 5px;"></i></th>
+                                <th style="padding: 15px; text-align: right; background: #f8fafc; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 10; cursor: pointer;" onclick="sortUsersEditor('username')">اسم المستخدم <i class="fa-solid fa-sort" style="color: #94a3b8; font-size: 0.8rem; margin-right: 5px;"></i></th>
+                                <th style="padding: 15px; text-align: right; background: #f8fafc; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 10; cursor: pointer;" onclick="sortUsersEditor('role_id')">الصلاحية <i class="fa-solid fa-sort" style="color: #94a3b8; font-size: 0.8rem; margin-right: 5px;"></i></th>
+                                <th style="padding: 15px; text-align: center; background: #f8fafc; border-bottom: 2px solid #e2e8f0; position: sticky; top: 0; z-index: 10;">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="editor-users-list"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Section: Maintenance Logs -->
+            <div id="section-logs" class="section">
+                <div class="card-header">
+                    <h3><i class="fa-solid fa-clock-rotate-left"></i> سجل صيانة وتغيير الإعدادات</h3>
+                </div>
+                <div style="background: #f8fafc; border-radius: 20px; padding: 25px; border: 1px solid #e2e8f0; min-height: 400px; overflow-y: auto; max-height: 60vh;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: right;">
+                        <thead style="background: #f1f5f9; color: #64748b; font-size: 0.85rem; font-weight: 800;">
+                            <tr>
+                                <th style="padding: 12px 15px; border-bottom: 2px solid #e2e8f0;">التاريخ والوقت</th>
+                                <th style="padding: 12px 15px; border-bottom: 2px solid #e2e8f0;">المسؤول</th>
+                                <th style="padding: 12px 15px; border-bottom: 2px solid #e2e8f0;">العملية</th>
+                            </tr>
+                        </thead>
+                        <tbody id="maintenance-logs-body">
+                            <!-- Logs injected here -->
+                        </tbody>
+                    </table>
+                    <div id="no-logs-msg" style="text-align: center; padding: 100px; color: #cbd5e1; display: none;">
+                        <i class="fa-solid fa-folder-open" style="font-size: 3rem; display: block; margin-bottom: 15px; opacity: 0.1;"></i>
+                        لا يوجد سجلات حتى الآن
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section: Reset -->
+            <div id="section-reset" class="section">
+                <div class="card-header">
+                    <h3 style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> الصيانة والتصفير</h3>
+                </div>
+                <div
+                    style="background:#fff1f2; padding:20px; border-radius:15px; border:1px solid #fecdd3; margin-bottom:20px;">
+                    <h4 style="margin:0; color:#be123c;">تحذير منطقة الخطر</h4>
+                    <p style="color:#e11d48; font-size:0.9rem;">العمليات هنا لا يمكن التراجع عنها. تأكد من عمل نسخة
+                        احتياطية.</p>
+                </div>
+
+                <div
+                    style="margin-bottom: 25px; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid var(--border-soft);">
+                    <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                        <input type="checkbox" id="skipDemo"
+                            style="width: 20px; height: 20px; accent-color: var(--accent-teal);">
+                        <span style="font-weight: 800; font-size: 0.95rem; color: var(--sidebar-bg);">تعطيل تلقيم
+                            البيانات التجريبية (Skip Demo Data)</span>
+                    </label>
+                    <p style="margin: 8px 0 0 32px; font-size: 0.8rem; color: var(--text-muted); font-weight: 600;">
+                        بمانع هذا الخيار، لن يقوم النظام بإنشاء مجموعات أو طلاب تجريبيين عند المسح الشامل.</p>
+                </div>
+                <div class="grid-2">
+                    <button onclick="exportJSON()" class="btn-neuro"
+                        style="height:60px; border:2px dashed #6366f1; color:#6366f1; background:#f5f7ff;"><i
+                            class="fa-solid fa-download"></i> تصدير البيانات JSON</button>
+                    <button onclick="clearAllData()" class="btn-neuro"
+                        style="height:60px; border:2px solid #ef4444; color:#ef4444; background:#fff1f2;"><i
+                            class="fa-solid fa-trash-can"></i> مسح شامل (تصفير)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/core.js"></script>
+    <script>
+        const STORE_KEYS = {
+            config: 'app_config',
+            branches: 'branches',
+            specs: 'trainer_specialties',
+            sources: 'student_sources',
+            books: 'app_books',
+            levels: 'app_levels',
+            lecturers: 'app_lecturers',
+            groups: 'app_group_patterns',
+            users: 'users',
+            roles: 'roles'
+        };
+
+        let state = {};
+
+        function toggleAdminPassword() {
+            const input = document.getElementById('admin_pass');
+            const icon = document.getElementById('toggleAdminPass');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function checkPass() {
+            const u = document.getElementById('admin_user').value;
+            const p = document.getElementById('admin_pass').value;
+            if (p === 'admin135') {
+                if (document.getElementById('remember_me').checked) {
+                    localStorage.setItem('admin_rem_u', u);
+                    localStorage.setItem('admin_rem_p', p);
+                }
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('main-ui').style.display = 'flex';
+                initPanel();
+            } else alert('خطأ في البيانات');
+        }
+
+        window.onload = () => {
+            if (localStorage.getItem('admin_rem_p') === 'admin135') {
+                document.getElementById('admin_user').value = localStorage.getItem('admin_rem_u');
+                document.getElementById('admin_pass').value = localStorage.getItem('admin_rem_p');
+                document.getElementById('remember_me').checked = true;
+            }
+
+        };
+
+        function showSection(id, el) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('section-' + id).classList.add('active');
+            el.classList.add('active');
+        }
+
+        // --- Theme Default Configurations (Baked-in Source Defaults) ---
+        const THEME_DEFAULTS = {
+            royal: {
+                sidebarBg: '#0a2385',
+                sidebarTitleStart: '#991b1b',
+                sidebarTitleEnd: '#dc2626',
+                sidebarActiveBg: '#1A9E9C',
+                sidebarActiveText: '#ffffff'
+            }
+        };
+
+        function initPanel() {
+            Object.keys(STORE_KEYS).forEach(k => {
+                state[k] = Storage.get(STORE_KEYS[k]) || (k === 'config' ? {} : []);
+            });
+
+            // Populate Identity
+            document.getElementById('appName').value = state.config.appName || 'EduMaster Pro';
+            document.getElementById('primaryColor').value = state.config.primaryColor || '#1a9e9c';
+            document.getElementById('logoUrl').value = state.config.logoUrl || '';
+            document.getElementById('footerText').value = state.config.footerText || '© 2026 EduMaster';
+            document.getElementById('currency').value = state.config.currency || 'ج.م';
+            document.getElementById('tax').value = state.config.tax || 0;
+            document.getElementById('skipDemo').checked = state.config.skipDemo || false;
+
+            document.getElementById('broadcastMessage').value = state.config.broadcastMessage || '';
+            document.getElementById('msgGatewayUrl').value = state.config.msgGatewayUrl || '';
+            document.getElementById('msgApiKey').value = state.config.msgApiKey || '';
+            document.getElementById('msgAttendTemplate').value = state.config.msgAttendTemplate || '';
+            
+            // Attendance Control
+            document.getElementById('hideConsoleQR').checked = state.config.hideConsoleQR || false;
+            document.getElementById('disableManualAttendance').checked = state.config.disableManualAttendance || false;
+            
+            // ID Card Settings
+            document.getElementById('idCardInfoType').value = state.config.idCardInfoType || 'group';
+            document.getElementById('idCardCustomText').value = state.config.idCardCustomText || '';
+            document.getElementById('idCardFontSize').value = state.config.idCardFontSize || '1.1rem';
+            toggleCustomCardText();
+
+            // Render Logs
+            renderMaintenanceLogs();
+
+            // Royal Sidebar Colors
+            document.getElementById('sidebarBg').value = state.config.sidebarBg || THEME_DEFAULTS.royal.sidebarBg;
+            document.getElementById('sidebarTitleStart').value = state.config.sidebarTitleStart || THEME_DEFAULTS.royal.sidebarTitleStart;
+            document.getElementById('sidebarTitleEnd').value = state.config.sidebarTitleEnd || THEME_DEFAULTS.royal.sidebarTitleEnd;
+            document.getElementById('sidebarActiveBg').value = state.config.sidebarActiveBg || THEME_DEFAULTS.royal.sidebarActiveBg;
+            document.getElementById('sidebarActiveText').value = state.config.sidebarActiveText || THEME_DEFAULTS.royal.sidebarActiveText;
+
+            // Sync Previews
+            updateAllPreviews();
+            updateLogoPreview(state.config.logoUrl);
+
+            // Add Event Listeners for Live Previews
+            const colorInputs = document.querySelectorAll('input[type="color"]');
+            colorInputs.forEach(input => {
+                input.addEventListener('input', () => updatePreview(input.id));
+            });
+            document.getElementById('logoUrl').addEventListener('input', (e) => updateLogoPreview(e.target.value));
+
+            // Seed default books if none exist
+            if (state.books.length === 0) {
+                const defaults = [];
+                for (let i = 1; i <= 5; i++) defaults.push(`Phonics ${i}`);
+                for (let i = 1; i <= 6; i++) defaults.push(`Let's Go ${i}`);
+                ['Intro', '1', '2', '3', '4', '5'].forEach(lvl => defaults.push(`Interchange ${lvl}`));
+                state.books = defaults;
+            }
+
+            // Populate Branches
+            if (state.branches.length === 0) {
+                state.branches = Array.from({ length: 8 }, (_, i) => ({ id: i + 1, name: `فرع ${i + 1}` }));
+            }
+            renderBranches();
+
+            renderAllLists();
+        }
+
+        function renderAllLists() {
+            renderList('books-list', state.books, 'books');
+            renderList('levels-list', state.levels, 'levels');
+            renderList('lecturers-list', state.lecturers, 'lecturers');
+            renderList('specs-list', state.specs, 'specs');
+            renderList('sources-list', state.sources, 'sources');
+            renderList('groups-list', state.groups, 'groups');
+            renderBranches();
+            renderUsersInEditor();
+        }
+
+        function renderBranches() {
+            const bCont = document.getElementById('branch-inputs');
+            if (!bCont) return;
+            bCont.innerHTML = '';
+            state.branches.forEach((b, idx) => {
+                bCont.innerHTML += `
+                    <div class="list-item">
+                        <div style="display: flex; align-items: center; gap: 15px; flex-grow: 1;">
+                            <span style="background: var(--accent-indigo); color: white; min-width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 900;">${b.id}</span>
+                            <div style="display: flex; flex-direction: column; gap: 4px; flex: 1;">
+                                <label style="font-size: 0.65rem; color: #64748b; font-weight: 800;">اسم الفرع:</label>
+                                <input type="text" class="b-input" data-id="${b.id}" value="${b.name}" 
+                                       onchange="updateBranchField(${idx}, 'name', this.value)"
+                                       style="width: 100%; border: 1.5px solid #e2e8f0; padding: 6px 12px; border-radius: 8px; font-weight: 700;">
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 4px; width: 100px;">
+                                <label style="font-size: 0.65rem; color: #64748b; font-weight: 800;">السعة القوى:</label>
+                                <input type="number" class="b-capacity" data-id="${b.id}" value="${b.capacity || 0}" 
+                                       onchange="updateBranchField(${idx}, 'capacity', this.value)"
+                                       style="width: 100%; border: 1.5px solid #e2e8f0; padding: 6px 8px; border-radius: 8px; font-weight: 700; text-align: center;">
+                            </div>
+                        </div>
+                        <button onclick="removeBranch(${idx})" style="color:#ef4444; border:none; background:none; cursor:pointer; padding: 10px;"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>`;
+            });
+        }
+
+        function updateBranchField(idx, field, value) {
+            state.branches[idx][field] = field === 'capacity' ? Number(value) : value;
+        }
+
+        function addBranch() {
+            const nextId = state.branches.length > 0 ? Math.max(...state.branches.map(b => b.id)) + 1 : 1;
+            const name = prompt('أدخل اسم الفرع الجديد:', `فرع ${nextId}`);
+            if (name && name.trim()) {
+                state.branches.push({ id: nextId, name: name.trim() });
+                renderBranches();
+                if (window.Toast) Toast.show('تم إضافة الفرع للقمية المؤقتة', 'info');
+            }
+        }
+
+        function removeBranch(idx) {
+            const b = state.branches[idx];
+            Modal.confirm({
+                title: 'حذف فرع',
+                message: `هل أنت متأكد من حذف [${b.name}]؟ هذا قد يؤثر على البيانات المرتبطة بهذا الفرع.`,
+                type: 'danger',
+                onConfirm: () => {
+                    state.branches.splice(idx, 1);
+                    renderBranches();
+                }
+            });
+        }
+
+        function renderList(id, list, type) {
+            const cont = document.getElementById(id);
+            cont.innerHTML = '';
+            list.forEach((item, i) => {
+                cont.innerHTML += `
+                    <div class="list-item" id="${type}-item-${i}">
+                        <span class="item-text">${item}</span>
+                        <div style="display: flex; gap: 5px;">
+                            <button onclick="editItem('${type}', ${i})" style="color:var(--accent-indigo); border:none; background:none; cursor:pointer;"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button onclick="removeItem('${type}', ${i})" style="color:#ef4444; border:none; background:none; cursor:pointer;"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function editItem(type, idx) {
+            const newValue = prompt('تعديل القيمة:', state[type][idx]);
+            if (newValue && newValue.trim()) {
+                state[type][idx] = newValue.trim();
+                renderList(type + '-list', state[type], type);
+                if (window.Toast) Toast.show('تم التعديل (يجب الحفظ لتثبيت التغيير)', 'info');
+            }
+        }
+
+        function addItem(type) {
+            const inputMap = { books: 'new-book', levels: 'new-level', lecturers: 'new-lecturer', specs: 'new-spec', sources: 'new-source', groups: 'new-group' };
+            const input = document.getElementById(inputMap[type]);
+            if (!input.value.trim()) return;
+            state[type].push(input.value.trim());
+            input.value = '';
+            renderList(type + '-list', state[type], type);
+        }
+
+        function removeItem(type, idx) {
+            const item = state[type][idx];
+            Modal.confirm({
+                title: 'تأكيد الحذف',
+                message: `هل أنت متأكد من حذف [${item}] من القائمة؟`,
+                type: 'danger',
+                confirmText: 'حذف نهائي',
+                cancelText: 'تراجع',
+                icon: 'fa-trash-can',
+                onConfirm: () => {
+                    state[type].splice(idx, 1);
+                    renderList(type + '-list', state[type], type);
+                    if (window.Toast) Toast.show('تم الحذف من القائمة المؤقتة (اضغط حفظ للتثبيت)', 'info');
+                }
+            });
+        }
+
+        function renderUsersInEditor() {
+            const container = document.getElementById('editor-users-list');
+            if (!container) return;
+            
+            const users = state.users || [];
+            const roles = state.roles || [];
+
+            if (users.length === 0) {
+                container.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:#64748b;">لا يوجد مستخدمين مسجلين</td></tr>';
+                return;
+            }
+
+            container.innerHTML = users.map(user => {
+                const role = roles.find(r => r.id === user.role_id) || { name: 'غير محدد' };
+                return `
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td style="padding: 12px; text-align: center;">
+                            <input type="checkbox" class="editor-user-cb" data-id="${user.id}" onchange="updateBulkDeleteUsersBtn()">
+                        </td>
+                        <td style="padding: 12px; font-weight: 800; color: #1e293b;">${user.name}</td>
+                        <td style="padding: 12px;"><code style="background:#f1f5f9; padding:2px 8px; border-radius:5px; font-weight:700;">${user.username}</code></td>
+                        <td style="padding: 12px;"><span style="background:rgba(99, 102, 241, 0.1); color:#6366f1; padding:3px 10px; border-radius:50px; font-size:0.8rem; font-weight:800;">${role.name}</span></td>
+                        <td style="padding: 12px; text-align: center;">
+                            <button onclick="removeUserFromEditor(${user.id})" style="color:#ef4444; border:none; background:none; cursor:pointer;"><i class="fa-solid fa-trash-can"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function bulkSelectInEditor(state) {
+            const checkboxes = document.querySelectorAll('.editor-user-cb');
+            checkboxes.forEach(cb => cb.checked = state);
+            const masterCb = document.getElementById('select-all-editor');
+            if (masterCb) masterCb.checked = state;
+            updateBulkDeleteUsersBtn();
+        }
+
+        function toggleAllUsersInEditor(master) {
+            bulkSelectInEditor(master.checked);
+        }
+
+        let editorSortConfig = { field: '', asc: true };
+        function sortUsersEditor(field) {
+            if (editorSortConfig.field === field) {
+                editorSortConfig.asc = !editorSortConfig.asc;
+            } else {
+                editorSortConfig.field = field;
+                editorSortConfig.asc = true;
+            }
+            
+            state.users.sort((a, b) => {
+                let valA = a[field] || '';
+                let valB = b[field] || '';
+                
+                // If the field is role_id, sort by role name instead of ID string for better UX
+                if (field === 'role_id') {
+                    const rA = (state.roles || []).find(r => r.id === a.role_id);
+                    const rB = (state.roles || []).find(r => r.id === b.role_id);
+                    valA = rA ? rA.name : '';
+                    valB = rB ? rB.name : '';
+                }
+
+                if(typeof valA === 'string') valA = valA.toLowerCase();
+                if(typeof valB === 'string') valB = valB.toLowerCase();
+                
+                if (valA < valB) return editorSortConfig.asc ? -1 : 1;
+                if (valA > valB) return editorSortConfig.asc ? 1 : -1;
+                return 0;
+            });
+            renderUsersInEditor();
+        }
+
+        function updateBulkDeleteUsersBtn() {
+            const selected = document.querySelectorAll('.editor-user-cb:checked');
+            const btn = document.getElementById('bulk-delete-users-btn');
+            if (btn) btn.disabled = selected.length === 0;
+        }
+
+        function removeUserFromEditor(userId) {
+            const users = state.users || [];
+            const user = users.find(u => u.id == userId);
+            if (!user) return;
+
+            if (user.role_id === 1) {
+                Toast.show('لا يمكن حذف المستخدم الرئيسي للمدير العام', 'error');
+                return;
+            }
+
+            Modal.confirm({
+                title: 'تأكيد الحذف النهائي',
+                message: `هل أنت متأكد من حذف المستخدم [${user.name}] نهائياً؟`,
+                type: 'danger',
+                onConfirm: () => {
+                    state.users = users.filter(u => u.id != userId);
+                    Storage.save('users', state.users); // Save immediately
+                    renderUsersInEditor();
+                    Toast.show('تم حذف المستخدم بنجاح من النظام', 'success');
+                }
+            });
+        }
+
+        function deleteSelectedUsersInEditor() {
+            const selected = Array.from(document.querySelectorAll('.editor-user-cb:checked')).map(cb => cb.dataset.id);
+            if (selected.length === 0) return;
+
+            Modal.confirm({
+                title: 'حذف جماعي نهائي',
+                message: `هل أنت متأكد من حذف ${selected.length} مستخدم نهائياً؟`,
+                type: 'danger',
+                onConfirm: () => {
+                    const users = state.users || [];
+                    state.users = users.filter(u => !selected.includes(u.id.toString()) || u.role_id === 1);
+                    Storage.save('users', state.users); // Save immediately
+                    renderUsersInEditor();
+                    updateBulkDeleteUsersBtn();
+                    const masterCb = document.getElementById('select-all-editor');
+                    if (masterCb) masterCb.checked = false;
+                    Toast.show('تم حذف المحددين بنجاح وتحديث النظام', 'success');
+                }
+            });
+        }
+
+        async function saveAll() {
+            state.config = {
+                appName: document.getElementById('appName').value,
+                primaryColor: document.getElementById('primaryColor').value,
+                logoUrl: document.getElementById('logoUrl').value,
+                footerText: document.getElementById('footerText').value,
+                currency: document.getElementById('currency').value,
+                tax: Number(document.getElementById('tax').value),
+                skipDemo: document.getElementById('skipDemo').checked,
+
+                broadcastMessage: document.getElementById('broadcastMessage').value,
+                msgGatewayUrl: document.getElementById('msgGatewayUrl').value,
+                msgApiKey: document.getElementById('msgApiKey').value,
+                msgAttendTemplate: document.getElementById('msgAttendTemplate').value,
+                // Attendance Control
+                hideConsoleQR: document.getElementById('hideConsoleQR').checked,
+                disableManualAttendance: document.getElementById('disableManualAttendance').checked,
+                // ID Card
+                idCardInfoType: document.getElementById('idCardInfoType').value,
+                idCardCustomText: document.getElementById('idCardCustomText').value,
+                idCardFontSize: document.getElementById('idCardFontSize').value,
+                // Logo Transform
+                logoX: state.config.logoX || 0,
+                logoY: state.config.logoY || 0,
+                logoScale: state.config.logoScale || 1,
+                // Royal Styles
+                sidebarBg: document.getElementById('sidebarBg').value,
+                sidebarTitleStart: document.getElementById('sidebarTitleStart').value,
+                sidebarTitleEnd: document.getElementById('sidebarTitleEnd').value,
+                sidebarActiveBg: document.getElementById('sidebarActiveBg').value,
+                sidebarActiveText: document.getElementById('sidebarActiveText').value
+            };
+
+            const branches = [];
+            document.querySelectorAll('.b-input').forEach((inp, idx) => {
+                const bId = Number(inp.dataset.id);
+                const bName = inp.value;
+                const bCap = Number(document.querySelectorAll('.b-capacity')[idx].value) || 0;
+                branches.push({ id: bId, name: bName, capacity: bCap });
+            });
+            state.branches = branches;
+
+            for (const k of Object.keys(STORE_KEYS)) {
+                await Storage.save(STORE_KEYS[k], state[k]);
+            }
+
+            // Record Log
+            await recordMaintenanceLog('تحديث كافة إعدادات النظام');
+
+            localStorage.setItem('edumaster_app_name', state.config.appName);
+            if (window.Toast) Toast.show('تم حفظ كافة البيانات بنجاح', 'success');
+            else alert('تم الحفظ بنجاح');
+            renderMaintenanceLogs();
+        }
+
+        async function recordMaintenanceLog(action) {
+            const logs = Storage.get('maintenance_logs') || [];
+            const user = localStorage.getItem('admin_rem_u') || 'Master Admin';
+            logs.unshift({
+                time: new Date().toLocaleString('ar-EG'),
+                user: user,
+                action: action
+            });
+            // Keep last 50
+            if (logs.length > 50) logs.pop();
+            await Storage.save('maintenance_logs', logs);
+        }
+
+        function renderMaintenanceLogs() {
+            const logs = Storage.get('maintenance_logs') || [];
+            const body = document.getElementById('maintenance-logs-body');
+            const noLogs = document.getElementById('no-logs-msg');
+            
+            if (!body) return;
+            body.innerHTML = '';
+            
+            if (logs.length === 0) {
+                noLogs.style.display = 'block';
+                return;
+            }
+            
+            noLogs.style.display = 'none';
+            logs.forEach(log => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="padding: 12px 15px; border-bottom: 1px solid #f1f5f9; color: #64748b; font-family: monospace;">${log.time}</td>
+                    <td style="padding: 12px 15px; border-bottom: 1px solid #f1f5f9; font-weight: 800;">${log.user}</td>
+                    <td style="padding: 12px 15px; border-bottom: 1px solid #f1f5f9; color: #0f172a; font-weight: 700;">${log.action}</td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function logout() { window.location.href = 'index.html'; }
+
+        function clearAllData() {
+            Modal.confirm({
+                title: 'تنبيه المستوى الأول - تصفير شامل',
+                message: 'سيتم مسح كافة بيانات النظام (الإعدادات، الطلاب، المعاملات المالية، الفروع). هل أنت متأكد؟',
+                type: 'danger',
+                confirmText: 'نعم، الاستمرار',
+                cancelText: 'تراجع',
+                onConfirm: () => {
+                    setTimeout(() => {
+                        Modal.confirm({
+                            title: 'تنبيه المستوى الثاني - تحذير نهائي',
+                            message: 'هذه العملية غير قابلة للتراجع تماماً. هل قمت بعمل نسخة احتياطية (JSON) قبل البدء؟',
+                            type: 'danger',
+                            confirmText: 'نعم، أنا أعلم ما أفعل',
+                            cancelText: 'إلغاء الآن',
+                            onConfirm: () => {
+                                setTimeout(() => {
+                                    Modal.confirm({
+                                        title: 'تنبيه المستوى الثالث - الخطوة الأخيرة',
+                                        message: 'لن يكون هناك مجال للتراجع بعد هذه اللحظة. هل تريد مسح كل شيء فعلاً؟',
+                                        type: 'danger',
+                                        confirmText: 'تأكيد المسح النهائي',
+                                        cancelText: 'توقف فوراً',
+                                        onConfirm: () => {
+                                            const pass = prompt('يرجى إدخال كلمة المرور الرئيسية (admin135) للمصادقة على عملية التصفير:');
+                                            if (pass === 'admin135') {
+                                                localStorage.clear();
+                                                alert('تم تصفير النظام بالكامل بنجاح. سيتم إعادة تحميل الصفحة الآن.');
+                                                location.reload();
+                                            } else {
+                                                alert('كلمة مرور خاطئة! تم إلغاء العملية لحماية البيانات.');
+                                            }
+                                        }
+                                    });
+                                }, 300);
+                            }
+                        });
+                    }, 300);
+                }
+            });
+        }
+
+        function exportJSON() {
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `backup_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+        }
+
+        function handleLogoUpload(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            // Limit to 2MB for safety
+            if (file.size > 2 * 1024 * 1024) {
+                alert('عذراً، حجم الصورة كبير جداً. يرجى اختيار صورة أقل من 2 ميجابايت.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    // Compress image if it's too large (>512px)
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    const max = 512;
+                    if (width > max || height > max) {
+                        if (width > height) {
+                            height *= max / width;
+                            width = max;
+                        } else {
+                            width *= max / height;
+                            height = max;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const compressedUrl = canvas.toDataURL('image/png', 0.8);
+                    document.getElementById('logoUrl').value = compressedUrl;
+                    updateLogoPreview(compressedUrl);
+                    if (window.Toast) Toast.show('تم معالجة ورفع اللوجو بنجاح', 'success');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateLogoPreview(url) {
+            const img = document.getElementById('logo-preview-img');
+            const placeholder = document.getElementById('logo-placeholder-icon');
+            const editPanel = document.getElementById('logo-edit-panel');
+            
+            if (url && url.length > 20) {
+                // Auto-fix missing header if it looks like base64
+                let finalUrl = url;
+                if (!url.startsWith('data:') && !url.startsWith('http')) {
+                    finalUrl = 'data:image/png;base64,' + url;
+                }
+                
+                img.src = finalUrl;
+                img.style.display = 'block';
+                placeholder.style.display = 'none';
+                editPanel.style.display = 'block';
+                
+                // Set initial size to fit container if it's the first time
+                img.onload = () => {
+                    if (!img.style.width) {
+                        const ratio = img.naturalWidth / img.naturalHeight;
+                        if (ratio > 1) {
+                            img.style.width = '120%';
+                            img.style.height = 'auto';
+                        } else {
+                            img.style.height = '120%';
+                            img.style.width = 'auto';
+                        }
+                    }
+                    applyLogoTransform();
+                };
+            } else {
+                img.style.display = 'none';
+                placeholder.style.display = 'block';
+                editPanel.style.display = 'none';
+            }
+        }
+
+        function adjustLogo(prop, val) {
+            if (!state.config) state.config = {};
+            if (state.config.logoX === undefined) state.config.logoX = 0;
+            if (state.config.logoY === undefined) state.config.logoY = 0;
+            if (state.config.logoScale === undefined) state.config.logoScale = 1;
+
+            if (prop === 'x') state.config.logoX += val;
+            if (prop === 'y') state.config.logoY += val;
+            if (prop === 's') state.config.logoScale = Math.max(0.1, state.config.logoScale + val);
+
+            applyLogoTransform();
+        }
+
+        function resetLogoPos() {
+            state.config.logoX = 0;
+            state.config.logoY = 0;
+            state.config.logoScale = 1;
+            applyLogoTransform();
+        }
+
+        function applyLogoTransform() {
+            const img = document.getElementById('logo-preview-img');
+            if (img && img.style.display !== 'none') {
+                const x = state.config.logoX || 0;
+                const y = state.config.logoY || 0;
+                const s = state.config.logoScale || 1;
+                img.style.transform = `translate(${x}px, ${y}px) scale(${s})`;
+            }
+        }
+        // --- New Theme Preview & Reset Logic ---
+        function updatePreview(id) {
+            const preview = document.getElementById('prev-' + id);
+            const input = document.getElementById(id);
+            if (preview && input) {
+                preview.style.background = input.value;
+            }
+        }
+
+        function updateAllPreviews() {
+            const keys = ['sidebarTitleStart', 'sidebarTitleEnd', 'sidebarBg', 'sidebarActiveBg', 'sidebarActiveText'];
+            keys.forEach(updatePreview);
+        }
+
+        function resetColorField(id) {
+            const defaultValue = THEME_DEFAULTS.royal[id] || '#000000';
+            const input = document.getElementById(id);
+            if (input) {
+                input.value = defaultValue;
+                updatePreview(id);
+            }
+        }
+
+        function resetThemeGroup(theme) {
+            if (theme !== 'royal') return;
+            const defaults = THEME_DEFAULTS.royal;
+            
+            Modal.confirm({
+                title: 'تأكيد إعادة الضبط',
+                message: 'هل أنت متأكد من إعادة ضبط ألوان الثيم الملكي للإعدادات الأصلية؟',
+                type: 'warning',
+                onConfirm: () => {
+                    Object.keys(defaults).forEach(id => {
+                        const input = document.getElementById(id);
+                        if (input) {
+                            input.value = defaults[id];
+                            updatePreview(id);
+                        }
+                    });
+                    Toast.show('تمت إعادة ضبط الثيم بنجاح', 'success');
+                }
+            });
+        }
+
+        function toggleCustomCardText() {
+            const type = document.getElementById('idCardInfoType').value;
+            const group = document.getElementById('customCardTextGroup');
+            if (group) group.style.display = (type === 'custom') ? 'block' : 'none';
+        }
+    </script>
+</body>
+
+</html>

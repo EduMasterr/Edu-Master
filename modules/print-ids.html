@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طباعة الكارنيهات (الباركود) - EduMaster Pro</title>
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .filter-section {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-ui);
+            margin-bottom: 25px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            border: 1px solid var(--border-soft);
+        }
+
+        body.dark-mode .filter-section {
+            background: var(--bg-card);
+            border-color: rgba(0, 234, 255, 0.2);
+        }
+
+        .print-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 25px;
+        }
+
+        /* ----- Shared Premium ID Card Design ----- */
+        .id-card-modern {
+            background: #ffffff;
+            background-image: 
+                radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.15) 0%, transparent 60%),
+                radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.15) 0%, transparent 60%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.08) 0%, transparent 60%),
+                radial-gradient(at 0% 0%, rgba(14, 165, 233, 0.08) 0%, transparent 60%),
+                radial-gradient(rgba(124, 58, 237, 0.12) 2px, transparent 0);
+            background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 30px 30px;
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border: 1.5px solid #e2e8f0;
+            font-family: 'Tajawal', sans-serif;
+            width: 100%;
+        }
+
+        /* 🪄 Magical Sidebar Touch */
+        .id-card-modern::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 12px;
+            height: 100%;
+            background: linear-gradient(to bottom, #7c3aed, #3b82f6);
+            z-index: 2;
+        }
+
+        body.dark-mode .id-card-modern {
+            border-color: rgba(0, 234, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .id-card-header {
+            background: linear-gradient(90deg, #7c3aed 0%, #3b82f6 100%); /* Deep purple to blue gradient */
+            color: #fff;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .id-card-role {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .id-card-org-name {
+            font-weight: 900;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+        }
+
+        .id-card-body {
+            background: #f8fafc;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .id-card-main-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .id-card-name {
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: #0f172a;
+            flex: 1;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        body.dark-mode .id-card-name {
+            color: #000; /* Force black text even in dark mode for the white card area if we keep it white */
+        }
+
+        .id-card-photo-wrapper {
+            width: 90px;
+            height: 90px;
+            background: #fff;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .id-card-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .id-card-photo-placeholder {
+            width: 50%;
+            opacity: 0.3;
+        }
+
+        .id-card-barcode-section {
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            border-radius: 8px;
+            border: 1px solid #7dd3fc;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.02);
+            position: relative;
+            margin-top: auto;
+            min-height: 48px;
+        }
+
+        .barcode-svg {
+            max-width: 100%;
+            height: 40px; /* Adjust based on preference */
+        }
+        
+        .id-card-public-id {
+            position: absolute;
+            bottom: -7px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-weight: 800;
+            color: #1e293b;
+            font-size: 0.65rem;
+            background: #fff;
+            padding: 1px 6px;
+            border: 1px solid #cbd5e1;
+            border-radius: 3px;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        .id-card-footer {
+            background: #0f172a; /* Very dark blue/black */
+            color: #fff;
+            text-align: center;
+            padding: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+
+        #print-area {
+            display: none;
+        }
+
+        /* ----- PRINT SPECIFIC STYLES ----- */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 5mm; /* Balanced margins for 10 cards */
+            }
+            body {
+                background: #fff !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            body > * {
+                display: none !important;
+            }
+            
+            #print-area, #print-area * {
+                display: flex !important;
+                visibility: visible !important;
+            }
+            
+            #print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%; /* Use full printable width */
+                display: flex !important;
+                flex-wrap: wrap !important;
+                align-content: flex-start;
+                gap: 3mm !important; 
+                justify-content: center;
+                padding: 0 !important;
+                margin: 0 auto !important;
+            }
+
+            /* 10 Cards layout: 2 columns × 5 rows (Standard ID format) */
+            .id-card-print {
+                width: 85mm; 
+                height: 52mm;
+                border: 0.8pt solid #cbd5e1 !important;
+                border-radius: 12px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                box-sizing: border-box !important;
+                background: #ffffff !important;
+                background-image: 
+                    radial-gradient(at 100% 0%, rgba(124, 58, 237, 0.12) 0%, transparent 60%),
+                    radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.12) 0%, transparent 60%),
+                    radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.08) 0%, transparent 60%),
+                    radial-gradient(rgba(124, 58, 237, 0.08) 1mm, transparent 0) !important;
+                background-size: 100% 100%, 100% 100%, 100% 100%, 20px 20px !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                overflow: hidden;
+                position: relative;
+            }
+
+            /* Premium Sidebar in Print */
+            .id-card-print::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 2.5mm;
+                height: 100%;
+                background: linear-gradient(to bottom, #7c3aed, #3b82f6) !important;
+                z-index: 2;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .print-header {
+                background: linear-gradient(90deg, #7c3aed 0%, #3b82f6 100%) !important;
+                color: #fff !important;
+                padding: 1mm 4mm !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                height: 7mm !important;
+                box-sizing: border-box !important;
+            }
+
+            .print-role {
+                background: rgba(255,255,255,0.2) !important;
+                padding: 1mm 3mm !important;
+                border-radius: 10mm !important;
+                font-size: 8pt !important;
+                font-weight: bold !important;
+            }
+
+            .print-org {
+                font-weight: bold !important;
+                font-size: 9pt !important;
+            }
+
+            .print-body {
+                padding: 1mm 3mm !important;
+                display: flex !important;
+                flex-direction: column !important;
+                flex: 1 !important;
+                justify-content: flex-start !important;
+                gap: 1mm !important;
+            }
+
+            .print-main-info {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                margin-bottom: 2mm !important;
+            }
+
+            .print-name {
+                font-size: 14pt !important;
+                font-weight: 900 !important;
+                color: #000 !important;
+                flex: 1 !important;
+                text-align: right !important;
+                padding-right: 4mm !important;
+            }
+
+            .print-photo-wrapper {
+                width: 20mm !important;
+                height: 20mm !important;
+                background: #fff !important;
+                border-radius: 6px !important;
+                border: 1px solid #ddd !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                overflow: hidden !important;
+            }
+
+            .print-photo {
+                width: 100% !important;
+                height: 100% !important;
+                object-fit: cover !important;
+                display: block !important;
+            }
+
+            .print-barcode-section {
+                background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%) !important;
+                border: 0.5pt solid #7dd3fc !important;
+                border-radius: 4px !important;
+                height: 11mm !important;
+                display: flex !important;
+                justify-content: center !important;
+                align-items: center !important;
+                position: relative !important;
+                margin-top: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .print-barcode-svg {
+                height: 9mm !important; 
+                width: 72mm !important;
+            }
+
+            .print-public-id {
+                position: absolute !important;
+                bottom: -2mm !important;
+                left: 50% !important;
+                transform: translateX(-50%) !important;
+                font-size: 6.5pt !important;
+                font-weight: 900 !important;
+                color: #000 !important;
+                background: #fff !important;
+                padding: 0.1mm 1.5mm !important;
+                border: 0.4pt solid #cbd5e1 !important;
+                border-radius: 0.8mm !important;
+                white-space: nowrap !important;
+                z-index: 10 !important;
+            }
+
+            .print-footer {
+                background: #0f172a !important;
+                color: #fff !important;
+                text-align: center !important;
+                padding: 0 !important;
+                font-size: 7pt !important;
+                font-weight: bold !important;
+                height: 7mm !important;
+                box-sizing: border-box !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                height: 7mm !important;
+            }
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+    <div class="wrapper">
+        <aside class="sidebar no-print"></aside>
+        
+        <main class="main-content no-print">
+            <div class="content-container">
+                <header class="top-bar">
+                    <div class="action-group">
+                        <h1 class="page-title"><i class="fa-solid fa-id-card"></i> طباعة الكارنيهات (A4 - 10 كروت)</h1>
+                    </div>
+                </header>
+
+                <div class="filter-section">
+                    <div style="flex: 1;">
+                        <label style="font-weight: 700; margin-bottom: 8px; display: block; color: var(--text-dark);">حدد الفئة المراد طباعتها:</label>
+                        <select id="user-type" class="app-input" onchange="loadUsersForPrint()">
+                            <option value="student">👨‍🎓 الطلاب</option>
+                            <option value="trainer">👨‍🏫 المحاضرين / المعلمين</option>
+                            <option value="employee">💼 الموظفين</option>
+                            <option value="all_types">🌟 الكل (طلاب + مدربين + موظفين)</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-weight: 700; margin-bottom: 8px; display: block; color: var(--text-dark);">تصفية بالفرع:</label>
+                        <select id="branch-filter" class="app-input" onchange="loadUsersForPrint()">
+                            <option value="all">كافة الفروع</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1.5;">
+                        <label style="font-weight: 700; margin-bottom: 8px; display: block; color: var(--text-dark);">بحث عن اسم:</label>
+                        <input type="text" id="name-search" class="app-input" placeholder="اكتب الاسم للبحث..." onkeyup="loadUsersForPrint()">
+                    </div>
+                    <div style="padding-bottom: 12px; display: flex; align-items: center; gap: 10px;">
+                        <label style="font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" id="select-all" checked onchange="toggleAllSelections(this)" style="width: 20px; height: 20px; accent-color: var(--saas-primary);">
+                            تحديد الكل
+                        </label>
+                        <span id="selected-count" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700; background: var(--border-soft); padding: 4px 10px; border-radius: 50px;">مختار: 0</span>
+                    </div>
+                    <div>
+                        <button class="app-btn-primary" onclick="triggerPrint()" style="height: 42px; width: 180px; font-weight: 900;">
+                            <i class="fa-solid fa-print"></i> طباعة (Ctrl+P)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Screen UI for Previewing -->
+                <div id="screen-preview-grid" class="print-preview-grid">
+                    <div style="text-align: center; grid-column: 1/-1; padding: 50px; color: var(--text-muted); font-weight: 700;">
+                        <i class="fa-solid fa-circle-notch fa-spin" style="margin-left: 8px;"></i> جاري تحميل البيانات و الأكواد الأمنية...
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Hidden Print Area (Only visible on browser print) -->
+    <div id="print-area"></div>
+
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+    <script src="../js/print-ids.js"></script>
+</body>
+</html>
+
+

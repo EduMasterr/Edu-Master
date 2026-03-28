@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الدرجات والشهادات الذكية - EduMaster Pro</title>
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .cert-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid var(--border-soft);
+            border-radius: 20px;
+            padding: 20px;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark-mode .cert-card {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(0, 234, 255, 0.2);
+        }
+
+        .cert-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body data-no-global-search="true">
+    <div class="wrapper">
+        <aside class="sidebar"></aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar">
+                    <div class="action-group">
+                        <h1 class="page-title"><i class="fa-solid fa-award"></i> إدارة الدرجات والشهادات المؤمنة</h1>
+                    </div>
+                </header>
+
+                <div class="stats-overview"
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(26, 158, 156, 0.1); color: var(--accent-teal);">
+                            <i class="fa-solid fa-file-signature"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-exams">0</h3>
+                            <p>اختبارات تم رصدها</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(245, 158, 11, 0.1); color: #f59e0b;"><i
+                                class="fa-solid fa-medal"></i></div>
+                        <div class="stat-info">
+                            <h3 id="total-certs">0</h3>
+                            <p>شهادات QR مصدرة</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-card">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                        <div>
+                            <h2 style="margin:0;">رصد النتائج وإصدار الشهادات</h2>
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 5px;">يمكنك إصدار شهادة
+                                فورية لأي طالب يتخطى نسبة 70%</p>
+                        </div>
+                        <div style="display:flex; gap:15px; align-items:center;">
+                            <div class="search-input-group" style="width: 350px; position: relative;">
+                                <input type="text" id="local-table-search" class="app-input"
+                                    placeholder="بحث باسم الطالب أو الاختبار..." oninput="renderExamsTable()"
+                                    style="padding-right: 45px; font-size: 18px; font-weight: 950; color: var(--sidebar-bg); border: 2px solid var(--accent-teal);">
+                                <i class="fa-solid fa-magnifying-glass"
+                                    style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--accent-teal); font-size: 1.25rem;"></i>
+                            </div>
+                            <button class="app-btn-primary" onclick="openExamModal()">
+                                <i class="fa-solid fa-plus-circle"></i> رصد درجة اختبار جديد
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="app-table" id="exams-table">
+                            <thead>
+                                <tr>
+                                    <th>الطالب</th>
+                                    <th>الاختبار</th>
+                                    <th>الدرجة</th>
+                                    <th>التاريخ</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- JS Injected Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Exam Modal -->
+    <div class="modal-overlay" id="exam-modal">
+        <div class="modal-container" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title">رصد نتيجة اختبار</h2>
+                <button class="close-modal" onclick="Modal.close('exam-modal')">&times;</button>
+            </div>
+            <div style="padding: 25px;">
+                <div class="form-group">
+                    <label>الطالب المستهدف</label>
+                    <select id="exam-student-id" class="app-input" style="height: 45px;"></select>
+                </div>
+                <div class="form-group">
+                    <label>عنوان الاختبار</label>
+                    <input type="text" id="exam-name" class="app-input"
+                        placeholder="مثلاً: اختبار لغة إنجليزية - الوحدة الأولى">
+                </div>
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>الدرجة</label>
+                        <input type="number" id="exam-grade" class="app-input" placeholder="0">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>من (النهائية)</label>
+                        <input type="number" id="exam-total" class="app-input" value="100">
+                    </div>
+                </div>
+                <button class="app-btn-primary" style="width: 100%; margin-top: 15px; height: 50px; font-size: 1.1rem;"
+                    onclick="saveExamResult()">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> حفظ النتيجة الآن
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+    <script src="../js/certification-engine.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            UICore.init();
+            loadStudentsList();
+            renderExamsTable();
+        });
+
+        function loadStudentsList() {
+            const students = Storage.get('students') || [];
+            const branches = Storage.get('branches') || [];
+            const select = document.getElementById('exam-student-id');
+
+            // Sort by name
+            students.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+
+            select.innerHTML = '<option value="" disabled selected>اختر الطالب...</option>' +
+                students.map(s => {
+                    const branch = branches.find(b => b.id == s.branch);
+                    const branchName = branch ? branch.name : 'بدون فرع';
+                    return `<option value="${s.id}">${s.name} (${branchName})</option>`;
+                }).join('');
+        }
+
+        function openExamModal(selectedSid = null) {
+            if (selectedSid) {
+                document.getElementById('exam-student-id').value = selectedSid;
+            }
+            Modal.open('exam-modal');
+        }
+
+        function saveExamResult() {
+            const sid = document.getElementById('exam-student-id').value;
+            const name = document.getElementById('exam-name').value;
+            const grade = parseInt(document.getElementById('exam-grade').value);
+            const total = parseInt(document.getElementById('exam-total').value);
+
+            if (!sid) return Toast.show('يرجى اختيار الطالب أولاً', 'error');
+            if (!name || isNaN(grade)) return Toast.show('يرجى إدخال عنوان الاختبار والدرجة', 'error');
+
+            const grades = Storage.get('student_grades') || {};
+            if (!grades[sid]) grades[sid] = [];
+
+            grades[sid].push({
+                examName: name,
+                grade: grade,
+                total: total,
+                date: new Date().toISOString()
+            });
+
+            Storage.save('student_grades', grades);
+            Toast.show('✅ تم رصد الدرجة بنجاح!', 'success');
+
+            // Clear inputs
+            document.getElementById('exam-name').value = '';
+            document.getElementById('exam-grade').value = '';
+
+            Modal.close('exam-modal');
+            renderExamsTable();
+        }
+
+        function normalizeArabic(text) {
+            if (!text) return "";
+            return text.replace(/[أإآ]/g, 'ا')
+                .replace(/ة/g, 'ه')
+                .replace(/ى/g, 'ي')
+                .toLowerCase().trim();
+        }
+
+        function renderExamsTable() {
+            const gradesData = Storage.get('student_grades') || {};
+            const students = Storage.get('students') || [];
+            const branches = Storage.get('branches') || [];
+            const tbody = document.querySelector('#exams-table tbody');
+            const searchRaw = document.getElementById('local-table-search').value;
+            const searchTerm = normalizeArabic(searchRaw);
+
+            let allRowsData = [];
+
+            // 1. Add existing grades
+            Object.entries(gradesData).forEach(([sid, exams]) => {
+                const student = students.find(s => s.id == sid);
+                if (!student) return;
+
+                const branch = branches.find(b => b.id == student.branch);
+                const branchName = branch ? branch.name : '';
+
+                exams.forEach((ex, idx) => {
+                    allRowsData.push({
+                        type: 'RESULT',
+                        ...ex,
+                        student,
+                        sid,
+                        idx,
+                        branchName,
+                        searchKey: normalizeArabic(student.name + ' ' + ex.examName)
+                    });
+                });
+            });
+
+            // 2. Add students who don't have matches in grades yet (only if searching)
+            if (searchTerm.length > 0) {
+                students.forEach(s => {
+                    const studentNameNorm = normalizeArabic(s.name);
+                    if (studentNameNorm.includes(searchTerm)) {
+                        // Check if this student already has results showing in filtered list
+                        const hasResults = allRowsData.some(row => row.sid == s.id && row.type === 'RESULT' && row.searchKey.includes(searchTerm));
+                        if (!hasResults) {
+                            const branch = branches.find(b => b.id == s.branch);
+                            allRowsData.push({
+                                type: 'NO_RESULT',
+                                student: s,
+                                sid: s.id,
+                                branchName: branch ? branch.name : '',
+                                searchKey: studentNameNorm
+                            });
+                        }
+                    }
+                });
+            }
+
+            // Sort results: Results by date, then "No Results" placeholders
+            allRowsData.sort((a, b) => {
+                if (a.type !== b.type) return a.type === 'RESULT' ? -1 : 1;
+                if (a.type === 'RESULT') return new Date(b.date) - new Date(a.date);
+                return a.student.name.localeCompare(b.student.name, 'ar');
+            });
+
+            // Filter by search term
+            const filtered = allRowsData.filter(row => row.searchKey.includes(searchTerm));
+
+            tbody.innerHTML = filtered.map(row => {
+                if (row.type === 'RESULT') {
+                    return `
+                        <tr>
+                            <td>
+                                <div style="font-weight:900; color:var(--sidebar-bg);">${row.student.name}</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted);">كود: ${row.student.serial_id || row.student.id} | ${row.branchName}</div>
+                            </td>
+                            <td style="font-weight:700;">${row.examName}</td>
+                            <td>
+                                <div style="font-weight:900; font-size:1.1rem; color: ${row.grade >= (row.total * 0.5) ? '#10b981' : '#ef4444'};">
+                                    ${row.grade} <span style="font-size:0.8rem; color:var(--text-muted);">/ ${row.total}</span>
+                                </div>
+                            </td>
+                            <td style="color:var(--text-muted); font-size:0.85rem;">${new Date(row.date).toLocaleDateString('ar-EG')}</td>
+                            <td>
+                                <div style="display:flex; gap:8px;">
+                                    <button class="action-btn" style="color:#f59e0b; background: rgba(245, 158, 11, 0.1);" onclick="issueCert(${row.sid}, '${row.examName.replace(/'/g, "\\'")}', ${row.grade}, ${row.total})" title="إصدار شهادة">
+                                        <i class="fa-solid fa-award"></i>
+                                    </button>
+                                    <button class="action-btn" style="color:#ef4444; background: rgba(239, 68, 68, 0.1);" onclick="deleteGrade(${row.sid}, ${row.idx})" title="حذف النتيجة">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    return `
+                        <tr style="background: rgba(26, 158, 156, 0.03);">
+                            <td>
+                                <div style="font-weight:700; color:var(--text-muted); opacity:0.8;">${row.student.name}</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted); opacity:0.6;">كود: ${row.student.serial_id || row.student.id} | ${row.branchName}</div>
+                            </td>
+                            <td colspan="3" style="text-align:center; color:var(--text-muted); font-style:italic; font-size:0.9rem;">
+                                <i class="fa-solid fa-circle-info"></i> لا يوجد درجات مسجلة لهذا الطالب بعد
+                            </td>
+                            <td>
+                                <button class="app-btn-primary" style="padding: 6px 12px; font-size: 0.8rem; background: var(--accent-teal) !important;" onclick="openExamModal(${row.sid})">
+                                    <i class="fa-solid fa-plus-circle"></i> رصد درجة الآن
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }
+            }).join('') || '<tr><td colspan="5" style="text-align:center; padding:40px; color:var(--text-muted);">لا توجد نتائج تطابق بحثك</td></tr>';
+
+            // Stats update
+            const totalExamsCount = Object.values(gradesData).reduce((acc, curr) => acc + curr.length, 0);
+            document.getElementById('total-exams').innerText = totalExamsCount;
+            document.getElementById('total-certs').innerText = (Storage.get('issued_certificates') || []).length;
+        }
+
+        function deleteGrade(sid, idx) {
+            Modal.confirm({
+                title: 'تأكيد الحذف',
+                message: 'هل أنت متأكد من حذف هذه النتيجة فعلياً؟',
+                confirmText: 'نعم، احذف',
+                cancelText: 'تراجع',
+                icon: 'fa-trash-can',
+                type: 'danger',
+                onConfirm: () => {
+                    const grades = Storage.get('student_grades') || {};
+                    if (grades[sid]) {
+                        grades[sid].splice(idx, 1);
+                        Storage.save('student_grades', grades);
+                        renderExamsTable();
+                        Toast.show('تم حذف النتيجة نهائياً', 'success');
+                        if (window.AudioCore) AudioCore.playWarning(); // Extra audio feedback
+                    }
+                }
+            });
+        }
+
+        function issueCert(sid, examName, grade, total) {
+            if (grade < (total * 0.7)) {
+                return Toast.show('عذراً، نظام الشهادات يشترط تفوق الطالب (أكثر من 70%) للإصدار.', 'warning');
+            }
+
+            Modal.confirm({
+                title: 'اختيار اتجاه الشهادة',
+                message: 'كيف تود طباعة الشهادة لهذا الطالب؟',
+                confirmText: 'بشكل عرضي (Landscape)',
+                cancelText: 'بشكل طولي (Portrait)',
+                icon: 'fa-print',
+                onConfirm: () => processIssue(sid, examName, grade, total, 'landscape'),
+                onCancel: () => processIssue(sid, examName, grade, total, 'portrait')
+            });
+        }
+
+        function processIssue(sid, examName, grade, total, orientation) {
+            const cert = CertificationEngine.issueCertificate(sid, examName, grade, total, 'EXAM_SUCCESS', orientation);
+            Toast.show('🌟 تم إصدار الشهادة المؤمنة بنجاح!', 'success');
+            CertificationEngine.viewCertificate(cert.id);
+            renderExamsTable();
+        }
+    </script>
+</body>
+
+</html>
+
+

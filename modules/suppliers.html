@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMaster Pro - الموردين</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-graduation-cap" style="color:var(--accent-blue);"></i>
+                <span>EduMaster Pro</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="../dashboard.html" class="nav-item">
+                    <i class="fa-solid fa-chart-pie"></i> <span>نظرة عامة</span>
+                </a>
+                <a href="branches.html" class="nav-item">
+                    <i class="fa-solid fa-building-columns"></i> <span>إدارة الفروع</span>
+                </a>
+                <a href="students.html" class="nav-item">
+                    <i class="fa-solid fa-user-graduate"></i> <span>الطلاب والمجموعات</span>
+                </a>
+                <div class="nav-divider" style="height:1px; background:var(--border-color); margin:10px 0;"></div>
+                <div class="nav-section-title"
+                    style="font-size:11px; color:var(--text-secondary); margin:10px 16px; font-weight:700; text-transform:uppercase;">
+                    المخزن والكتب</div>
+                <a href="books.html" class="nav-item">
+                    <i class="fa-solid fa-book"></i> <span>إدارة الكتب</span>
+                </a>
+                <a href="suppliers.html" class="nav-item active">
+                    <i class="fa-solid fa-truck-field"></i> <span>الموردين</span>
+                </a>
+                <a href="purchase.html" class="nav-item">
+                    <i class="fa-solid fa-cart-flatbed-suitcases"></i> <span>المشتريات</span>
+                </a>
+                <a href="book-delivery.html" class="nav-item">
+                    <i class="fa-solid fa-hand-holding-hand"></i> <span>تسليم الكتب</span>
+                </a>
+                <div class="nav-divider" style="height:1px; background:var(--border-color); margin:10px 0;"></div>
+                <a href="index.html" class="nav-item logout-link">
+                    <i class="fa-solid fa-right-from-bracket"></i> <span>خروج</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-container">
+                <header class="top-bar">
+                    <h1 class="page-title">إدارة الموردين</h1>
+                    <div class="action-group">
+                        <button class="btn-neuro btn-primary"
+                            onclick="document.getElementById('supplier-modal').classList.add('active')">
+                            <i class="fa-solid fa-plus"></i> إضافة مورد
+                        </button>
+                    </div>
+                </header>
+
+                <div class="data-card">
+                    <div class="table-responsive">
+                        <table class="neuro-table">
+                            <thead>
+                                <tr>
+                                    <th>اسم المورد</th>
+                                    <th>رقم التواصل</th>
+                                    <th>البريد الإلكتروني</th>
+                                    <th>الرصيد المستحق</th>
+                                    <th>إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- JS Populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="supplier-modal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 class="modal-title">بيانات المورد الجديد</h2>
+                <button class="close-modal"
+                    onclick="this.closest('.modal-overlay').classList.remove('active')">&times;</button>
+            </div>
+            <form id="supplier-form">
+                <div class="form-group">
+                    <label>اسم الشركة / المورد</label>
+                    <input type="text" name="name" class="form-control" placeholder="مثلاً: دار المعارف" required>
+                </div>
+                <div class="form-group">
+                    <label>رقم التليفون</label>
+                    <input type="text" name="contact" class="form-control" placeholder="01xxxxxxxxx">
+                </div>
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" name="email" class="form-control" placeholder="info@supplier.com">
+                </div>
+                <div style="margin-top: 32px; display: flex; gap: 12px;">
+                    <button type="submit" class="btn-neuro btn-primary" style="flex:1;">حفظ المورد</button>
+                    <button type="button" class="btn-neuro btn-secondary"
+                        onclick="this.closest('.modal-overlay').classList.remove('active')"
+                        style="flex:1;">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        import { SupplierUI } from './js/inventory.js';
+        window.supplierUI = new SupplierUI();
+    </script>
+</body>
+
+</html>
+
+

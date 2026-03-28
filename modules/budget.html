@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 سجل الميزانية واليومية العام - EduMaster Pro</title>
+    <!-- Core System Styles -->
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Modern Design System for Budget Page */
+        :root {
+            --budget-green: #10b981;
+            --budget-red: #ef4444;
+            --cyan-accent: #00eaff;
+            --royal-accent: #ef4444;
+            /* Red for Royal theme */
+        }
+
+        .content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Unified Card Styles */
+        .financial-card,
+        .stat-box,
+        .accounting-table-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-soft);
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body.dark-mode .financial-card,
+        body.dark-mode .stat-box {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Entry Forms Styling */
+        .entry-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .card-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Responsive Form Inputs */
+        .budget-input {
+            background: var(--bg-input);
+            border: 1px solid var(--border-soft);
+            color: var(--text-main);
+            height: 52px;
+            border-radius: 12px;
+            padding: 0 18px;
+            width: 100%;
+            font-family: 'Tajawal', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .budget-input:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 4px rgba(0, 234, 255, 0.15);
+            outline: none;
+        }
+
+        body:not(.dark-mode) .budget-input {
+            background: #fff;
+            border-color: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .budget-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        /* Summary Stats Cards */
+        .summary-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .stat-box {
+            padding: 22px;
+            align-items: center;
+            display: flex;
+            gap: 18px;
+        }
+
+        .stat-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            background: rgba(0, 234, 255, 0.1);
+            color: var(--cyan-accent);
+        }
+
+        .stat-details h5 {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 900;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+
+        /* Dynamic Visibility Classes */
+        .profit-pos {
+            color: #020617 !important;
+        }
+
+        .profit-neg {
+            color: var(--budget-red) !important;
+        }
+
+        body.dark-mode .profit-pos {
+            color: var(--cyan-accent) !important;
+            text-shadow: 0 0 15px rgba(0, 234, 255, 0.3);
+        }
+
+        body.cloudy-mode .profit-pos {
+            color: #1e293b !important;
+        }
+
+        body:not(.dark-mode) .stat-value:not(.profit-neg) {
+            color: #1e293b;
+        }
+
+        /* Table Aesthetics */
+        .acc-table th {
+            background: var(--sidebar-bg);
+            color: #fff;
+            font-weight: 800;
+            padding: 20px 15px;
+            text-align: right;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .acc-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            color: var(--text-main);
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        body.dark-mode .acc-table td {
+            border-bottom-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .td-date {
+            font-family: 'Inter', sans-serif;
+            color: var(--cyan-accent) !important;
+        }
+
+        /* Modal Style */
+        .modal-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-soft);
+            border-radius: 20px;
+            width: 480px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            /* Ensure card doesn't exceed screen */
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 20000 !important;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(8px);
+            animation: modalFadeIn 0.3s ease-out forwards;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            }
+
+            to {
+                opacity: 1;
+                backdrop-filter: blur(8px);
+            }
+        }
+
+        .modal-overlay.active {
+            display: flex !important;
+        }
+    </style>
+</head>
+
+<body class="dark-mode">
+
+    <div class="wrapper">
+        <aside class="sidebar"></aside>
+
+        <main class="main-content">
+            <div class="content-container">
+
+                <header class="top-bar" style="margin-bottom: 25px;">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <h1 class="premium-heading">📊 ميزانية الفرع واليومية</h1>
+                        <div id="active-branch-badge"
+                            style="background: var(--cyan-accent); color:#000; padding:4px 12px; border-radius:30px; font-weight:800; font-size:0.8rem;">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 12px;">
+                        <button class="app-btn-primary" onclick="window.resetLedgerNumbers()"
+                            style="background: rgba(239, 68, 68, 0.1) !important; border:1px solid rgba(239, 68, 68, 0.2) !important; color: #ef4444 !important;">
+                            <i class="fa-solid fa-trash-can"></i> تصفير السجلات
+                        </button>
+                        <button class="app-btn-primary" type="button" onclick="window.openOBModal(event)"
+                            style="background: #1e293b !important; border:1px solid rgba(0,234,255,0.2) !important;">
+                            <i class="fa-solid fa-vault"></i> الرصيد الافتتاحي
+                        </button>
+                        <a href="../dashboard.html" class="app-btn-secondary">الرئيسية</a>
+                    </div>
+                </header>
+
+                <!-- Entry Forms Section -->
+                <div class="entry-grid">
+                    <!-- Income Card -->
+                    <div class="financial-card" style="border-right: 5px solid #10b981; padding: 25px;">
+                        <div class="card-header-flex">
+                            <span class="card-title" style="color: #10b981;">
+                                <i class="fa-solid fa-circle-plus"></i> تسجيل وارد جديد (+)
+                            </span>
+                            <button class="btn-modify-cats" onclick="window.manageCategories('income')"
+                                style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: none; padding: 6px 15px; border-radius: 8px; cursor: pointer; font-weight: 800;">
+                                <i class="fa-solid fa-sliders"></i> تعديل المواد
+                            </button>
+                        </div>
+                        <form id="form-income" onsubmit="window.saveTransaction(event, 'income')">
+                            <div id="in-branch-group" class="form-group" style="margin-bottom: 15px; display: none;">
+                                <label class="budget-label"
+                                    style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: #94a3b8;">إضافة
+                                    إلى فرع:</label>
+                                <select id="in-branch" class="budget-input"
+                                    style="width: 100%; border-color: var(--cyan-accent);"></select>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                <div class="form-group">
+                                    <label class="budget-label"
+                                        style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: #94a3b8;">المبلغ</label>
+                                    <input type="number" id="in-amount" class="budget-input" placeholder="0.00" required
+                                        step="0.01" style="width: 100%;">
+                                </div>
+                                <div class="form-group">
+                                    <label class="budget-label"
+                                        style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: #94a3b8;">البند</label>
+                                    <select id="in-cat" class="budget-input" required style="width: 100%;"></select>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                <div class="form-group">
+                                    <label class="budget-label"
+                                        style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: #94a3b8;">الطالب
+                                        (اختياري لربط الدفع بالحساب)</label>
+                                    <input list="students-list" id="in-student" class="budget-input"
+                                        placeholder="بحث عن اسم الطالب..." style="width: 100%;">
+                                    <datalist id="students-list"></datalist>
+                                </div>
+                                <div class="field-group">
+                                    <label class="budget-label"
+                                        style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: var(--cyan-accent); font-weight: 800;">رقم
+                                        الإيصال اليدوي</label>
+                                    <input type="text" id="in-receipt" class="budget-input" placeholder="مثلاً: 5040"
+                                        style="width: 100%; border-color: var(--cyan-accent); font-weight: 800;">
+                                </div>
+                            </div>
+
+                            <div
+                                style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px; margin-bottom: 20px;">
+                                <div class="form-group">
+                                    <label class="budget-label"
+                                        style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: #94a3b8;">البيان
+                                        / الوصف</label>
+                                    <input type="text" id="in-desc" class="budget-input"
+                                        placeholder="مثلاً: سداد قسط المصروفات" required style="width: 100%;">
+                                </div>
+                                <div class="form-group">
+                                    <label class="budget-label"
+                                        style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: #94a3b8;">طريقة
+                                        الدفع</label>
+                                    <select id="in-acc" class="budget-input" style="width: 100%;">
+                                        <option value="cash">نقدي</option>
+                                        <option value="bank">بنك</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-save-action btn-income"
+                                style="width: 100%; background: #10b981; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i class="fa-solid fa-check-double"></i> حفظ العملية في الميزانية
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Expense Card -->
+                    <div class="financial-card" style="border-right: 5px solid #ef4444; padding: 25px;">
+                        <div class="card-header-flex">
+                            <span class="card-title" style="color: #ef4444;">
+                                <i class="fa-solid fa-circle-minus"></i> تسجيل منصرف جديد (-)
+                            </span>
+                            <button class="btn-modify-cats" onclick="window.manageCategories('expense')"
+                                style="background: rgba(239, 68, 68, 0.1); color: #ef4444; border: none; padding: 6px 15px; border-radius: 8px; cursor: pointer; font-weight: 800;">
+                                <i class="fa-solid fa-sliders"></i> تعديل بنود المنصرفات
+                            </button>
+                        </div>
+                        <form id="form-expense" onsubmit="window.saveTransaction(event, 'expense')">
+                            <div id="ex-branch-group" class="form-group" style="margin-bottom: 15px; display: none;">
+                                <label class="budget-label"
+                                    style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: #94a3b8;">خصم
+                                    من فرع:</label>
+                                <select id="ex-branch" class="budget-input"
+                                    style="width: 100%; border-color: #ef4444;"></select>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                <div class="form-group">
+                                    <label class="budget-label"
+                                        style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: #94a3b8;">المبلغ</label>
+                                    <input type="number" id="ex-amount" class="budget-input" placeholder="0.00" required
+                                        step="0.01" style="width: 100%;">
+                                </div>
+                                <div class="form-group">
+                                    <label class="budget-label"
+                                        style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: #94a3b8;">البند</label>
+                                    <select id="ex-cat" class="budget-input" required style="width: 100%;"></select>
+                                </div>
+                            </div>
+                            <div
+                                style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 15px; margin-bottom: 20px;">
+                                <div class="form-group">
+                                    <label class="budget-label"
+                                        style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: #94a3b8;">البيان
+                                        / الوصف</label>
+                                    <input type="text" id="ex-desc" class="budget-input" placeholder="البيان / الوصف"
+                                        required style="width: 100%;">
+                                </div>
+                                <div class="form-group">
+                                    <label class="budget-label"
+                                        style="display: block; margin-bottom: 8px; font-size: 0.85rem; color: #94a3b8;">طريقة
+                                        الدفع</label>
+                                    <select id="ex-acc" class="budget-input" style="width: 100%;">
+                                        <option value="cash">نقدي</option>
+                                        <option value="bank">بنك</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-save-action btn-expense"
+                                style="width: 100%; background: #ef4444; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i class="fa-solid fa-check-double"></i> حفظ المنصرف في الميزانية
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Stats Strip -->
+                <div class="summary-strip">
+                    <div class="stat-box">
+                        <div class="stat-icon"><i class="fa-solid fa-vault"></i></div>
+                        <div class="stat-details">
+                            <h5>الرصيد الافتتاحي</h5>
+                            <p id="sum-opening" class="stat-value">0.00</p>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color:#10b981"><i
+                                class="fa-solid fa-arrow-trend-up"></i></div>
+                        <div class="stat-details">
+                            <h5>إجمالي الوارد (+)</h5>
+                            <p id="sum-income" class="stat-value" style="color: #10b981 !important;">0.00</p>
+                        </div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-icon" style="background: rgba(239, 68, 68, 0.1); color:#ef4444"><i
+                                class="fa-solid fa-arrow-trend-down"></i></div>
+                        <div class="stat-details">
+                            <h5>إجمالي المنصرف (-)</h5>
+                            <p id="sum-expense" class="stat-value" style="color: #ef4444 !important;">0.00</p>
+                        </div>
+                    </div>
+                    <div class="stat-box" id="net-card">
+                        <div class="stat-icon" style="background: rgba(0, 234, 255, 0.1); color:var(--cyan-accent)">
+                            <i class="fa-solid fa-scale-balanced"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h5>الرصيد الحالي</h5>
+                            <p id="sum-net" class="stat-value">0.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="financial-card"
+                    style="padding:15px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center;">
+                    <div style="display:flex; gap:15px; align-items:center;">
+                        <span style="color:var(--text-main); font-weight:700; font-size:0.9rem;">تاريخ اليوم:</span>
+                        <input type="date" id="view-date" class="budget-input" style="width:160px;"
+                            onchange="loadLedger()">
+                        <div
+                            style="background:rgba(0,0,0,0.05); padding:5px 12px; border-radius:8px; display:flex; gap:10px; font-size:0.8rem; color:var(--text-main);">
+                            <span><i class="fa-solid fa-sun" style="color:#f59e0b"></i> الشيفت: 10 ص</span>
+                            <i class="fa-solid fa-arrow-left" style="opacity:0.3; font-size:10px; margin-top:4px;"></i>
+                            <span>6 م <i class="fa-solid fa-moon" style="color:#4f46e5"></i></span>
+                        </div>
+                    </div>
+                    <button class="app-btn-primary" onclick="closeDay()"
+                        style="background:var(--budget-green) !important;">تحويل وإغلاق اليومية</button>
+                </div>
+
+                <div class="accounting-table-container">
+                    <table class="acc-table">
+                        <thead id="ledger-head">
+                            <tr>
+                                <th style="width: 50px;">#</th>
+                                <th style="width: 140px;">التوقيت</th>
+                                <th>البيان والوصف</th>
+                                <th style="width: 130px;">التصنيف</th>
+                                <th style="width: 120px;">وارد (+)</th>
+                                <th style="width: 120px;">منصرف (-)</th>
+                                <th style="width: 140px;">الرصيد التراكمي</th>
+                                <th style="width: 100px;">المسؤول</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ledger-body"></tbody>
+                    </table>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Category Manager Modal -->
+    <div class="modal-overlay" id="modal-cats">
+        <div class="modal-card">
+            <h3 style="color:#fff; margin-bottom:20px;" id="cat-modal-title">تعديل بنود القائمة</h3>
+            <div id="cat-list"
+                style="max-height:200px; overflow-y:auto; margin-bottom:20px; border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:10px;">
+            </div>
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <input type="text" id="new-cat-label" class="budget-input" placeholder="اسم البند الجديد">
+                <button class="app-btn-primary" onclick="addCategory()" style="flex-shrink:0;">إضافة</button>
+            </div>
+            <button class="app-btn-secondary" onclick="closeCatModal()" style="width:100%;">إغلاق</button>
+        </div>
+    </div>
+
+    <!-- OB Modal -->
+    <div class="modal-overlay" id="modal-ob">
+        <form class="modal-card" id="form-ob" onsubmit="window.saveOB(event)">
+            <h3 style="color:#fff; margin-bottom:20px;"><i class="fa-solid fa-vault"></i> ضبط الرصيد الافتتاحي</h3>
+            <div id="ob-branch-group" style="margin-bottom:15px; display: none;">
+                <label style="color:#94a3b8; display:block; margin-bottom:8px; font-size:14px;">الفرع المستهدف</label>
+                <select id="ob-branch" class="budget-input"></select>
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="color:#94a3b8; display:block; margin-bottom:8px; font-size:14px;">السنة والشهر</label>
+                <input type="month" id="ob-month" class="budget-input">
+            </div>
+            <div style="margin-bottom:20px;">
+                <label style="color:#94a3b8; display:block; margin-bottom:8px; font-size:14px;">المبلغ (ج.م)</label>
+                <input type="number" id="ob-amount" class="budget-input" step="0.01" placeholder="0.00">
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button type="submit" class="app-btn-primary" style="width:100%;">حفظ الرصيد</button>
+                <button type="button" class="app-btn-secondary" onclick="closeOBModal()"
+                    style="width:100%;">إلغاء</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="../js/core.js"></script>
+    <script src="../js/permissions.js"></script>
+    <script src="../js/accounting-core.js"></script>
+    <script src="../js/ui-core.js"></script>
+    <script src="../js/theme-toggle.js"></script>
+
+    <script>
+        // HOOK FUNCTIONS TO WINDOW IMMEDIATELY
+        window.saveTransaction = saveTransaction;
+        window.loadLedger = loadLedger;
+        let currentCatType = 'income';
+
+        // Initial Layout
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Budget Page Initializing...");
+
+            // --- CRITICAL DATA REPAIR (For New Devices) ---
+            try {
+                const branches = Storage.get('branches');
+                if (!branches || !Array.isArray(branches) || branches.length === 0) {
+                    console.warn("System Data Missing - Auto-Repairing...");
+                    if (window.initAppData) window.initAppData();
+                    Toast.show("تم تهيئة النظام بنجاح", "success");
+                }
+            } catch (e) { console.error("Auto-Repair Failed", e); }
+            // ----------------------------------------------
+
+            const today = new Date().toISOString().split('T')[0];
+            const dateEl = document.getElementById('view-date');
+            const obMonthEl = document.getElementById('ob-month');
+
+            if (dateEl) dateEl.value = today;
+            if (obMonthEl) obMonthEl.value = today.substring(0, 7);
+
+            // Safe branch name retrieval
+            let branchName = 'المركز الرئيسي';
+            try {
+                if (window.Permissions && typeof Permissions.getActiveBranchName === 'function') {
+                    branchName = Permissions.getActiveBranchName();
+                }
+            } catch (e) { console.warn("Branch retrieval failed", e); }
+
+            const badge = document.getElementById('active-branch-badge');
+            if (badge) badge.textContent = `الفرع النشط: ${branchName}`;
+
+            loadDynamicCategories();
+            loadStudentsDatalist();
+
+            // SYSTEM RECOVERY (The NUCLEAR Option - Pull from Journal)
+            try {
+                if (window.AccountingCore && typeof AccountingCore.syncFromJournal === 'function') {
+                    const recovered = AccountingCore.syncFromJournal();
+                    if (recovered > 0) {
+                        Toast.show(`تم استعادة ${recovered} عمليات مفقودة من الدفتر اليومي!`, 'success');
+                    }
+                }
+            } catch (e) { console.error("Recovery failed", e); }
+
+            // Initial Data Load
+            setTimeout(() => {
+                loadLedger();
+                initBranchSelectors();
+            }, 100);
+
+            // Handle URL params (e.g., student payment redirect)
+            const urlParams = new URLSearchParams(window.location.search);
+            const studentVal = urlParams.get('student');
+            if (studentVal) {
+                const studentInput = document.getElementById('in-student');
+                if (studentInput) {
+                    studentInput.value = decodeURIComponent(studentVal);
+                    // Open income tab/section if needed? No, it's visible.
+                    // Set category to student fees
+                    const catSelect = document.getElementById('in-cat');
+                    if (catSelect) catSelect.value = 'student_fees';
+
+                    Toast.show('تم جلب بيانات الطالب للدفع', 'info');
+                }
+            }
+        });
+
+        function initBranchSelectors() {
+            const activeBranchId = Permissions.getActiveBranchId();
+            if (activeBranchId) return; // Hidden by default
+
+            // SuperAdmin & All Branches view - Show selectors
+            const branches = Storage.get('branches') || [];
+            const ids = ['in-branch', 'ex-branch', 'ob-branch'];
+            const groups = ['in-branch-group', 'ex-branch-group', 'ob-branch-group'];
+
+            const options = branches.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
+
+            ids.forEach((id, idx) => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.innerHTML = options;
+                    const group = document.getElementById(groups[idx]);
+                    if (group) group.style.display = 'block';
+                }
+            });
+        }
+
+        function loadStudentsDatalist() {
+            const datalist = document.getElementById('students-list');
+            if (!datalist) return;
+            const students = Storage.get('students') || [];
+            datalist.innerHTML = students.map(s => `<option value="${s.id} | ${s.name}"></option>`).join('');
+        }
+
+        function loadDynamicCategories() {
+            try {
+                let incomeCats = Storage.get('cats_income');
+                let expenseCats = Storage.get('cats_expense');
+
+                // Auto-Initialize if empty or missing
+                if (!incomeCats || incomeCats.length === 0) {
+                    incomeCats = ['student_fees', 'books', 'other'];
+                    Storage.save('cats_income', incomeCats);
+                }
+                if (!expenseCats || expenseCats.length === 0) {
+                    expenseCats = ['salaries', 'rent', 'utilities', 'gas', 'other'];
+                    Storage.save('cats_expense', expenseCats);
+                }
+
+                const render = (id, list, placeholder) => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+
+                    let html = `<option value="" disabled selected>${placeholder}</option>`;
+                    if (Array.isArray(list)) {
+                        list.forEach(c => {
+                            let label = c;
+                            try {
+                                label = AccountingCore.getCategoryLabel(c);
+                            } catch (e) { console.error("Label fail", c); }
+                            html += `<option value="${c}">${label}</option>`;
+                        });
+                    }
+                    el.innerHTML = html;
+                };
+
+                render('in-cat', incomeCats, 'اختر البند...');
+                render('ex-cat', expenseCats, 'اختر البند...');
+            } catch (err) {
+                console.error("Critical Category Load Error:", err);
+            }
+        }
+
+        function manageCategories(type) {
+            currentCatType = type;
+            document.getElementById('cat-modal-title').textContent = type === 'income' ? 'تعديل بنود الوارد' : 'تعديل بنود المنصرف';
+            renderCatList();
+            document.getElementById('modal-cats').style.display = 'flex';
+        }
+
+        function renderCatList() {
+            const cats = Storage.get('cats_' + currentCatType) || (currentCatType === 'income' ? ['student_fees', 'books', 'other'] : ['salaries', 'rent', 'utilities', 'gas', 'other']);
+            const listEl = document.getElementById('cat-list');
+            listEl.innerHTML = cats.map(c => `
+                <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; border-bottom:1px solid rgba(255,255,255,0.03);">
+                    <span style="color:#fff; font-weight:700;">${AccountingCore.getCategoryLabel(c)}</span>
+                    <button onclick="removeCategory('${c}')" style="background:none; border:none; color:var(--budget-red); cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function addCategory() {
+            const label = document.getElementById('new-cat-label').value.trim();
+            if (!label) return;
+
+            const key = 'custom_' + Date.now();
+            const customLabels = Storage.get('accounting_categories') || {};
+            customLabels[key] = label;
+            Storage.save('accounting_categories', customLabels);
+
+            const cats = Storage.get('cats_' + currentCatType) || (currentCatType === 'income' ? ['student_fees', 'books', 'other'] : ['salaries', 'rent', 'utilities', 'gas', 'other']);
+            cats.push(key);
+            Storage.save('cats_' + currentCatType, cats);
+
+            document.getElementById('new-cat-label').value = '';
+            renderCatList();
+            loadDynamicCategories();
+            Toast.show('تمت إضافة البند بنجاح', 'success');
+        }
+
+        function removeCategory(id) {
+            Modal.confirm({
+                title: 'حذف تصنيف',
+                message: 'تأكيد حذف هذا البند من القائمة؟ سيؤثر هذا على إمكانية اختيار البند في العمليات القادمة.',
+                icon: 'fa-trash-can',
+                confirmText: 'حذف البند',
+                onConfirm: () => {
+                    let cats = Storage.get('cats_' + currentCatType);
+                    cats = cats.filter(c => c !== id);
+                    Storage.save('cats_' + currentCatType, cats);
+                    renderCatList();
+                    loadDynamicCategories();
+                }
+            });
+        }
+
+        function closeCatModal() { document.getElementById('modal-cats').style.display = 'none'; }
+
+        // Initialize ledger loading and other UI items
+        window.loadLedger = loadLedger;
+        window.deleteT = deleteT;
+        window.closeDay = closeDay;
+        window.manageCategories = manageCategories;
+        window.addCategory = addCategory;
+        window.closeCatModal = closeCatModal;
+
+        function saveTransaction(e, type) {
+            if (e) e.preventDefault();
+            const prefix = type === 'income' ? 'in' : 'ex';
+
+            const amountInput = document.getElementById(`${prefix}-amount`);
+            const catInput = document.getElementById(`${prefix}-cat`);
+            const descInput = document.getElementById(`${prefix}-desc`);
+            const accInput = document.getElementById(`${prefix}-acc`);
+
+            if (!amountInput.value || parseFloat(amountInput.value) <= 0) {
+                return Toast.show('يرجى إدخل مبلغ صحيح', 'error');
+            }
+            if (!catInput.value) {
+                return Toast.show('يرجى اختيار البند', 'error');
+            }
+
+            const activeBranchId = Permissions.getActiveBranchId();
+            const selectedBranchId = type === 'income'
+                ? (document.getElementById('in-branch')?.value || activeBranchId)
+                : (document.getElementById('ex-branch')?.value || activeBranchId);
+
+            if (!selectedBranchId && !activeBranchId) {
+                return Toast.show('يرجى اختيار الفرع أولاً', 'error');
+            }
+
+            const data = {
+                amount: parseFloat(amountInput.value),
+                category: catInput.value,
+                description: descInput.value,
+                account_type: accInput.value,
+                branch_id: parseInt(selectedBranchId || activeBranchId || 1),
+                receipt_no: type === 'income' ? document.getElementById('in-receipt').value : '',
+                date: document.getElementById('view-date').value,
+                employee_name: Permissions.getCurrentUser()?.name || 'النظام'
+            };
+
+            // Capture student data if provided (Format: ID | Name)
+            if (type === 'income') {
+                const studentInput = document.getElementById('in-student').value;
+                if (studentInput && studentInput.includes('|')) {
+                    const [sid, sname] = studentInput.split('|').map(x => x.trim());
+                    data.student_id = sid;
+                    data.student_name = sname;
+                } else if (studentInput) {
+                    data.student_name = studentInput;
+                }
+            }
+
+            console.log("Saving Transaction:", data);
+
+            try {
+                if (type === 'income') AccountingCore.recordIncome(data);
+                else AccountingCore.recordExpense(data);
+
+                Toast.show(`تم تسجيل ال${type === 'income' ? 'وارد' : 'منصرف'} بنجاح`, 'success');
+
+                // Clear form inputs
+                if (type === 'income') document.getElementById('form-income').reset();
+                else document.getElementById('form-expense').reset();
+
+                loadLedger();
+                loadDynamicCategories();
+                loadStudentsDatalist();
+            } catch (err) {
+                console.error("Save Error:", err);
+                Toast.show('فشل حفظ العملية: ' + err.message, 'error');
+            }
+        }
+
+        // --- OPENING BALANCE CORE LOGIC (Defensive) ---
+        window.openOBModal = function (e) {
+            console.log("[Senior Debug] Initiating OB Modal Open");
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            try {
+                // 1. Interaction Recovery (Anti-Freeze)
+                document.body.style.overflow = 'hidden';
+                document.body.style.pointerEvents = 'auto';
+
+                // 2. Cleanup stuck overlays
+                document.querySelectorAll('.modal-overlay.active').forEach(ov => {
+                    if (ov.id !== 'modal-ob') ov.classList.remove('active');
+                });
+
+                const modal = document.getElementById('modal-ob');
+                if (!modal) throw new Error("OB Modal element missing");
+
+                // 3. Populate Data
+                const branches = Storage.get('branches') || [];
+                const activeBranchId = Permissions.getActiveBranchId();
+                const modalBranch = document.getElementById('ob-branch');
+
+                if (modalBranch) {
+                    modalBranch.innerHTML = branches.map(b => {
+                        const isSelected = activeBranchId && (parseInt(activeBranchId) == parseInt(b.id));
+                        return `<option value="${b.id}" ${isSelected ? 'selected' : ''}>${b.name || 'فرع ' + b.id}</option>`;
+                    }).join('');
+
+                    const user = Permissions.getCurrentUser();
+                    const isSuperAdmin = user && user.role_id === 1;
+                    const showSelector = isSuperAdmin && !activeBranchId;
+
+                    const groupEl = document.getElementById('ob-branch-group');
+                    if (groupEl) groupEl.style.display = showSelector ? 'block' : 'none';
+                }
+
+                // 4. Reveal Modal Safely
+                modal.style.display = 'flex';
+                modal.classList.add('active');
+
+                console.log("[OB Modal] Displayed successfully");
+            } catch (err) {
+                console.error("[CRITICAL] OB Open Failure:", err);
+                // Last ditch effort to keep page responsive
+                document.body.style.overflow = '';
+                document.body.style.pointerEvents = 'auto';
+            }
+        };
+
+        window.closeOBModal = function () {
+            console.log("[OB Modal] Closing - DOM Sanitization");
+            try {
+                const modal = document.getElementById('modal-ob');
+                if (modal) {
+                    modal.style.display = 'none';
+                    modal.classList.remove('active');
+                }
+
+                // CRITICAL ANTI-FREEZE
+                document.body.style.overflow = '';
+                document.body.style.pointerEvents = 'auto';
+
+                // Remove any dynamically created backdrops if used by other scripts
+                document.querySelectorAll('.modal-backdrop, .modal-overlay-backdrop').forEach(el => el.remove());
+
+                console.log("[OB Modal] Closed & Page Unfrozen");
+            } catch (e) {
+                console.error("[OB Modal] Close Error:", e);
+                // Ensure page recovers even if logic fails
+                document.body.style.overflow = '';
+                document.body.style.pointerEvents = 'auto';
+            }
+        };
+
+        window.saveOB = function (e) {
+            if (e) e.preventDefault();
+            const monthStr = document.getElementById('ob-month').value;
+            const amountStr = document.getElementById('ob-amount').value;
+
+            if (!monthStr || !amountStr) return Toast.show('يرجى إكمال البيانات', 'error');
+
+            const [year, month] = monthStr.split('-');
+            const activeBranchId = Permissions.getActiveBranchId();
+            const selectedBranchId = document.getElementById('ob-branch')?.value || activeBranchId || 1;
+
+            console.log("[OB Modal] Saving:", { branchId: selectedBranchId, year, month, amount: amountStr });
+
+            try {
+                AccountingCore.setOpeningBalance(parseInt(selectedBranchId), year, month, 'cash', parseFloat(amountStr));
+                Toast.show('تم حفظ الرصيد الافتتاحي بنجاح', 'success');
+                window.closeOBModal();
+                if (window.loadLedger) window.loadLedger();
+                if (typeof updateStats === 'function') updateStats();
+            } catch (err) {
+                console.error("[OB Modal] Save Error:", err);
+                Toast.show('فشل حفظ الرصيد: ' + err.message, 'error');
+            }
+        };
+
+        // --- ENHANCED: Global Enter Key Support ---
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                // Find visible/active form and submit it
+                const openModal = document.querySelector('.modal-overlay[style*="display: flex"]');
+                if (openModal) {
+                    const form = openModal.querySelector('form');
+                    if (form) {
+                        e.preventDefault();
+                        form.requestSubmit();
+                        return;
+                    }
+                }
+
+                // If not in modal, check if typing in a main form
+                if (document.activeElement) {
+                    const parentForm = document.activeElement.closest('form');
+                    if (parentForm) {
+                        e.preventDefault();
+                        parentForm.requestSubmit();
+                    }
+                }
+            }
+        });
+
+        function loadLedger() {
+            const date = document.getElementById('view-date').value;
+            if (!date) return;
+
+            const parts = date.split('-');
+            const yearStr = parts[0];
+            const monthStr = parts[1];
+
+            const activeBranchId = Permissions.getActiveBranchId();
+
+            // 1. FETCH ROBUST UNIFIED STATS FIRST
+            const pl = AccountingCore.generateProfitLoss(activeBranchId, yearStr, monthStr);
+            const OB = pl.summary.totalOpening;
+
+            // 2. Get Transactions - Chronological for this period
+            const startDate = `${yearStr}-${monthStr}-01`;
+            const lastDay = new Date(parseInt(yearStr), parseInt(monthStr), 0).getDate();
+            const endDate = `${yearStr}-${monthStr}-${String(lastDay).padStart(2, '0')}`;
+
+            let transactions = AccountingCore.getTransactions({
+                startDate: startDate,
+                endDate: endDate,
+                branchId: activeBranchId,
+                accountType: 'cash',
+                reverse: false
+            });
+
+            let html = `
+                <tr class="opening-row">
+                    <td>-</td>
+                    <td class="td-date">-</td>
+                    <td style="font-size: 1.1rem; font-weight: 900;">رصيد افتتاح الفرع المحول (${monthStr}/${yearStr})</td>
+                    <td style="color: #94a3b8; font-weight: 700;">رصيد</td>
+                    <td><span class="badge-tag" style="background: rgba(0, 234, 255, 0.1); color: var(--cyan-accent); font-size: 1.1rem;">${Formatter.formatCurrency(OB)}</span></td>
+                    <td>0</td>
+                    <td class="val-balance" style="font-size: 1.25rem;">${Formatter.formatCurrency(OB)}</td>
+                    <td style="color: #94a3b8; font-weight: 600;">System</td>
+                </tr>
+            `;
+
+            let running = parseFloat(OB) || 0;
+            let sumIn = 0, sumEx = 0;
+
+            transactions.forEach((t, i) => {
+                const amount = parseFloat(t.amount) || 0;
+                if (t.type === 'income') { sumIn += amount; running += amount; }
+                else { sumEx += amount; running -= amount; }
+
+                const hh = t.created_at ? new Date(t.created_at).getHours() : 12;
+                const isOffShift = hh < 10 || hh >= 18;
+
+                html += `
+                    <tr style="${isOffShift ? 'background: rgba(245, 158, 11, 0.02);' : ''}">
+                        <td style="color: #64748b; font-weight: 800;">${i + 1}</td>
+                        <td class="td-date">
+                            <div style="font-weight: 900; color: #fff;">${t.created_at ? new Date(t.created_at).toLocaleTimeString('ar-EG-latn', { hour: '2-digit', minute: '2-digit' }) : t.date}</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">${t.date}</div>
+                            ${isOffShift ? '<div style="color:#f59e0b; font-size: 0.7rem; font-weight: 800;">⚠️ خارج الشيفت</div>' : ''}
+                        </td>
+                        <td>
+                            <div style="font-weight:800; color: #fff; font-size: 1.1rem; margin-bottom: 3px;">${t.description}</div>
+                            ${t.student_name ? `<div style="color:var(--cyan-accent); font-weight: 700; font-size: 0.9rem;"><i class="fa-solid fa-graduation-cap" style="margin-left: 5px;"></i>طالب: ${t.student_name}</div>` : ''}
+                        </td>
+                        <td style="font-weight: 700; color: #94a3b8;">${AccountingCore.getCategoryLabel(t.category)}</td>
+                        <td>${t.type === 'income' ? `<span class="badge-tag badge-income" style="font-size: 1.1rem;">${Formatter.formatCurrency(amount)}</span>` : '-'}</td>
+                        <td>${t.type === 'expense' ? `<span class="badge-tag badge-expense" style="font-size: 1.1rem;">${Formatter.formatCurrency(amount)}</span>` : '-'}</td>
+                        <td class="val-balance" style="font-size: 1.2rem;">${Formatter.formatCurrency(running)}</td>
+                        <td style="font-size:0.9rem; color:#94a3b8; font-weight: 600;">${t.employee_name || 'System'}</td>
+                    </tr>
+                `;
+            });
+
+            const ledgerBody = document.getElementById('ledger-body');
+            if (ledgerBody) ledgerBody.innerHTML = html;
+
+            // USE THE ALREADY FETCHED 'pl' DATA FOR THE SUMMARY BOXES
+            document.getElementById('sum-opening').textContent = Formatter.formatCurrency(pl.summary.totalOpening) + ' ج.م';
+            document.getElementById('sum-income').textContent = Formatter.formatCurrency(pl.summary.totalRevenue) + ' ج.م';
+            document.getElementById('sum-expense').textContent = Formatter.formatCurrency(pl.summary.totalExpense) + ' ج.م';
+
+            const netVal = document.getElementById('sum-net');
+            netVal.textContent = Formatter.formatCurrency(pl.summary.currentBalance) + ' ج.م';
+            netVal.style.color = ''; // Clear inline
+
+            if (pl.summary.currentBalance >= 0) {
+                netVal.classList.add('profit-pos');
+                netVal.classList.remove('profit-neg');
+            } else {
+                netVal.classList.add('profit-neg');
+                netVal.classList.remove('profit-pos');
+            }
+
+            if (window.Permissions) Permissions.applyUIPermissions();
+        }
+
+        function deleteT(id) {
+            Modal.confirm({
+                title: 'تأكيد الحذف',
+                message: 'هل أنت متأكد من رغبتك في حذف هذه المعاملة؟ لا يمكن التراجع عن هذا الإجراء.',
+                icon: 'fa-trash-can',
+                confirmText: 'حذف الآن',
+                onConfirm: () => {
+                    AccountingCore.deleteTransaction(id);
+                    loadLedger();
+                }
+            });
+        }
+
+        function closeDay() {
+            const date = document.getElementById('view-date').value;
+            Modal.confirm({
+                title: 'إغلاق اليومية',
+                message: `هل تود إغلاق يومية ${date} وتحويل الرصيد المتبقي للشيفت القادم؟`,
+                icon: 'fa-lock',
+                confirmText: 'إغلاق وتحويل',
+                onConfirm: () => {
+                    Toast.show('تم إغلاق اليومية بنجاح بنظام الشيفت المعتمد', 'success');
+                }
+            });
+        }
+
+        // --- Aggressive Reset Function ---
+        window.resetLedgerNumbers = () => {
+            Modal.confirm({
+                title: 'تصفير شامل للسجلات',
+                message: '⚠️ تحذير نهائي: هل أنت متأكد من رغبتك في حذف كافة السجلات والقيود والبدء من جديد؟ سيتم تصفير كافة الحسابات والأرصدة.',
+                icon: 'fa-triangle-exclamation',
+                confirmText: 'تصفير شامل',
+                cancelText: 'تراجع',
+                onConfirm: () => {
+                    try {
+                        AccountingCore.resetFinancials();
+                        Storage.save('journal_entries', []);
+                        Storage.save('transactions', []);
+                        Storage.save('opening_balances', {});
+                        Storage.save('invoices', []);
+                        Toast.show('تم تصفير كافة السجلات بنجاح', 'success');
+                        setTimeout(() => {
+                            window.location.href = window.location.pathname + '?reset=' + Date.now();
+                        }, 500);
+                    } catch (err) {
+                        alert('خطأ أثناء التصفير: ' + err.message);
+                    }
+                }
+            });
+        };
+
+        // --- Global Hookup (Crucial for HTML Event Handlers) ---
+        window.saveTransaction = saveTransaction;
+        window.loadLedger = loadLedger;
+        window.deleteT = deleteT;
+        window.closeDay = closeDay;
+        window.manageCategories = manageCategories;
+        window.addCategory = addCategory;
+        window.closeCatModal = closeCatModal;
+        window.removeCategory = removeCategory;
+    </script>
+</body>
+
+</html>
+
+

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مواصفات نظام Neuro-Clinic - EduMaster Pro</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&family=Inter:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a192f;
+            --bg-surface: #112240;
+            --accent-primary: #00eaff;
+            --accent-glow: #00eaff;
+            --text-primary: #ffffff;
+            --text-secondary: #a8b2d1;
+            --glass-border: rgba(0, 234, 255, 0.2);
+            --neon-shadow: 0 0 20px rgba(0, 234, 255, 0.3);
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-primary);
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .doc-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px;
+            background: radial-gradient(circle at 10% 10%, rgba(0, 234, 255, 0.03) 0%, transparent 40%);
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid var(--accent-primary);
+            padding-bottom: 40px;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 4px;
+            background: var(--accent-primary);
+            box-shadow: 0 0 15px var(--accent-primary);
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(0, 234, 255, 0.4);
+        }
+
+        .header p {
+            color: var(--accent-primary);
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            background: rgba(17, 34, 64, 0.5);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            color: var(--accent-primary);
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-right: 5px solid var(--accent-primary);
+            padding-right: 15px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .feature-item {
+            background: rgba(10, 25, 47, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .feature-item h3 {
+            color: var(--accent-primary);
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+
+        .color-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .color-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+
+        .prompt-box {
+            background: #000;
+            color: #00ff00;
+            padding: 25px;
+            border-radius: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            border-right: 4px solid var(--accent-primary);
+            white-space: pre-wrap;
+            direction: ltr;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 80px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .section {
+                page-break-inside: avoid;
+                border: 1px solid #ddd;
+                background: none;
+            }
+
+            .prompt-box {
+                background: #eee;
+                color: #333;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="doc-container">
+        <div class="header">
+            <h1>NEURO-CLINIC SYSTEM</h1>
+            <p>EduMaster Pro - Enterprise Educational SaaS Spec v2.0</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">الهوية البصرية (Visual Identity)</div>
+            <p>يعتمد النظام على لغة تصميم مستوحاة من عوالم "Cyberpunk" و التكنولوجيا المستقبلية، مع التركيز على العمق
+                والوضوح.</p>
+            <div class="grid">
+                <div class="feature-item">
+                    <div class="color-box">
+                        <div class="color-circle" style="background: #0a192f;"></div>
+                        <strong>Deep Navy (#0a192f)</strong>
+                    </div>
+                    <p>اللون الأساسي للخلفيات العميقة.</p>
+                </div>
+                <div class="feature-item">
+                    <div class="color-box">
+                        <div class="color-circle" style="background: #00eaff; box-shadow: 0 0 10px #00eaff;"></div>
+                        <strong>Electric Cyan (#00eaff)</strong>
+                    </div>
+                    <p>لون العناصر التفاعلية والتحسينات الليزرية.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">المميزات والخصائص (System Features)</div>
+            <div class="grid">
+                <div class="feature-item">
+                    <h3>لوحة القيادة الذكية (Smart Dashboard)</h3>
+                    <p>عرض حي للإحصائيات مع تأثيرات توهج ديناميكية وربط حقيقي مع البيانات.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>نظام RBAC المتطور</h3>
+                    <p>إدارة دقيقة للصلاحيات والأدوار الوظيفية مع سجل رقابة (Audit Trail) كامل.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>الإدارة المالية (Finance Hub)</h3>
+                    <p>تقارير مالية مفصلة، تتبع المدفوعات، وإدارة ميزانيات الفروع.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>نظام البحث العالمي</h3>
+                    <p>محرك بحث فوري يغطي الطلاب، المعلمين، والدورات في واجهة واحدة.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">المكونات البرمجية (Core Components)</div>
+            <ul>
+                <li><strong>الخلفية الليزرية:</strong> تدرجات دائرية ثابتة تمنح المستخدم إحساساً بالعمق الفضائي.</li>
+                <li><strong>الأزرار (Laser Buttons):</strong> رسوم متحركة (Laser-flicker) تحاكي وميض الليزر عند التفاعل.
+                </li>
+                <li><strong>البطاقات (Cyber-Cards):</strong> تأثير الزجاج (Glassmorphism) مع حدود متوهجة عند التمرير.
+                </li>
+                <li><strong>الجداول (Neuro-Table):</strong> تصميم انسيابي يحرك الصفوف للأعلى عند التفاعل (Floating
+                    Effect).</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <div class="section-title">البرومبت الاحترافي (Master System Prompt)</div>
+            <p style="font-size: 0.9rem; margin-bottom: 20px; color: var(--text-secondary);">استخدم هذا النص مع أي ذكاء
+                اصطناعي للحفاظ على نفس فلسفة التصميم في التطوير المستقبلي:</p>
+            <div class="prompt-box">
+                [System Architecture Prompt: Neuro-Clinic Edition]
+                Theme: Futuristic Cyber-Tech SaaS Dashboard.
+                Backpack Colors: Deep Navy (#0a192f), Surface Blue (#112240).
+                Accent Color: Electric Cyan (#00eaff) with high-intensity glow styles.
+                Styling Rules:
+                - All cards must use 'backdrop-filter: blur(20px)' and 'border: 1px solid rgba(0, 234, 255, 0.2)'.
+                - Interaction: Every interactive element must scale up slightly and increase glow intensity on hover.
+                - Typography: Use 'Tajawal' for Arabic and 'Inter' for UI labels.
+                - Buttons: Apply 'animation: laser-flicker 0.2s infinite' for primary actions.
+                - Layout: Use a fixed right-side sidebar (RTL) and 260px width.
+                - Logic: Data must be persisted via a unified Storage layer and UI updated using modular render
+                functions.
+            </div>
+        </div>
+
+        <div class="footer">
+            &copy; 2026 EduMaster Pro - Neuro Clinic Edition. جميع الحقوق محفوظة.
+        </div>
+    </div>
+</body>
+
+</html>
+
+

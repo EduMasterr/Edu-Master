@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS CRM - تسجيل عميل جديد</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../styles/edumaster-ui.css">
+
+    <style>
+        /* --- 1. SaaS Light Enterprise Theme --- */
+        :root {
+            --saas-bg: #F5F7FA;
+            --saas-card-bg: #FFFFFF;
+            --saas-primary: #2563EB;
+            --saas-primary-hover: #1d4ed8;
+            --saas-success: #16A34A;
+            --saas-danger: #DC2626;
+            --saas-text-main: #1E293B;
+            --saas-text-sec: #64748B;
+            --saas-border: #E2E8F0;
+            --saas-focus-ring: rgba(37, 99, 235, 0.2);
+            --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        body {
+            background-color: var(--saas-bg);
+            color: var(--saas-text-main);
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* --- 2. Layout Structure --- */
+        .saas-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        .saas-sidebar {
+            width: 260px;
+            background: #FFFFFF;
+            border-left: 1px solid var(--saas-border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            right: 0;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Main Content Area */
+        .saas-main {
+            flex: 1;
+            margin-right: 260px;
+            /* Sidebar width */
+            padding: 40px;
+            width: calc(100% - 260px);
+        }
+
+        .form-container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* --- 3. Card & Form Design --- */
+        .saas-card {
+            background: var(--saas-card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            /* Soft shadow */
+            border: 1px solid var(--saas-border);
+            padding: 32px;
+        }
+
+        .saas-header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .saas-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--saas-text-main);
+            margin: 0;
+        }
+
+        .saas-subtitle {
+            color: var(--saas-text-sec);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Grid System */
+        .saas-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .saas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .saas-main {
+                margin-right: 0;
+                padding: 20px;
+            }
+
+            .saas-sidebar {
+                display: none;
+                /* Collapsible logic can be added via JS */
+            }
+        }
+
+        /* --- 4. Form Fields --- */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+        }
+
+        .saas-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--saas-text-main);
+        }
+
+        .saas-label .required {
+            color: var(--saas-danger);
+            margin-right: 4px;
+        }
+
+        .saas-input {
+            height: 44px;
+            padding: 0 16px;
+            border: 1px solid var(--saas-border);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            color: var(--saas-text-main);
+            transition: var(--transition-smooth);
+            background: #fff;
+            width: 100%;
+        }
+
+        .saas-input:focus {
+            border-color: var(--saas-primary);
+            box-shadow: 0 0 0 3px var(--saas-focus-ring);
+            outline: none;
+        }
+
+        .saas-input.error {
+            border-color: var(--saas-danger);
+        }
+
+        .error-msg {
+            font-size: 12px;
+            color: var(--saas-danger);
+            display: none;
+            margin-top: 4px;
+        }
+
+        .saas-input.error+.error-msg {
+            display: block;
+        }
+
+        /* --- 5. Action Buttons --- */
+        .form-actions {
+            margin-top: 40px;
+            padding-top: 24px;
+            border-top: 1px solid var(--saas-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+        }
+
+        .btn-saas {
+            height: 44px;
+            padding: 0 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-family: inherit;
+        }
+
+        .btn-primary-saas {
+            background-color: var(--saas-primary);
+            color: #fff;
+            border: none;
+        }
+
+        .btn-primary-saas:hover {
+            background-color: var(--saas-primary-hover);
+        }
+
+        .btn-secondary-saas {
+            background-color: transparent;
+            color: var(--saas-text-sec);
+            border: 1px solid var(--saas-border);
+        }
+
+        .btn-secondary-saas:hover {
+            background-color: #f8fafc;
+            color: var(--saas-text-main);
+            border-color: #cbd5e1;
+        }
+
+        /* Loading State */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        .btn-loading .spinner {
+            display: block;
+        }
+
+        .btn-loading span {
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* --- 6. Toast Notification --- */
+        .saas-toast {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            /* RTL opposite side */
+            background: #fff;
+            padding: 16px 24px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-right: 4px solid var(--saas-success);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 2000;
+        }
+
+        .saas-toast.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .saas-toast i {
+            color: var(--saas-success);
+            font-size: 20px;
+        }
+
+        /* --- 7. Status Badges --- */
+        .status-badge-outline {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(37, 99, 235, 0.05);
+            /* very light blue */
+            color: var(--saas-primary);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="saas-layout">
+        <!-- Sidebar -->
+        <aside class="saas-sidebar">
+            <div style="padding: 24px; border-bottom: 1px solid var(--saas-border);">
+                <h2 style="margin: 0; font-size: 20px; color: var(--saas-primary);">SaaS CRM</h2>
+            </div>
+            <!-- Injected Nav Items -->
+            <div class="nav-menu" style="padding: 20px;">
+                <!-- Reusing existing logic or static for this demo -->
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="saas-main">
+            <div class="form-container">
+
+                <!-- Breadcrumb -->
+                <div
+                    style="margin-bottom: 20px; display: flex; align-items: center; gap: 8px; color: var(--saas-text-sec); font-size: 14px;">
+                    <span>الرئيسية</span>
+                    <i class="fa-solid fa-chevron-left" style="font-size: 10px;"></i>
+                    <span>العملاء</span>
+                    <i class="fa-solid fa-chevron-left" style="font-size: 10px;"></i>
+                    <span style="color: var(--saas-text-main); font-weight: 600;">تسجيل عميل جديد</span>
+                </div>
+
+                <div class="saas-card">
+                    <div class="saas-header">
+                        <div>
+                            <h1 class="saas-title">بيانات العميل الجديد</h1>
+                            <p class="saas-subtitle">قم بملء البيانات الأساسية للعميل لفتح ملف جديد بالنظام.</p>
+                        </div>
+                        <span class="status-badge-outline">
+                            <i class="fa-solid fa-circle-info" style="margin-left: 6px;"></i> ملف جديد
+                        </span>
+                    </div>
+
+                    <form id="new-client-form">
+                        <!-- Section 1: Basic Info -->
+                        <div class="saas-grid">
+                            <div class="form-group">
+                                <label class="saas-label">الاسم الكامل <span class="required">*</span></label>
+                                <input type="text" class="saas-input" placeholder="أدخل اسم العميل..." required>
+                                <span class="error-msg">يرجى إدخال الاسم بشكل صحيح</span>
+                            </div>
+                            <div class="form-group">
+                                <label class="saas-label">رقم الهاتف <span class="required">*</span></label>
+                                <input type="tel" class="saas-input" placeholder="01xxxxxxxxx" required>
+                            </div>
+                        </div>
+
+                        <!-- Spacer -->
+                        <div style="height: 24px;"></div>
+
+                        <!-- Section 2: Contact & Company -->
+                        <div class="saas-grid">
+                            <div class="form-group">
+                                <label class="saas-label">البريد الإلكتروني</label>
+                                <input type="email" class="saas-input" placeholder="example@domain.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="saas-label">اسم الشركة / المؤسسة</label>
+                                <input type="text" class="saas-input" placeholder="اختياري">
+                            </div>
+                        </div>
+
+                        <!-- Spacer -->
+                        <div style="height: 24px;"></div>
+
+                        <!-- Section 3: Classification -->
+                        <div class="saas-grid">
+                            <div class="form-group">
+                                <label class="saas-label">مصدر العميل</label>
+                                <select class="saas-input" style="appearance: none;">
+                                    <option>حملة فيسبوك</option>
+                                    <option>إحالة من صديق</option>
+                                    <option>بحث جوجل</option>
+                                    <option>أخرى</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down"
+                                    style="position: absolute; left: 15px; top: 38px; color: var(--saas-text-sec); font-size: 12px; pointer-events: none;"></i>
+                            </div>
+                            <div class="form-group">
+                                <label class="saas-label">الحالة المتوقعة</label>
+                                <select class="saas-input" style="appearance: none;">
+                                    <option>مهتم جداً (Hot Lead)</option>
+                                    <option>مهتم (Warm Lead)</option>
+                                    <option>بارد (Cold Lead)</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down"
+                                    style="position: absolute; left: 15px; top: 38px; color: var(--saas-text-sec); font-size: 12px; pointer-events: none;"></i>
+                            </div>
+                        </div>
+
+                        <!-- Section 4: Notes -->
+                        <div class="form-group" style="margin-top: 24px;">
+                            <label class="saas-label">ملاحظات إضافية</label>
+                            <textarea class="saas-input" style="height: 100px; padding-top: 10px;"
+                                placeholder="اكتب أي ملاحظات هنا..."></textarea>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="form-actions">
+                            <button type="button" class="btn-saas btn-secondary-saas">إلغاء</button>
+                            <button type="submit" class="btn-saas btn-primary-saas" id="save-btn">
+                                <span><i class="fa-solid fa-check"></i> حفظ بيانات العميل</span>
+                                <div class="spinner"></div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast -->
+    <div class="saas-toast" id="success-toast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>تم حفظ العميل بنجاح</span>
+    </div>
+
+    <!-- Logic -->
+    <script src="../js/core.js"></script> <!-- Reusing core just in case -->
+    <script src="../js/ui-core.js"></script>
+    <!-- Reusing UI core sidebar injection logic if needed, but we built custom sidebar here mostly -->
+    <script>
+        // Inject Sidebar content if UI Core exists, otherwise simple static
+        // Simulate Form Submission
+        document.getElementById('new-client-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('save-btn');
+
+            // Prevent multiple clicks
+            if (btn.classList.contains('btn-loading')) return;
+
+            // Start Loading
+            btn.classList.add('btn-loading');
+
+            // Simulate API Call
+            setTimeout(() => {
+                btn.classList.remove('btn-loading');
+
+                // Show Success Toast
+                const toast = document.getElementById('success-toast');
+                toast.classList.add('active');
+
+                setTimeout(() => {
+                    toast.classList.remove('active');
+                }, 3000);
+
+                // Reset Form
+                this.reset();
+
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
+
+
