@@ -109,35 +109,40 @@ window.Cloud = {
         const branchStr = branchId || 'all_scans';
         const targetPath = 'edumaster/all_scans';
         const scansRef = db.ref(targetPath).limitToLast(5); 
+        const startTime = Date.now(); // 🕒 Capture exactly when we tuned in
 
         const lid = listenerId || window.location.pathname.split('/').pop() || 'live_sync';
-        console.log(`📡 [Cloud] Tuning into: ${targetPath} | Key: ${lid}`);
+        console.log(`📡 [Cloud] Tuning into: ${targetPath} | Start: ${startTime}`);
 
-        // Track seen fingerprints to prevent double-processing within the same listener instance
         const seenFingerprints = new Set();
 
         scansRef.on('child_added', (snapshot) => {
             const data = snapshot.val();
             if (!data || !data.id) return;
 
-            // 🔍 v9.1: Branch Filter (Since we now use a single-source channel)
-            if (branchId && branchId !== 'all' && data.branchId && data.branchId !== branchId) {
-                return; // Not for this branch
+            // 🛑 v9.2: GHOST SCAN PREVENTION 
+            // Firebase .on('child_added') triggers for existing items in the limit.
+            // We ignore any scan that was created BEFORE we opened this page.
+            const serverTs = data.serverTimestamp || data.timestamp || 0;
+            const msgTs = typeof serverTs === 'string' ? new Date(serverTs).getTime() : serverTs;
+            
+            if (msgTs < (startTime - 2000)) { // Allow 2s margin for server delay
+                 console.log(`⏭️ [${lid}] Skipping historical scan:`, data.name || data.id);
+                 return;
             }
 
-            // 🛑 v9.1: Fingerprint Deduplication (Protect against race conditions)
-            const fingerprint = data.fingerprint || `${data.id}_${data.serverTimestamp || data.timestamp}`;
+            // 🔍 v9.1: Branch Filter... (keeps rest of logic)
+            if (branchId && branchId !== 'all' && data.branchId && data.branchId !== branchId) {
+                return;
+            }
+
+            const fingerprint = data.fingerprint || `${data.id}_${serverTs}`;
             if (seenFingerprints.has(fingerprint)) return;
             seenFingerprints.add(fingerprint);
             
-            // Keep memory low
             if (seenFingerprints.size > 20) seenFingerprints.delete(Array.from(seenFingerprints)[0]);
 
             const now = Date.now();
-            const serverTs = data.serverTimestamp || data.timestamp || 0;
-            const msgTs = typeof serverTs === 'string' ? new Date(serverTs).getTime() : serverTs;
-
-            // v9.0: 300s window
             if (Math.abs(now - msgTs) > 300000) return;
 
             console.log(`📡 [${lid}] Live Signal:`, data.name || data.id);
