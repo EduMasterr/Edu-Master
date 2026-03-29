@@ -80,13 +80,19 @@ class AttendanceConsole {
                     
                     // 🚨 VULNERABILITY FIX: Strict Token Validation
                     if (scanData.method === 'MOBILE_SCAN' && this.activeQRTokens && this.activeQRTokens.size > 0) {
-                        // Only block if a token was provided but it's not in our recent history (indicates a reused photo)
-                        if (scanData.qrToken && !this.activeQRTokens.has(scanData.qrToken)) {
-                            console.error(`🛡️ Security Block: Received expired or fake QR token from ${scanData.name}`);
+                        // Extract the raw random part if it's a full SEC token (format: SEC:branch:ts:random)
+                        const scannedToken = scanData.qrToken && scanData.qrToken.includes(':') 
+                             ? scanData.qrToken.split(':')[3] 
+                             : (scanData.qrToken || '');
+
+                        // Only block if a token was provided but it's not in our recent history
+                        if (scannedToken && !this.activeQRTokens.has(scannedToken)) {
+                            console.error(`🛡️ Security Block: Received expired or fake QR token [${scannedToken}] from ${scanData.name}. Active size: ${this.activeQRTokens.size}`);
                             this.addLog(scanData.name || "مجهول", "تم رفض الصورة/الكود المنسوخ (منتهي الصلاحية)", "error");
                             this.playSound('error');
-                            return; // STOP EXECUTION!
+                            return; // ❌ STOP EXECUTION!
                         }
+                        console.log(`✅ Security: QR Token [${scannedToken}] validated against active history.`);
                     }
 
                     // Deduplicate within the same tab/session
@@ -953,8 +959,8 @@ class AttendanceConsole {
             }
         });
 
-        // 🕒 v7.6: Time Filtering (Only show items from last 1 minute)
-        const EXPIRY_MINUTES = 1;
+        // 🕒 v9.0: Time Filtering (Only show items from last 30 minutes)
+        const EXPIRY_MINUTES = 30;
         const now = new Date();
 
         // ✅ Always clear to support branch switching & expiry

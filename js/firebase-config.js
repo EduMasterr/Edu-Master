@@ -119,9 +119,10 @@ window.Cloud = {
             const serverTs = data.serverTimestamp || data.timestamp || 0;
             const msgTs = typeof serverTs === 'string' ? new Date(serverTs).getTime() : serverTs;
 
-            // ⚡ LIVE ONLY FILTER (Expert Security v8.0)
-            // Only process scans from the last 10 seconds (Prevents photo sharing tricks)
-            if (Math.abs(now - msgTs) > 10000) {
+            // ⚡ LIVE ONLY FILTER (Expert Security v9.0)
+            // Only process scans from the last 300 seconds (5 minutes)
+            // This allows for network latency while still preventing day-old photo reuse.
+            if (Math.abs(now - msgTs) > 300000) {
                 console.warn(`🛡️ Security: Blocked old signal (Likely Photo) - Age: ${Math.round((now - msgTs)/1000)}s`);
                 return; // Too old
             }
