@@ -35,13 +35,15 @@ window.Cloud = {
         if (!window.firebase) return;
         const db = firebase.database();
         const timestamp = firebase.database.ServerValue.TIMESTAMP;
+        const payload = { 
+            ...scanData, 
+            serverTimestamp: timestamp, 
+            branchId,
+            fingerprint: `${scanData.id}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`
+        };
         
-        const payload = { ...scanData, serverTimestamp: timestamp, branchId };
-        
-        // 1. Push to Branch Specific node
-        db.ref(`edumaster/scans/${branchId}`).push().set(payload);
-        
-        // 2. Mirror to Universal node (v7.1 - For easier PC monitoring)
+        // v9.1: Single-source strategy. Mirroring caused double-triggering (In/Out same second).
+        // Listeners should now only tune into 'all_scans' or filter by branchId in their callback.
         return db.ref(`edumaster/all_scans`).push().set(payload);
     },
 
@@ -105,27 +107,38 @@ window.Cloud = {
         if (!window.firebase) return;
         const db = firebase.database();
         const branchStr = branchId || 'all_scans';
-        const targetPath = (branchId === 'all' || !branchId) ? 'edumaster/all_scans' : `edumaster/scans/${branchId}`;
-        const scansRef = db.ref(targetPath).limitToLast(5); // Increased sweep to 5 records for reliability
+        const targetPath = 'edumaster/all_scans';
+        const scansRef = db.ref(targetPath).limitToLast(5); 
 
         const lid = listenerId || window.location.pathname.split('/').pop() || 'live_sync';
         console.log(`📡 [Cloud] Tuning into: ${targetPath} | Key: ${lid}`);
 
+        // Track seen fingerprints to prevent double-processing within the same listener instance
+        const seenFingerprints = new Set();
+
         scansRef.on('child_added', (snapshot) => {
             const data = snapshot.val();
-            if (!data) return;
+            if (!data || !data.id) return;
+
+            // 🔍 v9.1: Branch Filter (Since we now use a single-source channel)
+            if (branchId && branchId !== 'all' && data.branchId && data.branchId !== branchId) {
+                return; // Not for this branch
+            }
+
+            // 🛑 v9.1: Fingerprint Deduplication (Protect against race conditions)
+            const fingerprint = data.fingerprint || `${data.id}_${data.serverTimestamp || data.timestamp}`;
+            if (seenFingerprints.has(fingerprint)) return;
+            seenFingerprints.add(fingerprint);
+            
+            // Keep memory low
+            if (seenFingerprints.size > 20) seenFingerprints.delete(Array.from(seenFingerprints)[0]);
 
             const now = Date.now();
             const serverTs = data.serverTimestamp || data.timestamp || 0;
             const msgTs = typeof serverTs === 'string' ? new Date(serverTs).getTime() : serverTs;
 
-            // ⚡ LIVE ONLY FILTER (Expert Security v9.0)
-            // Only process scans from the last 300 seconds (5 minutes)
-            // This allows for network latency while still preventing day-old photo reuse.
-            if (Math.abs(now - msgTs) > 300000) {
-                console.warn(`🛡️ Security: Blocked old signal (Likely Photo) - Age: ${Math.round((now - msgTs)/1000)}s`);
-                return; // Too old
-            }
+            // v9.0: 300s window
+            if (Math.abs(now - msgTs) > 300000) return;
 
             console.log(`📡 [${lid}] Live Signal:`, data.name || data.id);
             callback(data);
