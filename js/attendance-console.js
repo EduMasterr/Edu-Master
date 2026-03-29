@@ -80,7 +80,8 @@ class AttendanceConsole {
                     
                     // 🚨 VULNERABILITY FIX: Strict Token Validation
                     if (scanData.method === 'MOBILE_SCAN' && this.activeQRTokens && this.activeQRTokens.size > 0) {
-                        if (!scanData.qrToken || !this.activeQRTokens.has(scanData.qrToken)) {
+                        // Only block if a token was provided but it's not in our recent history (indicates a reused photo)
+                        if (scanData.qrToken && !this.activeQRTokens.has(scanData.qrToken)) {
                             console.error(`🛡️ Security Block: Received expired or fake QR token from ${scanData.name}`);
                             this.addLog(scanData.name || "مجهول", "تم رفض الصورة/الكود المنسوخ (منتهي الصلاحية)", "error");
                             this.playSound('error');
@@ -187,12 +188,12 @@ class AttendanceConsole {
                 this.qrInstance.clear();
                 this.qrInstance.makeCode(secureToken);
                 
-                // 🛡️ Keep a history of the last 6 generated tokens (~60 seconds validity)
+                // 🛡️ v8.5: Keep a history of the last 30 generated tokens (~300s / 5m validity)
                 const rawToken = secureToken.split(':')[3];
                 if (this.activeQRTokens) {
                     this.activeQRTokens.add(rawToken);
                     const tokensArr = Array.from(this.activeQRTokens);
-                    if (tokensArr.length > 6) {
+                    if (tokensArr.length > 30) {
                         this.activeQRTokens.delete(tokensArr[0]);
                     }
                 }

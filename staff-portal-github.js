@@ -258,11 +258,11 @@ class StaffPortal {
         const qrTimestamp = parseInt(parts[2]);
         const token = parts[3]; // Extract the strict security token
         
-        // 🛡️ v8.1: Strict Time Validation on Mobile (Reject Screenshots early)
+        // 🛡️ v8.5: Balanced Time Validation (Allow 5m drift)
         const now = Date.now();
         const ageInSeconds = (now - qrTimestamp) / 1000;
         
-        if (ageInSeconds > 60 || ageInSeconds < -60) {
+        if (ageInSeconds > 300 || ageInSeconds < -300) {
             this.showMsg(`عفواً، صورة الباركود منتهية الصلاحية. يرجى المسح من الشاشة مباشرة.`, "#f43f5e");
             setTimeout(() => this.stopScanner(), 2000);
             return;
