@@ -660,7 +660,7 @@ window.UICore = {
                 ` : ''}
 
                 <div class="nav-divider"></div>
-                <a href="${p}portal.html" target="_blank" class="nav-item" style="background: rgba(99, 102, 241, 0.1); color: #6366f1 !important; border-bottom: 1px solid rgba(99,102,241,0.2); margin-top: 10px;">
+                <a href="${p}modules/portal.html" target="_blank" class="nav-item" style="background: rgba(99, 102, 241, 0.1); color: #6366f1 !important; border-bottom: 1px solid rgba(99,102,241,0.2); margin-top: 10px;">
                     <i class="fa-solid fa-user-graduate" style="color: #6366f1;"></i> <span>بوابة الطالب (تجريبي)</span>
                 </a>
                 <div style="display: flex; gap: 5px; margin-top: 10px;">
