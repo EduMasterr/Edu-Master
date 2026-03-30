@@ -36,6 +36,22 @@ window.Cloud = {
         return snap.val();
     },
 
+    // تحديث السحابة يدوياً (Pull Manual)
+    pullTodayScans: async () => {
+        try {
+            console.log("📥 Cloud: Manual Pulling last 100 scans...");
+            const snap = await firebase.database().ref('edumaster/all_scans').limitToLast(100).once('value');
+            if (snap.val()) {
+                const results = Object.values(snap.val());
+                console.log(`✅ Cloud: Recovered ${results.length} scans from cloud history.`);
+                return results;
+            }
+        } catch (e) {
+            console.error("❌ Cloud Pull Error:", e);
+        }
+        return [];
+    },
+
     // مستقبل الإشارات (السرعة القصوى للكمبيوتر)
     onScanReceived: (branchId, callback) => {
         const startTime = Date.now() - 60000; // السماح بآخر دقيقة
@@ -48,21 +64,13 @@ window.Cloud = {
                 const ts = data.serverTimestamp || data.timestamp || 0;
                 if (ts < startTime) return;
 
-                // 🛡️ v11.1: Smart Branch Check (Normalizing branch vs branchId)
+                // 🛡️ v11.3: Smart Branch Check
                 const incomingBranch = data.branchId || data.branch || 'miami';
-                console.log("☁️ Data Received in Background:", data.name, "from", incomingBranch);
-
                 if (!branchId || branchId === 'all' || String(incomingBranch) === String(branchId)) {
                     callback(data);
                 }
             });
         }
-    },
-
-    // تحديث السحابة يدوياً
-    pullTodayScans: async () => {
-        const snap = await firebase.database().ref('edumaster/all_scans').limitToLast(100).once('value');
-        return snap.val() ? Object.values(snap.val()) : [];
     },
 
     startScanBackgroundSync: (branchId, onSyncCallback) => {
