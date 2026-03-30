@@ -364,6 +364,8 @@ class StaffPortal {
             name: this.currentUser.name,
             type: this.typeSelect.value,
             branch: branchId,
+            status: isOut ? 'OUT' : 'IN',
+            isOut: isOut,
             timestamp: now.toISOString(),
             time: now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit' }),
             method: 'MOBILE_SCAN',

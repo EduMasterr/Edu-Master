@@ -74,9 +74,18 @@ class AttendanceConsole {
 
         // ⚡ v4.2: Robust Cloud Sync - matches by ID, then Code, with UI diagnostics
         if (window.Cloud) {
+            this._pageLoadTime = Date.now();
+
             const handleCloudScan = async (scanData) => {
                 try {
                     if (!scanData) return;
+                    
+                    // 🛡️ v11.6: Ignore scans that happened before page load to prevent "Startup Ghost Toggles"
+                    const scanTs = scanData.serverTimestamp || scanData.timestamp || 0;
+                    if (scanTs < this._pageLoadTime - 5000) {
+                        console.log("☁️ Cloud: Skipping old startup scan:", scanData.name);
+                        return;
+                    }
                     
                     // 🚨 VULNERABILITY FIX: Strict Token Validation
                     if (scanData.method === 'MOBILE_SCAN' && this.activeQRTokens && this.activeQRTokens.size > 0) {
@@ -113,7 +122,7 @@ class AttendanceConsole {
                         if (user) {
                             const type = scanData.type || 'STUDENT';
                             console.log(`✅ Cloud: Match found → ${user.name}`);
-                            this.recordAttendance(user, type);
+                            this.recordAttendance(user, type, scanData);
                             return;
                         } else {
                             console.warn("⚠️ Cloud: ID not found in local DB. Trying code...");

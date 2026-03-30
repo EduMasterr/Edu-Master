@@ -94,12 +94,24 @@ window.Cloud = {
             if (!data[itemKey][scan.id]) data[itemKey][scan.id] = {};
             
             const entry = data[itemKey][scan.id];
+            // 🛡️ v11.4: Accurate State Matching (Prevent Auto-Departure Bug)
+            const isOutEvent = scan.status === 'OUT' || scan.isOut === true;
+
             if (scan.type === 'STUDENT') {
-                if (!entry.time) entry.time = scan.time; else entry.out = scan.time;
+                if (isOutEvent) {
+                    entry.out = scan.time;
+                } else {
+                    if (!entry.time) entry.time = scan.time;
+                    // If it's an IN scan but we already have time, don't overwrite OUT
+                }
             } else {
                 entry.name = scan.name || entry.name;
                 entry.type = scan.type;
-                if (!entry.in) entry.in = scan.time; else entry.out = scan.time;
+                if (isOutEvent) {
+                    entry.out = scan.time;
+                } else {
+                    if (!entry.in) entry.in = scan.time;
+                }
             }
             await Storage.save(listKey, data);
         }
