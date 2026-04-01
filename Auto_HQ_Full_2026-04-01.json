@@ -1,0 +1,1065 @@
+{
+  "edumaster_app_books": [
+    "Phonics 1",
+    "Phonics 2",
+    "Phonics 3",
+    "Phonics 4",
+    "Phonics 5",
+    "Let's Go 1",
+    "Let's Go 2",
+    "Let's Go 3",
+    "Let's Go 4",
+    "Let's Go 5",
+    "Let's Go 6",
+    "Interchange Intro",
+    "Interchange 1",
+    "Interchange 2",
+    "Interchange 3",
+    "Interchange 4",
+    "Interchange 5"
+  ],
+  "edumaster_app_config": {
+    "appName": "EduMaster Pro",
+    "primaryColor": "#1a9e9c",
+    "logoUrl": "",
+    "footerText": "© 2026 EduMaster",
+    "currency": "ج.م",
+    "tax": 0,
+    "skipDemo": false,
+    "broadcastMessage": "",
+    "msgGatewayUrl": "",
+    "msgApiKey": "",
+    "msgAttendTemplate": "",
+    "hideConsoleQR": false,
+    "disableManualAttendance": true,
+    "idCardInfoType": "group",
+    "idCardCustomText": "",
+    "idCardFontSize": "1.1rem",
+    "logoX": 0,
+    "logoY": 0,
+    "logoScale": 1,
+    "sidebarBg": "#0a2385",
+    "sidebarTitleStart": "#991b1b",
+    "sidebarTitleEnd": "#dc2626",
+    "sidebarActiveBg": "#1a9e9c",
+    "sidebarActiveText": "#ffffff"
+  },
+  "edumaster_app_group_patterns": [],
+  "edumaster_app_lecturers": [],
+  "edumaster_app_levels": [],
+  "edumaster_attendance": {
+    "2026-03-18_global": {
+      "1773671075112": {
+        "notes": "سكانر كونسول (عام)",
+        "status": "present",
+        "time": "04:58 PM"
+      },
+      "1773671101255": {
+        "notes": "سكانر كونسول (عام)",
+        "status": "present",
+        "time": "04:59 PM"
+      }
+    },
+    "2026-03-26_1774111753479": {
+      "1773671153968": {
+        "status": "present",
+        "time": "08:30 PM",
+        "out": "08:31 PM",
+        "notes": "سكانر كونسول"
+      },
+      "1773671101255": {
+        "status": "present",
+        "time": "08:42 PM",
+        "out": null,
+        "notes": "سكانر كونسول"
+      }
+    },
+    "2026-03-26_global": {
+      "1773671101255": {
+        "time": "08:33 PM"
+      }
+    }
+  },
+  "edumaster_books": [],
+  "edumaster_branch_counters": {},
+  "edumaster_branches": [
+    {
+      "id": 1,
+      "name": "فـرع ميامى",
+      "capacity": 0
+    },
+    {
+      "id": 2,
+      "name": "فـرع 2",
+      "capacity": 0
+    },
+    {
+      "id": 3,
+      "name": "فـرع 3",
+      "capacity": 0
+    },
+    {
+      "id": 4,
+      "name": "فـرع 4",
+      "capacity": 0
+    },
+    {
+      "id": 5,
+      "name": "فـرع 5",
+      "capacity": 0
+    },
+    {
+      "id": 6,
+      "name": "فـرع 6",
+      "capacity": 0
+    },
+    {
+      "id": 7,
+      "name": "فـرع 7",
+      "capacity": 0
+    },
+    {
+      "id": 8,
+      "name": "فـرع 8",
+      "capacity": 0
+    }
+  ],
+  "edumaster_coa": [
+    {
+      "id": 1001,
+      "name": "الخزينة",
+      "category": "Asset",
+      "balance": 0
+    },
+    {
+      "id": 1002,
+      "name": "البنك",
+      "category": "Asset",
+      "balance": 0
+    },
+    {
+      "id": 4001,
+      "name": "إيرادات عامة",
+      "category": "Revenue",
+      "balance": 0
+    },
+    {
+      "id": 5001,
+      "name": "مصروفات عامة",
+      "category": "Expense",
+      "balance": 0
+    }
+  ],
+  "edumaster_maintenance_logs": [
+    {
+      "time": "٣٠‏/٣‏/٢٠٢٦ ٥:٢٧:٣٢ م",
+      "user": "admin",
+      "action": "تحديث كافة إعدادات النظام"
+    },
+    {
+      "time": "٣٠‏/٣‏/٢٠٢٦ ٥:٢٧:٢٧ م",
+      "user": "admin",
+      "action": "تحديث كافة إعدادات النظام"
+    },
+    {
+      "time": "٢٦‏/٣‏/٢٠٢٦ ٨:٤٠:٣٥ م",
+      "user": "admin",
+      "action": "تحديث كافة إعدادات النظام"
+    }
+  ],
+  "edumaster_roles": [
+    {
+      "id": 1,
+      "name": "SuperAdmin",
+      "label": "المدير العام",
+      "permissions": [
+        "*"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "BranchAdmin",
+      "label": "مدير فرع",
+      "permissions": [
+        "view_dashboard",
+        "view_students",
+        "manage_inventory",
+        "view_invoices"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Accountant",
+      "label": "محاسب",
+      "permissions": [
+        "view_financial_reports",
+        "post_journal"
+      ]
+    }
+  ],
+  "edumaster_settings": {
+    "systemName": "EduMaster Pro",
+    "masterLogo": "",
+    "primaryColor": "#1a9e9c",
+    "allowBranchSwitching": true
+  },
+  "edumaster_student_id_counter": {
+    "next": 1012
+  },
+  "edumaster_student_sources": [],
+  "edumaster_students": [
+    {
+      "addedBy": "المدير العام",
+      "addressExtra": "سموحة",
+      "addressPersonal": "الإسكندرية",
+      "birthDate": "2010-02-07",
+      "branch": 1,
+      "branch_id": 1,
+      "code": "18968556",
+      "email": "",
+      "enrollmentDate": "2026-03-16",
+      "gender": "male",
+      "group": "الاحد فونكس 3",
+      "group_ids": [
+        "1774111753479"
+      ],
+      "id": 1773671075112,
+      "job": "",
+      "name": "احمد خالد على",
+      "nationalId": "24324242424253",
+      "phone": "01235352625",
+      "phoneExtra": "",
+      "receipt_no": "342442",
+      "serial_id": "S-1007",
+      "source": "صديق",
+      "status": "Active"
+    },
+    {
+      "addedBy": "المدير العام",
+      "addressExtra": "سموحة",
+      "addressPersonal": "الإسكندرية",
+      "birthDate": "1999-11-30",
+      "branch": 1,
+      "branch_id": 1,
+      "code": "15021245",
+      "email": "",
+      "enrollmentDate": "2026-03-16",
+      "gender": "male",
+      "group": "الاحد فونكس 3",
+      "group_ids": [
+        "1774111753479"
+      ],
+      "id": 1773671101255,
+      "job": "",
+      "name": "محمد خالد على",
+      "nationalId": "24324242424253",
+      "phone": "01235352625",
+      "phoneExtra": "",
+      "receipt_no": "35243",
+      "serial_id": "S-1008",
+      "siblingId": 1773671075112,
+      "source": "صديق",
+      "status": "Active"
+    },
+    {
+      "addedBy": "المدير العام",
+      "addressExtra": "سموحة",
+      "addressPersonal": "الإسكندرية",
+      "birthDate": "2004-09-04",
+      "branch": 1,
+      "branch_id": 1,
+      "code": "17078251",
+      "email": "",
+      "enrollmentDate": "2026-03-16",
+      "gender": "female",
+      "group": "الاحد فونكس 3",
+      "group_ids": [
+        "1774111753479"
+      ],
+      "id": 1773671153968,
+      "job": "",
+      "name": "رشا خالد على",
+      "nationalId": "24324242424253",
+      "phone": "01235352625",
+      "phoneExtra": "",
+      "receipt_no": "543535",
+      "serial_id": "S-1009",
+      "siblingId": 1773671075112,
+      "source": "صديق",
+      "status": "Active"
+    },
+    {
+      "addedBy": "المدير العام",
+      "addressExtra": "سموحة",
+      "addressPersonal": "الإسكندرية",
+      "birthDate": "2003-05-29",
+      "branch": 1,
+      "branch_id": 1,
+      "code": "19233512",
+      "email": "",
+      "enrollmentDate": "2026-03-16",
+      "gender": "female",
+      "group": "الاحد فونكس 3",
+      "group_ids": [
+        "1774111753479"
+      ],
+      "id": 1773671184943,
+      "job": "",
+      "name": "منال خالد على",
+      "nationalId": "24324242424253",
+      "phone": "01235352625",
+      "phoneExtra": "",
+      "receipt_no": "3434",
+      "serial_id": "S-1010",
+      "siblingId": 1773671153968,
+      "source": "صديق",
+      "status": "Active"
+    },
+    {
+      "addedBy": "المدير العام",
+      "addressExtra": "سموحة",
+      "addressPersonal": "الإسكندرية",
+      "birthDate": "2007-03-30",
+      "branch": 1,
+      "branch_id": 1,
+      "code": "16959143",
+      "email": "",
+      "enrollmentDate": "2026-03-16",
+      "gender": "female",
+      "group": "الاحد فونكس 3",
+      "group_ids": [
+        "1774111753479"
+      ],
+      "id": 1773671217583,
+      "job": "",
+      "name": "حبيبة خالد على",
+      "nationalId": "24324242424253",
+      "phone": "01235352625",
+      "phoneExtra": "",
+      "receipt_no": "3434",
+      "serial_id": "S-1011",
+      "siblingId": 1773671184943,
+      "source": "صديق",
+      "status": "Active"
+    }
+  ],
+  "edumaster_study_groups": [
+    {
+      "branch_id": 1,
+      "day": "Saturday",
+      "id": 1774111753479,
+      "name": "الاحد فونكس 3",
+      "startDate": "2026-03-21",
+      "status": "Active",
+      "students": [
+        "1773671217583",
+        "1773671184943",
+        "1773671153968",
+        "1773671101255",
+        "1773671075112"
+      ],
+      "time": "05:00 PM",
+      "trainerId": "3002"
+    }
+  ],
+  "edumaster_trainer_logs": {
+    "2026-03-18": {
+      "3001": {
+        "in": "02:22 PM",
+        "out": "04:55 PM"
+      },
+      "3008": {
+        "in": "02:23 PM",
+        "out": "04:55 PM"
+      },
+      "3011": {
+        "in": "02:22 PM",
+        "out": "04:55 PM"
+      },
+      "3029": {
+        "in": "02:20 PM",
+        "out": "04:55 PM"
+      },
+      "3048": {
+        "in": "02:21 PM",
+        "out": "04:55 PM"
+      },
+      "3053": {
+        "in": "02:19 PM",
+        "out": "04:54 PM"
+      }
+    },
+    "2026-03-19": {
+      "3001": {
+        "in": "12:30 AM",
+        "out": "01:03 AM"
+      },
+      "3002": {
+        "in": "12:30 AM"
+      },
+      "3004": {
+        "in": "12:30 AM",
+        "out": "01:03 AM"
+      },
+      "3005": {
+        "in": "12:30 AM",
+        "out": "01:03 AM"
+      }
+    },
+    "2026-03-21": {
+      "3007": {
+        "gpsIn": {
+          "code": 1,
+          "error": "مرفوض أو غير متاح"
+        },
+        "gpsOut": {
+          "code": 1,
+          "error": "مرفوض أو غير متاح"
+        },
+        "in": "07:54 PM",
+        "name": "غاده سيد سلطان",
+        "out": "08:02 PM",
+        "type": "TRAINER"
+      },
+      "3011": {
+        "gpsIn": {
+          "accuracy": 100,
+          "lat": 31.1870473,
+          "lng": 29.9084931
+        },
+        "gpsOut": {
+          "code": 3,
+          "error": "مرفوض أو غير متاح"
+        },
+        "in": "07:15 PM",
+        "name": "هشام نصر",
+        "out": "07:15 PM",
+        "type": "TRAINER"
+      },
+      "3038": {
+        "gpsIn": {
+          "code": 1,
+          "error": "مرفوض أو غير متاح"
+        },
+        "gpsOut": {
+          "code": 1,
+          "error": "مرفوض أو غير متاح"
+        },
+        "in": "07:51 PM",
+        "name": "اميرة",
+        "out": "08:04 PM",
+        "type": "TRAINER"
+      }
+    },
+    "2026-03-26": {
+      "1000": {
+        "in": "07:52 PM",
+        "out": null
+      },
+      "3029": {
+        "in": "07:49 PM",
+        "out": "07:50 PM",
+        "name": "وليد حسن",
+        "type": "TRAINER"
+      }
+    },
+    "2026-03-30": {}
+  },
+  "edumaster_trainer_specialties": [],
+  "edumaster_trainers": [
+    {
+      "branch_id": 1,
+      "code": "39360471",
+      "contractType": "full-time",
+      "id": 3001,
+      "name": "مروه فايد عبد الوهاب",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1550556783",
+      "specialty": "English Teacher",
+      "status": "Active",
+      "trainerCode": "39360471"
+    },
+    {
+      "branch_id": 1,
+      "code": "30388561",
+      "contractType": "full-time",
+      "id": 3002,
+      "name": "اسماء جابر عبد الرحمن",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1220970951",
+      "specialty": "English Teacher",
+      "status": "Active",
+      "trainerCode": "30388561"
+    },
+    {
+      "branch_id": 1,
+      "code": "39613099",
+      "contractType": "full-time",
+      "id": 3003,
+      "name": "مي حمدي يحيي",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1288933536",
+      "specialty": "German Teacher",
+      "status": "Active",
+      "trainerCode": "39613099"
+    },
+    {
+      "branch_id": 1,
+      "code": "35619546",
+      "contractType": "full-time",
+      "id": 3004,
+      "name": "انجي علي حسن",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1279827681",
+      "specialty": "English Teacher",
+      "status": "Active",
+      "trainerCode": "35619546"
+    },
+    {
+      "branch_id": 1,
+      "code": "30276847",
+      "contractType": "full-time",
+      "id": 3005,
+      "name": "دعاء احمد الكيلاني",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1274815336",
+      "specialty": "Vedic Math",
+      "status": "Active",
+      "trainerCode": "30276847"
+    },
+    {
+      "branch_id": 1,
+      "code": "37004151",
+      "contractType": "full-time",
+      "id": 3006,
+      "name": "غاده عبد الحي",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1277607548",
+      "specialty": "French Teacher",
+      "status": "Active",
+      "trainerCode": "37004151"
+    },
+    {
+      "branch_id": 1,
+      "code": "30297748",
+      "contractType": "full-time",
+      "id": 3007,
+      "name": "غاده سيد سلطان",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1090270262",
+      "specialty": "Programming Teacher",
+      "status": "Active",
+      "trainerCode": "30297748"
+    },
+    {
+      "branch_id": 1,
+      "code": "39514947",
+      "contractType": "full-time",
+      "id": 3008,
+      "name": "نعمه بدر محمد",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1205011889",
+      "specialty": "Arabic Teacher",
+      "status": "Active",
+      "trainerCode": "39514947"
+    },
+    {
+      "branch_id": 1,
+      "code": "39663308",
+      "contractType": "full-time",
+      "id": 3009,
+      "name": "ابراهيم احمد ابراهيم",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1228907091",
+      "specialty": "English Teacher",
+      "status": "Active",
+      "trainerCode": "39663308"
+    },
+    {
+      "branch_id": 1,
+      "code": "36050512",
+      "contractType": "full-time",
+      "id": 3010,
+      "name": "محمد شاهين",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1001852857",
+      "specialty": "Math Teacher",
+      "status": "Active",
+      "trainerCode": "36050512"
+    },
+    {
+      "branch_id": 1,
+      "code": "31469616",
+      "contractType": "full-time",
+      "id": 3011,
+      "name": "هشام نصر",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1009942050",
+      "specialty": "Math Teacher",
+      "status": "Active",
+      "trainerCode": "31469616"
+    },
+    {
+      "branch_id": 1,
+      "code": "36769014",
+      "contractType": "full-time",
+      "id": 3023,
+      "name": "هاني عزت",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1010182842",
+      "specialty": "لغه انجليزيه",
+      "status": "Active",
+      "trainerCode": "36769014"
+    },
+    {
+      "branch_id": 1,
+      "code": "38037781",
+      "contractType": "full-time",
+      "id": 3024,
+      "name": "عصام مجدي",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1501521212",
+      "specialty": "English Teacher",
+      "status": "Active",
+      "trainerCode": "38037781"
+    },
+    {
+      "branch_id": 1,
+      "code": "33596256",
+      "contractType": "full-time",
+      "id": 3025,
+      "name": "مؤمن جمال",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1226564860",
+      "specialty": "English Teacher",
+      "status": "Active",
+      "trainerCode": "33596256"
+    },
+    {
+      "branch_id": 1,
+      "code": "36266643",
+      "contractType": "full-time",
+      "id": 3026,
+      "name": "عماد عبدالحميد",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1016235223",
+      "specialty": "لغه انجليزيه",
+      "status": "Active",
+      "trainerCode": "36266643"
+    },
+    {
+      "branch_id": 1,
+      "code": "33567572",
+      "contractType": "full-time",
+      "id": 3027,
+      "name": "مسيو هاني عبده",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1211379405",
+      "specialty": "French Teacher",
+      "status": "Active",
+      "trainerCode": "33567572"
+    },
+    {
+      "branch_id": 1,
+      "code": "33100976",
+      "contractType": "full-time",
+      "id": 3028,
+      "name": "محمود خيري",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1013113546",
+      "specialty": "محاضر لغه المانيه",
+      "status": "Active",
+      "trainerCode": "33100976"
+    },
+    {
+      "branch_id": 1,
+      "code": "33674472",
+      "contractType": "full-time",
+      "id": 3029,
+      "name": "وليد حسن",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1208968333",
+      "specialty": "محاضر ماث",
+      "status": "Active",
+      "trainerCode": "33674472"
+    },
+    {
+      "branch_id": 1,
+      "code": "33796927",
+      "contractType": "full-time",
+      "id": 3030,
+      "name": "مجدي رشدي",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1224221994",
+      "specialty": "محاضر كمبيوتر",
+      "status": "Active",
+      "trainerCode": "33796927"
+    },
+    {
+      "branch_id": 1,
+      "code": "32787434",
+      "contractType": "full-time",
+      "id": 3034,
+      "name": "الاء خميس",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "",
+      "specialty": "محاضر ماث",
+      "status": "Active",
+      "trainerCode": "32787434"
+    },
+    {
+      "branch_id": 1,
+      "code": "35654418",
+      "contractType": "full-time",
+      "id": 3038,
+      "name": "اميرة",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "01281702178",
+      "specialty": "french",
+      "status": "Active",
+      "trainerCode": "35654418"
+    },
+    {
+      "branch_id": 1,
+      "code": "34297045",
+      "contractType": "full-time",
+      "id": 3039,
+      "name": "ياسمين",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "01557068828",
+      "specialty": "english",
+      "status": "Active",
+      "trainerCode": "34297045"
+    },
+    {
+      "branch_id": 1,
+      "code": "32101151",
+      "contractType": "full-time",
+      "id": 3040,
+      "name": "ابراهيم",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "01228907091",
+      "specialty": "english",
+      "status": "Active",
+      "trainerCode": "32101151"
+    },
+    {
+      "branch_id": 1,
+      "code": "32010699",
+      "contractType": "full-time",
+      "id": 3041,
+      "name": "نادية",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "01223414334",
+      "specialty": "english",
+      "status": "Active",
+      "trainerCode": "32010699"
+    },
+    {
+      "branch_id": 1,
+      "code": "33531382",
+      "contractType": "full-time",
+      "id": 3042,
+      "name": "م-مروة",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "01550556783",
+      "specialty": "english",
+      "status": "Active",
+      "trainerCode": "33531382"
+    },
+    {
+      "branch_id": 1,
+      "code": "32357203",
+      "contractType": "full-time",
+      "id": 3048,
+      "name": "هبة سمير الدسوقي",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1279886171",
+      "specialty": "english",
+      "status": "Active",
+      "trainerCode": "32357203"
+    },
+    {
+      "branch_id": 1,
+      "code": "32324311",
+      "contractType": "full-time",
+      "id": 3049,
+      "name": "نرمين حشمت عزت",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1223766173",
+      "specialty": "mental math",
+      "status": "Active",
+      "trainerCode": "32324311"
+    },
+    {
+      "branch_id": 1,
+      "code": "37004151",
+      "contractType": "full-time",
+      "id": 3050,
+      "name": "هند عبده",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1277607548",
+      "specialty": "english",
+      "status": "Active",
+      "trainerCode": "37004151"
+    },
+    {
+      "branch_id": 1,
+      "code": "36034988",
+      "contractType": "full-time",
+      "id": 3051,
+      "name": "ولاء احمد",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1002926274",
+      "specialty": "english",
+      "status": "Active",
+      "trainerCode": "36034988"
+    },
+    {
+      "branch_id": 1,
+      "code": "31768801",
+      "contractType": "full-time",
+      "id": 3052,
+      "name": "غادة عبد الحي علي",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1204508339",
+      "specialty": "French Teacher",
+      "status": "Active",
+      "trainerCode": "31768801"
+    },
+    {
+      "branch_id": 1,
+      "code": "39440037",
+      "contractType": "full-time",
+      "id": 3053,
+      "name": "نهى حسن",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1276710468",
+      "specialty": "math",
+      "status": "Active",
+      "trainerCode": "39440037"
+    },
+    {
+      "branch_id": 1,
+      "code": "35653397",
+      "contractType": "full-time",
+      "id": 3054,
+      "name": "مهند هشام فتحي",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1142631225",
+      "specialty": "computer",
+      "status": "Active",
+      "trainerCode": "35653397"
+    },
+    {
+      "branch_id": 1,
+      "code": "30785315",
+      "contractType": "full-time",
+      "id": 3055,
+      "name": "حسام حسن عيد",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1206858933",
+      "specialty": "german",
+      "status": "Active",
+      "trainerCode": "30785315"
+    },
+    {
+      "branch_id": 1,
+      "code": "30166026",
+      "contractType": "full-time",
+      "id": 3056,
+      "name": "مصطفي احمد",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1066004039",
+      "specialty": "computer",
+      "status": "Active",
+      "trainerCode": "30166026"
+    },
+    {
+      "branch_id": 1,
+      "code": "33596256",
+      "contractType": "full-time",
+      "id": 3057,
+      "name": "مؤمن حمال",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1226564860",
+      "specialty": "English Teacher",
+      "status": "Active",
+      "trainerCode": "33596256"
+    },
+    {
+      "branch_id": 1,
+      "code": "38069505",
+      "contractType": "full-time",
+      "id": 3058,
+      "name": "مروه محمد",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1224214885",
+      "specialty": "عربي",
+      "status": "Active",
+      "trainerCode": "38069505"
+    },
+    {
+      "branch_id": 1,
+      "code": "31438517",
+      "contractType": "full-time",
+      "id": 3059,
+      "name": "نبيل محمد",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1123089515",
+      "specialty": "math",
+      "status": "Active",
+      "trainerCode": "31438517"
+    },
+    {
+      "branch_id": 1,
+      "code": "30539676",
+      "contractType": "full-time",
+      "id": 3061,
+      "name": "سلمي مهلل",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1122799501",
+      "specialty": "English Teacher",
+      "status": "Active",
+      "trainerCode": "30539676"
+    },
+    {
+      "branch_id": 1,
+      "code": "30409209",
+      "contractType": "full-time",
+      "id": 3062,
+      "name": "محمود عبد العزيز",
+      "paymentMode": "fixed",
+      "paymentValue": 0,
+      "phone": "1099439642",
+      "specialty": "English Teacher",
+      "status": "Active",
+      "trainerCode": "30409209"
+    }
+  ],
+  "edumaster_users": [
+    {
+      "id": 1000,
+      "name": "المدير العام",
+      "password": "123",
+      "role_id": 1,
+      "username": "admin"
+    },
+    {
+      "branch": 1,
+      "code": "20165793",
+      "id": 2001,
+      "name": "مدير فرع 1",
+      "password": "123",
+      "role_id": 2,
+      "username": "branch1"
+    },
+    {
+      "branch": 2,
+      "code": "26141326",
+      "id": 2002,
+      "name": "مدير فرع 2",
+      "password": "123",
+      "role_id": 2,
+      "username": "branch2"
+    },
+    {
+      "branch": 3,
+      "code": "29509507",
+      "id": 2003,
+      "name": "مدير فرع 3",
+      "password": "123",
+      "role_id": 2,
+      "username": "branch3"
+    },
+    {
+      "branch": 4,
+      "code": "20078735",
+      "id": 2004,
+      "name": "مدير فرع 4",
+      "password": "123",
+      "role_id": 2,
+      "username": "branch4"
+    },
+    {
+      "branch": 5,
+      "code": "22784356",
+      "id": 2005,
+      "name": "مدير فرع 5",
+      "password": "123",
+      "role_id": 2,
+      "username": "branch5"
+    },
+    {
+      "branch": 6,
+      "code": "21649122",
+      "id": 2006,
+      "name": "مدير فرع 6",
+      "password": "123",
+      "role_id": 2,
+      "username": "branch6"
+    },
+    {
+      "branch": 7,
+      "code": "29164954",
+      "id": 2007,
+      "name": "مدير فرع 7",
+      "password": "123",
+      "role_id": 2,
+      "username": "branch7"
+    },
+    {
+      "branch": 8,
+      "code": "27644626",
+      "id": 2008,
+      "name": "مدير فرع 8",
+      "password": "123",
+      "role_id": 2,
+      "username": "branch8"
+    }
+  ],
+  "edumaster_v": "2.0.1",
+  "backup_meta": {
+    "exporter": "HQ_Global",
+    "date": "2026-04-01T12:58:18.950Z",
+    "version": "2.0"
+  }
+}
