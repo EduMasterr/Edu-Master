@@ -30,8 +30,8 @@ class AttendanceLogsController {
         
         // 📡 Cloud Sync: Listen for mobile scans while this page is open
         if (window.Cloud && window.Cloud.startScanBackgroundSync) {
-            const branchId = window.Permissions?.getActiveBranchId() || 'miami';
-            console.log("🔗 Starting Cloud Sync for Logs on Branch:", branchId);
+            const branchId = window.Permissions?.getActiveBranchId();
+            console.log("🔗 Starting Cloud Sync for Logs on Branch:", branchId || 'All Branches');
             
             window.Cloud.startScanBackgroundSync(branchId, (scan) => {
                 console.log("📡 Cloud scan received in Logs:", scan);
