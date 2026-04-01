@@ -18,6 +18,8 @@ if (typeof firebase !== 'undefined' && (!firebase.apps || !firebase.apps.length)
             measurementId: "G-EWDTJR6B22"
         };
     }
+    console.log("🚀 Attendance Cloud Sync Engine Loaded (v10.1)");
+    window.ATT_VERSION = "10.1";
     firebase.initializeApp(window.firebaseConfig);
 }
 
