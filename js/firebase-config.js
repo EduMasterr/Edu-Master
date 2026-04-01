@@ -39,7 +39,7 @@ _db.enablePersistence({ synchronizeTabs: true })
 // 🛡️ Fragmented Sync Engine (تجاوز حد الـ 1MB)
 window.FirestoreEngine = {
     db: _db,
-    CHUNK_SIZE: 250,
+    CHUNK_SIZE: 500,
 
     /** 📤 حفظ مجزأ للمصفوفات الكبيرة */
     async saveFragmented(path, data) {
@@ -106,16 +106,14 @@ window.Cloud = {
         const fingerprint = `${scanData.id}_${timestamp}_${Math.random().toString(36).substr(2, 5)}`;
         const payload = { ...scanData, timestamp, branchId, fingerprint };
 
-        // Firestore يعمل في الخلفية ولا يعلق الواجهة
-        window.Cloud.runWithTimeout(
+        // Firestore يعمل في الخلفية مع ضمان العودة عند النجاح أو انتهاء المهلة
+        return window.Cloud.runWithTimeout(
             _db.collection('scans').add({
                 ...payload,
                 serverTimestamp: firebase.firestore.FieldValue.serverTimestamp()
             }),
-            2500
-        ).catch(e => console.warn("⚠️ Firestore pushScan background:", e.message));
-
-        return Promise.resolve(); // يعود فوراً للواجهة
+            3500 // Increased to 3.5s for real-world confirmation
+        );
     },
 
     /** 📤 حفظ نسخة احتياطية شاملة (مجزأة) */
@@ -140,7 +138,7 @@ window.Cloud = {
                     app_config: config,
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
-            })(), 12000); // Increased timeout to 12s for heavy pushes
+            })(), 15000); // Increased timeout to 15s for heavy pushes (Ideal Config)
             console.log("✅ [Attendance] Full sync to Firestore complete!");
         } catch (e) {
             console.warn("⚠️ pushAllRecords timed out or failed:", e.message);
@@ -172,7 +170,7 @@ window.Cloud = {
                 return (data.students || data.trainers) ? data : null;
             })();
 
-            const data = await window.Cloud.runWithTimeout(fsPromise, 5000);
+            const data = await window.Cloud.runWithTimeout(fsPromise, 12000); // Increased to 12s for pull reliability
             if (data) return data;
         } catch (e) {
             console.warn("⚠️ pullAllRecords failed/timeout:", e.message);

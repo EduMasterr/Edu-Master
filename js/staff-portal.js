@@ -78,14 +78,22 @@ class StaffPortal {
 
         // Firebase Connection Check (Deep Check)
         if (window.firebase) {
+            // Keep RTDB check for instant status
             const connectedRef = firebase.database().ref(".info/connected");
             connectedRef.on("value", (snap) => {
                 if (snap.val() === true) {
                     dot.className = "dot-pulse dot-green";
                     text.innerText = "متصل بالسحاب 🔥";
                 } else if (navigator.onLine) {
-                    dot.className = "dot-pulse dot-orange";
-                    text.innerText = "متصل بالنت (بدون سحاب)";
+                    // Try a lightweight Firestore check if RTDB is being slow
+                    firebase.firestore().collection('full_sync').doc('settings').get({ source: 'server' })
+                        .then(() => {
+                            dot.className = "dot-pulse dot-green";
+                            text.innerText = "متصل بالسحاب 🔥";
+                        }).catch(() => {
+                            dot.className = "dot-pulse dot-orange";
+                            text.innerText = "متصل بالنت (بدون سحاب)";
+                        });
                 }
             });
         }
@@ -109,7 +117,7 @@ class StaffPortal {
         try {
             const data = await Cloud.pullAllRecords();
             if (!data) {
-                this.showMsg("لا توجد بيانات سحابية متوفرة حالياً.", "#f43f5e");
+                this.showMsg("عفواً، السحاب فارغ! تأكد من رفع البيانات من الجهاز الرئيسي (Admin Console) أولاً.", "#f43f5e");
                 return;
             }
 
@@ -126,7 +134,11 @@ class StaffPortal {
 
         } catch (err) {
             console.error("Sync Error:", err);
-            this.showMsg("فشل التحديث السحابي: " + err.message, "#f43f5e");
+            if (err.message === "CLOUD_TIMEOUT") {
+                this.showMsg("فشل التحديث: السحاب لا يستجيب في الوقت المحدد. حاول مرة أخرى.", "#f43f5e");
+            } else {
+                this.showMsg("حدث خطأ في النظام: " + err.message, "#f43f5e");
+            }
         }
     }
 
