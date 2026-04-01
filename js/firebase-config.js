@@ -42,30 +42,34 @@ if (typeof firebase !== 'undefined' && typeof firebase.firestore !== 'function' 
     };
 }
 
-// Global DB Instances with Safety Guards
-var _db = null;
-var _rtdb = null;
-
-try {
-    if (typeof firebase !== 'undefined') {
-        if (typeof firebase.firestore === 'function') _db = firebase.firestore();
-        if (typeof firebase.database === 'function') _rtdb = firebase.database();
+// ✅ Getters for late-loading SDKs (Robust v11.3)
+Object.defineProperty(window, '_db', {
+    get: function() { 
+        if (typeof firebase !== 'undefined' && typeof firebase.firestore === 'function') {
+            try { return firebase.firestore(); } catch(e) { return null; }
+        }
+        return null;
     }
-} catch (e) {
-    console.warn("⚠️ Firebase services not yet ready:", e.message);
-}
+});
+
+Object.defineProperty(window, '_rtdb', {
+    get: function() { 
+        if (typeof firebase !== 'undefined' && typeof firebase.database === 'function') {
+            try { return firebase.database(); } catch(e) { return null; }
+        }
+        return null;
+    }
+});
 
 // ✅ Enable Offline Persistence (Safe Mode)
-if (_db) {
-    _db.enablePersistence({ synchronizeTabs: true })
-       .catch(err => {
-           if (err.code === 'failed-precondition') {
-               console.warn("Multiple tabs open - persistence disabled.");
-           } else if (err.code === 'unimplemented') {
-               console.warn("Browser doesn't support persistence.");
-           }
-       });
-}
+setTimeout(() => {
+    if (window._db) {
+        window._db.enablePersistence({ synchronizeTabs: true })
+           .catch(err => {
+               if (err.code === 'failed-precondition') console.warn("Persistence blocked: multi-tab");
+           });
+    }
+}, 2000);
 
 // 🛡️ Fragmented Sync Engine (تجاوز حد الـ 1MB)
 window.FirestoreEngine = {
