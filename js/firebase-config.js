@@ -5,34 +5,42 @@
  * projectId: attendance-f6fdc
  */
 
-// ⚡ Safe Initialization System (v11.8 Hyper-Safe)
-(function initCloud() {
-    if (typeof firebase === 'undefined') {
-        setTimeout(initCloud, 250);
-        return;
-    }
+    /** ⚡ Safe Initialization System (v12.1 - Hyper-Safe & Honest) */
+    (function initCloud() {
+        const start = Date.now();
+        function attempt() {
+            if (typeof firebase === 'undefined') {
+                if (Date.now() - start > 4000) {
+                    console.error("🚷 Connection blocked? Please check Brave Shields / Ad-blockers.");
+                    if (window.Portal) window.Portal.showMsg("عفواً، الموقع محظور! يرجى إغلاق حماية المتصفح (Brave Shield) للربط بالسحاب.", "#f43f5e");
+                }
+                setTimeout(attempt, 300);
+                return;
+            }
 
-    if (!firebase.apps || !firebase.apps.length) {
-        if (!window.firebaseConfig) {
-            window.firebaseConfig = {
-                apiKey: "AIzaSyBXc-L71Dqz-UwOXADcboJHAoXvshntHVg",
-                authDomain: "attendance-f6fdc.firebaseapp.com",
-                projectId: "attendance-f6fdc",
-                storageBucket: "attendance-f6fdc.firebasestorage.app",
-                messagingSenderId: "809905569514",
-                appId: "1:809905569514:web:a2eaebfbc4cab15962a193",
-                measurementId: "G-EWDTJR6B22"
-            };
+            if (!firebase.apps || !firebase.apps.length) {
+                if (!window.firebaseConfig) {
+                    window.firebaseConfig = {
+                        apiKey: "AIzaSyBXc-L71Dqz-UwOXADcboJHAoXvshntHVg",
+                        authDomain: "attendance-f6fdc.firebaseapp.com",
+                        projectId: "attendance-f6fdc",
+                        storageBucket: "attendance-f6fdc.firebasestorage.app",
+                        messagingSenderId: "809905569514",
+                        appId: "1:809905569514:web:a2eaebfbc4cab15962a193",
+                        measurementId: "G-EWDTJR6B22"
+                    };
+                }
+                
+                try {
+                    firebase.initializeApp(window.firebaseConfig);
+                    console.log("🚀 Attendance Cloud Sync Activated (v12.1)");
+                } catch (e) {
+                    console.error("Firebase init failed:", e);
+                }
+            }
         }
-        
-        try {
-            firebase.initializeApp(window.firebaseConfig);
-            console.log("🚀 Attendance Cloud Sync Engine Activated (v11.8)");
-        } catch (e) {
-            console.error("Firebase init failed:", e);
-        }
-    }
-})();
+        attempt();
+    })();
 
 // 🛡️ Auto-Load Firestore SDK if missing (Silent & Robust)
 if (typeof firebase !== 'undefined' && typeof firebase.firestore !== 'function' && !window._loadingFirestore) {
